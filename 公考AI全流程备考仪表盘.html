@@ -265,7 +265,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 .api-settings-toggle{background:none;border:none;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--sub);transition:all .15s;margin-left:8px}
 .api-settings-toggle:hover{background:var(--jade-light);color:var(--jade)}
 .api-settings-toggle.configured{color:var(--jade)}
-.api-settings-panel{display:none;position:fixed;top:60px;right:20px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;box-shadow:0 8px 30px rgba(0,0,0,.12);width:320px;max-width:90vw}
+.api-settings-panel{display:none;position:fixed;top:60px;right:20px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;box-shadow:0 8px 30px rgba(0,0,0,.12);width:320px;max-width:90vw;max-height:calc(100vh - 80px);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .api-settings-panel.show{display:block}
 .api-settings-panel h3{font-size:14px;margin-bottom:12px;color:var(--ink)}
 .api-settings-panel label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px}
@@ -323,7 +323,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 .follow-card.coming-soon .fc-link{background:var(--border);color:var(--hint);cursor:default}
 .follow-card:hover .fc-link{opacity:.9}
 .follow-card.coming-soon:hover .fc-link{opacity:1}
-@media(max-width:768px){.follow-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.follow-grid{grid-template-columns:1fr}.api-settings-panel{top:52px;right:10px;left:10px;width:auto;max-height:calc(100vh - 70px);padding:14px 16px}}
 </style>
 </head>
 <body>
@@ -360,31 +360,48 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 <div class="api-settings-panel" id="api-settings-panel">
   <h3>⚙ AI引擎 & 系统设置</h3>
-  <div style="background:var(--jade-light);border:1px solid var(--jade-mid);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--jade);line-height:1.6;">
-    🆓 <b>三家免费AI任选，全部支持图片识题！</b><br>
-    DeepSeek（500万tokens）· 通义千问（200万/月）· 智谱GLM（免费额度）<br>
-    选一家注册 → 获取API Key → 粘贴保存即可。拍照识图、AI对话全走你选的AI。
+  <div style="background:var(--blue-light);border:1px solid var(--blue);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--blue);line-height:1.6;">
+    📌 <b>对话AI</b> — 选你喜欢的大模型做复盘<br>
+    👁 <b>识图AI</b> — 拍照识别文字（通义千问/智谱GLM支持图片，DeepSeek不支持）<br>
+    如果选的AI不支持图片，拍照会自动切到识图AI，互不干扰。
   </div>
   <div class="free-usage-bar" id="free-usage-bar" style="margin-bottom:14px;">
     📊 今日免费次数：<span class="fu-count" id="free-usage-count">5/5</span>
     <span class="fu-key-hint" onclick="document.getElementById('api-key-input').focus()">用完？点此绑Key解锁无限</span>
   </div>
+  
+  <!-- ===== 对话AI ===== -->
+  <div style="font-weight:600;font-size:13px;color:var(--ink);margin-bottom:6px;">💬 对话AI</div>
   <label>AI提供商</label>
   <select id="api-provider-select" onchange="onProviderChange()" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;margin-bottom:10px;background:#fff;">
     <option value="deepseek">DeepSeek — 免费500万tokens（推荐）</option>
     <option value="qwen">通义千问（阿里云）— 免费200万tokens/月</option>
     <option value="glm">智谱GLM — 免费额度</option>
   </select>
-  <label id="api-key-label">DeepSeek API Key <span style="color:var(--hint);font-weight:400;">（绑定你自己的Key，无限使用）</span></label>
+  <label id="api-key-label">DeepSeek API Key</label>
   <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
-  <div class="api-hint" id="api-reg-hint">注册地址：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>，新用户赠送500万tokens免费额度</div>
-  <div class="api-status unset" id="api-status-indicator">⚠️ 未配置API Key — 每天5次免费额度</div>
-  <label style="margin-top:10px;">飞书群机器人 Webhook <span style="color:var(--hint);font-weight:400;">（用于接收用户反馈）</span></label>
+  <div class="api-hint" id="api-reg-hint">注册地址：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></div>
+  <div class="api-status unset" id="api-status-indicator">⚠️ 未配置API Key</div>
+  
+  <!-- ===== 识图AI ===== -->
+  <div style="font-weight:600;font-size:13px;color:var(--ink);margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--border);">👁 识图AI <span style="font-weight:400;font-size:11px;color:var(--hint);">（拍照识别文字用）</span></div>
+  <label>识图提供商</label>
+  <select id="vision-provider-select" onchange="onVisionProviderChange()" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;margin-bottom:10px;background:#fff;">
+    <option value="qwen">通义千问（阿里云）— 免费200万tokens/月</option>
+    <option value="glm">智谱GLM — 免费额度</option>
+  </select>
+  <label id="vision-key-label">通义千问 API Key <span style="color:var(--hint);font-weight:400;">（识图专用）</span></label>
+  <input type="password" id="vision-key-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
+  <div class="api-hint" id="vision-reg-hint">注册地址：<a href="https://bailian.console.aliyun.com" target="_blank">bailian.console.aliyun.com</a></div>
+  <div class="api-status unset" id="vision-status-indicator">⚠️ 未配置识图Key — DeepSeek用户必须配置此项</div>
+  
+  <label style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">飞书群机器人 Webhook <span style="color:var(--hint);font-weight:400;">（用于接收用户反馈）</span></label>
   <input type="text" id="webhook-input" placeholder="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxxxxxxxx">
   <div class="api-hint">在飞书群 → 设置 → 群机器人 → 添加自定义机器人 → 复制webhook地址</div>
   <div class="api-actions">
     <button class="primary" onclick="saveApiKey()">💾 保存全部</button>
-    <button onclick="testApiKey()">🔍 测试AI连接</button>
+    <button onclick="testApiKey()">🔍 测试对话AI</button>
+    <button onclick="testVisionKey()">👁 测试识图AI</button>
     <button onclick="testWebhook()">📤 测试推送</button>
     <button onclick="clearApiKey()">🗑 清除</button>
     <button onclick="toggleApiSettings()">✕ 关闭</button>
@@ -1419,19 +1436,29 @@ var chatLoading=false;
 
 // ===== API 多提供商配置 =====
 var API_PROVIDERS={
-  deepseek:{name:'DeepSeek',url:'https://api.deepseek.com/chat/completions',chatModel:'deepseek-chat',visionModel:'deepseek-v4-flash',freeInfo:'免费500万tokens（一次性）',regUrl:'https://platform.deepseek.com',keyPrefix:'sk-'},
-  qwen:{name:'通义千问（阿里云）',url:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',chatModel:'qwen-plus',visionModel:'qwen-vl-plus',freeInfo:'免费200万tokens/月',regUrl:'https://bailian.console.aliyun.com',keyPrefix:'sk-'},
-  glm:{name:'智谱GLM',url:'https://open.bigmodel.cn/api/paas/v4/chat/completions',chatModel:'glm-4-flash',visionModel:'glm-4v-flash',freeInfo:'免费额度',regUrl:'https://open.bigmodel.cn',keyPrefix:''}
+  deepseek:{name:'DeepSeek',url:'https://api.deepseek.com/chat/completions',chatModel:'deepseek-chat',visionSupport:false,freeInfo:'免费500万tokens（一次性）',regUrl:'https://platform.deepseek.com',keyPrefix:'sk-'},
+  qwen:{name:'通义千问（阿里云）',url:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',chatModel:'qwen-plus',visionModel:'qwen-vl-plus',visionSupport:true,freeInfo:'免费200万tokens/月',regUrl:'https://bailian.console.aliyun.com',keyPrefix:'sk-'},
+  glm:{name:'智谱GLM',url:'https://open.bigmodel.cn/api/paas/v4/chat/completions',chatModel:'glm-4-flash',visionModel:'glm-4v-flash',visionSupport:true,freeInfo:'免费额度',regUrl:'https://open.bigmodel.cn',keyPrefix:''}
 };
 var API_PROVIDER=localStorage.getItem('gk_api_provider')||'deepseek';
 var API_KEY=localStorage.getItem('gk_llm_api_key')||'';
-var SHARED_KEY=''; // ← 在这对单引号里粘贴你的API Key，用于免费试用
+var VISION_PROVIDER=localStorage.getItem('gk_vision_provider')||'qwen';
+var VISION_KEY=localStorage.getItem('gk_vision_key')||'';
+var SHARED_KEY='';
 var FREE_LIMIT=5;
 var WEBHOOK_URL=localStorage.getItem('gk_webhook_url')||'';
 function getApiConfig(){return API_PROVIDERS[API_PROVIDER]||API_PROVIDERS.deepseek;}
 function getApiUrl(){return getApiConfig().url;}
 function getChatModel(){return getApiConfig().chatModel;}
-function getVisionModel(){return getApiConfig().visionModel;}
+// 识图：如果当前AI支持vision就用自己，否则用专门的识图提供商
+function getVisionConfig(){
+  var main=getApiConfig();
+  if(main.visionSupport)return main; // 通义千问/智谱GLM自己就能识图
+  return API_PROVIDERS[VISION_PROVIDER]||API_PROVIDERS.qwen; // DeepSeek不支持图片→切识图专用
+}
+function getVisionUrl(){return getVisionConfig().url;}
+function getVisionModel(){return getVisionConfig().visionModel||getVisionConfig().chatModel;}
+function getVisionKey(){return VISION_KEY||API_KEY;}
 
 // ===== 免费额度管理 =====
 function getFreeUsage(){
@@ -1685,9 +1712,10 @@ async function callLLM(messages){
 // ===== AI 识图（多AI Vision）=====
 // 直接把图片发给AI的vision模型，让AI识别文字，2-3秒完成
 async function ocrWithLLM(imageDataURL){
-  var keyToUse=API_KEY||SHARED_KEY;
-  if(!keyToUse)throw new Error('NO_KEY');
-  var resp=await fetch(getApiUrl(),{
+  var keyToUse=getVisionKey();
+  if(!keyToUse)throw new Error('NO_VISION_KEY');
+  var vCfg=getVisionConfig();
+  var resp=await fetch(getVisionUrl(),{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+keyToUse},
     body:JSON.stringify({
@@ -1705,8 +1733,7 @@ async function ocrWithLLM(imageDataURL){
   });
   if(!resp.ok){
     var errText=await resp.text();
-    var cfg=getApiConfig();
-    throw new Error('[识图] '+parseApiError(resp,errText,cfg));
+    throw new Error('[识图] '+parseApiError(resp,errText,vCfg));
   }
   var data=await resp.json();
   if(!data.choices||!data.choices[0]||!data.choices[0].message)throw new Error('API返回格式异常');
@@ -1730,6 +1757,23 @@ window.onProviderChange=function(){
   document.getElementById('api-key-label').innerHTML=cfg.name+' API Key <span style="color:var(--hint);font-weight:400;">（免费额度：'+cfg.freeInfo+'）</span>';
   document.getElementById('api-key-input').placeholder=cfg.keyPrefix+'xxxxxxxxxxxxxxxxxxxxxxxx';
   document.getElementById('api-reg-hint').innerHTML='注册地址：<a href="'+cfg.regUrl+'" target="_blank">'+cfg.regUrl.replace('https://','')+'</a>';
+  // 如果当前对话AI不支持识图，高亮提示用户配置识图Key
+  var vStatus=document.getElementById('vision-status-indicator');
+  if(!cfg.visionSupport){
+    vStatus.style.display='block';
+    vStatus.textContent='⚠️ '+cfg.name+'不支持图片识别，请配置下方的识图AI Key';
+    vStatus.className='api-status unset';
+  }else{
+    vStatus.textContent='✅ '+cfg.name+'自带识图能力，无需额外配置';
+    vStatus.className='api-status ok';
+  }
+};
+window.onVisionProviderChange=function(){
+  var p=document.getElementById('vision-provider-select').value;
+  var cfg=API_PROVIDERS[p]||API_PROVIDERS.qwen;
+  document.getElementById('vision-key-label').innerHTML=cfg.name+' API Key <span style="color:var(--hint);font-weight:400;">（识图专用）</span>';
+  document.getElementById('vision-key-input').placeholder=cfg.keyPrefix+'xxxxxxxxxxxxxxxxxxxxxxxx';
+  document.getElementById('vision-reg-hint').innerHTML='注册地址：<a href="'+cfg.regUrl+'" target="_blank">'+cfg.regUrl.replace('https://','')+'</a>';
 };
 window.toggleApiSettings=function(){
   var panel=document.getElementById('api-settings-panel');
@@ -1738,24 +1782,36 @@ window.toggleApiSettings=function(){
     document.getElementById('api-provider-select').value=API_PROVIDER;
     onProviderChange();
     document.getElementById('api-key-input').value=API_KEY;
+    document.getElementById('vision-provider-select').value=VISION_PROVIDER;
+    onVisionProviderChange();
+    document.getElementById('vision-key-input').value=VISION_KEY;
     document.getElementById('webhook-input').value=WEBHOOK_URL;
     updateApiStatusUI();
+    updateVisionStatusUI();
     updateFreeUsageUI();
   }
 };
 window.saveApiKey=function(){
   var key=document.getElementById('api-key-input').value.trim();
+  var vKey=document.getElementById('vision-key-input').value.trim();
   var wh=document.getElementById('webhook-input').value.trim();
   var prov=document.getElementById('api-provider-select').value;
+  var vProv=document.getElementById('vision-provider-select').value;
   if(key)API_KEY=key;
+  if(vKey)VISION_KEY=vKey;
   if(wh)WEBHOOK_URL=wh;
   API_PROVIDER=prov;
+  VISION_PROVIDER=vProv;
   if(key){localStorage.setItem('gk_llm_api_key',key);}
   else{localStorage.removeItem('gk_llm_api_key');API_KEY='';}
+  if(vKey){localStorage.setItem('gk_vision_key',vKey);}
+  else{localStorage.removeItem('gk_vision_key');VISION_KEY='';}
   if(wh){localStorage.setItem('gk_webhook_url',wh);}
   else{localStorage.removeItem('gk_webhook_url');WEBHOOK_URL='';}
   localStorage.setItem('gk_api_provider',prov);
+  localStorage.setItem('gk_vision_provider',vProv);
   updateApiStatusUI();
+  updateVisionStatusUI();
   updateFreeUsageUI();
   document.getElementById('api-settings-panel').classList.remove('show');
 };
@@ -1781,26 +1837,68 @@ window.testApiKey=async function(){
       status.className='api-status unset';
     }
   }catch(e){
-    var netMsg='❌ 网络错误: '+e.message;
-    if(e.message.indexOf('Failed to fetch')!==-1)netMsg+='\n💡 可能是网络问题，请检查是否能访问 '+cfg.url;
-    status.textContent=netMsg;
+    status.textContent='❌ 网络错误: '+e.message;
+    status.className='api-status unset';
+  }
+};
+window.testVisionKey=async function(){
+  var key=document.getElementById('vision-key-input').value.trim()||VISION_KEY;
+  if(!key){alert('请先输入识图API Key');return;}
+  var prov=document.getElementById('vision-provider-select').value;
+  var cfg=API_PROVIDERS[prov]||API_PROVIDERS.qwen;
+  var status=document.getElementById('vision-status-indicator');
+  status.textContent='🔄 测试中...';
+  status.className='api-status ok';
+  try{
+    var resp=await fetch(cfg.url,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:cfg.chatModel,messages:[{role:'user',content:'回复"OK"'}],max_tokens:5})
+    });
+    if(resp.ok){status.textContent='✅ '+cfg.name+'识图API正常（支持图片识别）';status.className='api-status ok';}
+    else{
+      var errText=await resp.text();
+      var msg=parseApiError(resp,errText,cfg);
+      status.textContent='❌ '+msg;
+      status.className='api-status unset';
+    }
+  }catch(e){
+    status.textContent='❌ 网络错误: '+e.message;
     status.className='api-status unset';
   }
 };
 window.clearApiKey=function(){
   API_KEY='';
+  VISION_KEY='';
   localStorage.removeItem('gk_llm_api_key');
+  localStorage.removeItem('gk_vision_key');
   document.getElementById('api-key-input').value='';
+  document.getElementById('vision-key-input').value='';
   updateApiStatusUI();
+  updateVisionStatusUI();
 };
 function updateApiStatusUI(){
   var btn=document.getElementById('api-settings-btn');
   var status=document.getElementById('api-status-indicator');
   var cfg=getApiConfig();
-  if(API_KEY){btn.classList.add('configured');status.textContent='✅ '+cfg.name+' API Key已配置 — AI讲师就绪（无限使用）';status.className='api-status ok';}
-  else if(SHARED_KEY){btn.classList.add('configured');status.textContent='🎁 今日可免费试用 '+getFreeRemaining()+' 次 — 绑定你的Key解锁无限使用';status.className='api-status ok';}
-  else{btn.classList.remove('configured');status.textContent='⚠️ 未配置API Key — 请选择AI提供商并绑定Key（三家都免费！）';status.className='api-status unset';}
+  if(API_KEY){btn.classList.add('configured');status.textContent='✅ '+cfg.name+' API Key已配置 — AI讲师就绪';status.className='api-status ok';}
+  else if(SHARED_KEY){btn.classList.add('configured');status.textContent='🎁 今日可免费试用 '+getFreeRemaining()+' 次';status.className='api-status ok';}
+  else{btn.classList.remove('configured');status.textContent='⚠️ 未配置对话AI Key — 请选择AI并绑定Key（三家都免费）';status.className='api-status unset';}
   updateFreeUsageUI();
+}
+function updateVisionStatusUI(){
+  var status=document.getElementById('vision-status-indicator');
+  var vCfg=getVisionConfig();
+  if(!getApiConfig().visionSupport && !VISION_KEY){
+    status.textContent='⚠️ '+getApiConfig().name+'不支持识图，请配置识图Key';
+    status.className='api-status unset';
+  }else if(VISION_KEY){
+    status.textContent='✅ 识图Key已配置 — 拍照识别就绪';
+    status.className='api-status ok';
+  }else{
+    status.textContent='✅ 当前AI自带识图能力，无需额外配置';
+    status.className='api-status ok';
+  }
 }
 updateApiStatusUI();
 
@@ -2022,7 +2120,9 @@ window.handleImageUpload=function(event){
       statusWidget.textContent='识别失败';
       statusWidget.className='up-status error';
       var errMsg=err.message||'';
-      if(errMsg.indexOf('NO_KEY')!==-1){
+      if(errMsg.indexOf('NO_VISION_KEY')!==-1){
+        statusLine.innerHTML='⚠️ 你选的AI不支持识图，需要单独配置识图专用Key。请点击顶栏⚙ → 绑定<b>通义千问</b>API Key到「识图API Key」字段（免费200万tokens/月）。';
+      }else if(errMsg.indexOf('NO_KEY')!==-1){
         statusLine.innerHTML='⚠️ 未配置API Key。请点击顶栏⚙绑定Key（三家都免费！）';
       }else{
         statusLine.innerHTML='⚠️ AI识图失败：'+errMsg.substring(0,120)+'<br>请检查API Key是否正确，或手动粘贴题目文字。';
