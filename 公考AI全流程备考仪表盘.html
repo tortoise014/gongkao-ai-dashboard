@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公考AI全流程备考仪表盘</title>
+<style>
+:root{--bg:#fafaf7;--card:#ffffff;--ink:#1a1a1a;--sub:#5f5e5a;--hint:#888780;--jade:#0F6E56;--jade-light:#E1F5EE;--jade-mid:#9FE1CB;--seal:#8B1A1A;--gold:#BA7517;--gold-light:#FAEEDA;--coral:#D85A30;--coral-light:#FAECE7;--blue:#185FA5;--blue-light:#E6F1FB;--border:#e8e6dd;--radius:12px;--radius-sm:8px;--shadow:0 1px 3px rgba(0,0,0,0.06);--font-sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;--font-serif:"KaiTi","STKaiti","楷体",serif;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);line-height:1.6;font-size:14px;-webkit-font-smoothing:antialiased}
+h1{font-size:20px;font-weight:600;letter-spacing:.02em}
+h2{font-size:15px;font-weight:600}
+h3{font-size:13px;font-weight:500;color:var(--sub)}
+.top-bar{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 24px;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(8px)}
+.top-bar .brand{display:flex;align-items:center;gap:10px}
+.top-bar .brand svg{color:var(--jade)}
+.top-bar .brand span{font-weight:600;font-size:16px}
+.top-bar .nav-links{display:flex;gap:4px}
+.top-bar .nav-links button{background:none;border:none;font-size:13px;font-family:inherit;color:var(--sub);cursor:pointer;padding:6px 14px;border-radius:6px;transition:all .15s}
+.top-bar .nav-links button:hover{background:var(--jade-light);color:var(--jade)}
+.top-bar .nav-links button.active{background:var(--jade);color:#fff}
+.top-bar .nav-links.mobile{display:none;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;padding:4px 0;gap:2px}
+.seal-stamp{position:fixed;top:90px;right:24px;z-index:50;width:56px;height:56px;border:2px solid var(--seal);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--seal);font-family:var(--font-serif);font-size:18px;font-weight:bold;opacity:.85;transform:rotate(8deg);user-select:none;pointer-events:none}
+.layout{max-width:1100px;margin:0 auto;padding:24px}
+.hero-section{text-align:center;padding:40px 0 28px}
+.hero-section .countdown-row{display:flex;justify-content:center;gap:32px;margin-top:16px;flex-wrap:wrap}
+.countdown-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 28px;box-shadow:var(--shadow);min-width:140px}
+.countdown-card .num{font-size:36px;font-weight:700;color:var(--jade);line-height:1.1}
+.countdown-card .num.urgent{color:var(--seal)}
+.countdown-card .label{font-size:12px;color:var(--sub);margin-top:4px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.section-title{display:flex;align-items:center;gap:8px;margin:36px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--jade-mid)}
+.section-title svg{color:var(--jade);flex-shrink:0}
+.section-title h2{color:var(--jade)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-header-left{display:flex;align-items:center;gap:8px}
+.card-header-left svg{color:var(--jade)}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;line-height:1.6}
+.tag-jade{background:var(--jade-light);color:var(--jade)}
+.tag-gold{background:var(--gold-light);color:var(--gold)}
+.tag-coral{background:var(--coral-light);color:var(--coral)}
+.tag-blue{background:var(--blue-light);color:var(--blue)}
+.news-item{padding:10px 0;border-bottom:1px dashed var(--border)}
+.news-item:last-child{border-bottom:none}
+.news-item .title-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.news-item .title-row .dot{width:6px;height:6px;border-radius:50%;background:var(--jade);flex-shrink:0}
+.news-item .exam-angle{font-size:12px;color:var(--gold);font-family:var(--font-serif);margin-top:2px}
+.province-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.province-chip{font-family:inherit;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s;white-space:nowrap}
+.province-chip:hover,.province-chip.active{background:var(--jade);color:#fff;border-color:var(--jade)}
+.province-chip.guokao-ch{background:var(--gold-light);border-color:var(--gold);color:var(--gold)}
+.province-chip.guokao-ch:hover,.province-chip.guokao-ch.active{background:var(--gold);color:#fff}
+.province-detail{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:12px}
+.province-detail .pd-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.province-detail .pd-flag{font-size:28px}
+.province-detail .pd-name{font-size:18px;font-weight:700;color:var(--ink)}
+.province-detail .pd-alert{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600}
+.pd-alert.warn{background:var(--coral-light);color:var(--coral)}
+.pd-alert.info{background:var(--blue-light);color:var(--blue)}
+.compare-table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+.compare-table th{background:var(--bg);padding:8px 10px;text-align:left;font-size:11px;color:var(--sub);border-bottom:2px solid var(--border)}
+.compare-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.compare-table .diff{color:var(--coral);font-weight:600}
+.compare-table .unique{color:var(--jade);font-weight:600}
+/* 学习天数 */
+.study-days-card{text-align:center;padding:30px 20px}
+.study-days-num{font-size:56px;font-weight:800;color:var(--jade);line-height:1}
+.study-days-label{font-size:14px;color:var(--sub);margin-top:8px}
+.study-days-sub{font-size:12px;color:var(--hint);margin-top:12px}
+.study-days-set{font-size:11px;color:var(--blue);cursor:pointer;text-decoration:underline;margin-top:8px}
+/* 自测 */
+.st-tabs{display:flex;gap:4px;margin-bottom:16px}
+.st-tab{font-family:inherit;font-size:13px;padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s}
+.st-tab.active{background:var(--jade);color:#fff;border-color:var(--jade)}
+.st-panel{display:none}
+.st-panel.active{display:block}
+.st-stage-btn{display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s}
+.st-stage-btn:hover{border-color:var(--jade);background:var(--jade-light)}
+.st-stage-btn .st-stage-icon{font-size:20px;margin-right:8px}
+.st-stage-btn .st-stage-desc{font-size:11px;color:var(--hint);display:block;margin-top:2px}
+.st-module-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.st-module-check{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s}
+.st-module-check:hover{border-color:var(--jade)}
+.st-module-check.checked{border-color:var(--jade);background:var(--jade-light)}
+.st-module-check input{margin:0}
+.st-accuracy-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.st-accuracy-row label{font-size:12px;color:var(--sub);width:80px}
+.st-accuracy-row input{width:80px;padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit}
+.st-accuracy-row span{font-size:11px;color:var(--hint)}
+/* 申论 */
+.sl-form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.sl-score-item{text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.sl-score-item label{display:block;font-size:12px;color:var(--sub);margin-bottom:6px}
+.sl-score-item input{width:70px;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:14px;text-align:center;font-family:inherit}
+.sl-score-item .sl-max{font-size:10px;color:var(--hint)}
+.sl-essay-progress{margin-top:16px}
+.sl-essay-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;margin-bottom:8px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.sl-essay-row label{font-size:13px;color:var(--sub)}
+.sl-essay-row .sl-radio{display:flex;gap:8px}
+.sl-essay-row .sl-radio label{font-size:12px;cursor:pointer}
+.sl-essay-row input[type=number]{width:70px;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit}
+.sl-result{margin-top:16px;padding:16px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);display:none}
+.sl-result.show{display:block}
+/* 成语 */
+.idiom-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px}
+.idiom-pair{display:flex;gap:16px}
+.idiom-item{flex:1}
+.idiom-name{font-weight:700;font-size:15px;color:var(--jade)}
+.idiom-meaning{font-size:12px;color:var(--sub);margin-top:3px}
+.idiom-example{font-size:11px;color:var(--hint);margin-top:3px;font-style:italic}
+.idiom-distinction{font-size:12px;color:var(--coral);margin-top:8px;padding:8px 10px;background:var(--coral-light);border-radius:6px;line-height:1.6}
+/* 复盘 */
+.fupan-subtabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.fupan-subtab{font-family:inherit;font-size:13px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s}
+.fupan-subtab.active{background:var(--jade);color:#fff;border-color:var(--jade)}
+.fupan-subpanel{display:none}
+.fupan-subpanel.active{display:block}
+.review-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.review-tab{font-family:inherit;font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s}
+.review-tab.active{background:var(--jade);color:#fff;border-color:var(--jade)}
+.review-tab.urgent{border-color:var(--coral)}
+.review-tab.urgent.active{background:var(--coral);border-color:var(--coral)}
+.review-panel{display:none}
+.review-panel.active{display:block}
+.review-form{display:flex;flex-direction:column;gap:10px}
+.review-form label{font-size:12px;font-weight:500;color:var(--sub)}
+.review-form textarea,.review-form input,.review-form select{font-family:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--ink);resize:vertical}
+.review-form textarea:focus,.review-form input:focus,.review-form select:focus{outline:none;border-color:var(--jade)}
+.review-form button.analyze-btn{font-family:inherit;font-size:14px;font-weight:600;padding:10px;border:none;border-radius:var(--radius-sm);background:var(--jade);color:#fff;cursor:pointer;transition:opacity .15s}
+.review-form button.analyze-btn:hover{opacity:.9}
+.review-result{margin-top:16px;padding:16px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);display:none}
+.review-result.show{display:block}
+.method-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.method-card .method-name{font-weight:600;font-size:13px;color:var(--jade)}
+.method-card .method-desc{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.6}
+/* 讲师库 */
+.teacher-module-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+.tm-btn{font-family:inherit;font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s}
+.tm-btn:hover,.tm-btn.active{background:var(--jade);color:#fff;border-color:var(--jade)}
+.teacher-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.teacher-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .2s;background:#fff}
+.teacher-card:hover{border-color:var(--jade);box-shadow:0 2px 8px rgba(15,110,86,.1)}
+.teacher-card.selected{border-color:var(--jade);background:var(--jade-light)}
+.teacher-card .tc-name{font-size:15px;font-weight:700;color:var(--ink)}
+.teacher-card .tc-platform{font-size:11px;color:var(--hint);margin-top:2px}
+.teacher-card .tc-style{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.5}
+.teacher-card .tc-badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:3px;margin-top:6px}
+.tc-badge.skill{background:var(--jade-light);color:var(--jade)}
+.tc-badge.new-t{background:var(--gold-light);color:var(--gold)}
+.teacher-chat{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:16px;display:none;flex-direction:column;background:#fff;box-sizing:border-box}
+.teacher-chat.active{display:flex !important;height:min(92vh,1200px) !important;min-height:680px !important;max-height:1200px !important;position:relative}
+.teacher-chat.expanded{position:fixed !important;top:12px !important;left:12px !important;right:12px !important;bottom:12px !important;width:auto !important;height:auto !important;max-height:none !important;min-height:auto !important;z-index:1000;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.teacher-chat .chat-body{flex:1;min-height:180px;max-height:none;overflow-y:auto;padding:16px;background:var(--bg)}
+.teacher-chat .chat-header{background:var(--jade);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.teacher-chat .chat-header .ch-name{font-weight:600;font-size:14px}
+.teacher-chat .chat-header .ch-close,.teacher-chat .chat-header .ch-toggle{background:rgba(255,255,255,.2);border:none;color:#fff;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px}
+.teacher-chat .chat-msg{margin-bottom:12px}
+.teacher-chat .chat-msg.teacher-t{text-align:left}
+.teacher-chat .chat-msg.student-t{text-align:right}
+.teacher-chat .chat-msg .bubble{display:inline-block;max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;text-align:left}
+.teacher-chat .chat-msg.teacher-t .bubble{background:#fff;border:1px solid var(--border)}
+.teacher-chat .chat-msg.student-t .bubble{background:var(--jade-light)}
+.teacher-chat .chat-input-area{padding:12px;background:#fff;border-top:1px solid var(--border)}
+.teacher-chat .chat-input-area textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:inherit;font-size:13px;resize:vertical;min-height:60px;max-height:120px;overflow-y:auto}
+.teacher-chat .chat-input-area .chat-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.teacher-chat .chat-input-area .chat-actions button{font-family:inherit;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.teacher-chat .chat-input-area .chat-actions button.primary{background:var(--jade);color:#fff;border-color:var(--jade)}
+/* Socratic review indicator */
+.review-step-indicator{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--gold-light);border-bottom:1px solid var(--border);font-size:12px;color:var(--gold);font-weight:600}
+.review-step-indicator .step-dots{display:flex;gap:4px;margin-left:auto}
+.review-step-indicator .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.review-step-indicator .step-dot.done{background:var(--jade)}
+.review-step-indicator .step-dot.current{background:var(--gold);box-shadow:0 0 0 2px rgba(186,117,23,.3)}
+/* Question pinned area */
+.teacher-question-pin{display:none;padding:12px 16px;background:var(--blue-light);border-bottom:1px solid var(--border);font-size:12px;color:var(--blue);flex-shrink:0}
+.teacher-question-pin.active{display:block;}
+.teacher-question-pin .pin-label{font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.teacher-question-pin .pin-toggle{margin-left:auto;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;color:var(--blue)}
+.teacher-question-pin .pin-content{font-size:12px;line-height:1.6;color:var(--ink);max-height:120px;overflow-y:auto;transition:max-height .2s}
+.teacher-question-pin .pin-content.collapsed{max-height:54px}
+.teacher-chat .chat-input-area{padding:12px;background:#fff;border-top:1px solid var(--border);flex-shrink:0}
+/* Socratic teacher question */
+.chat-msg.teacher-t.socratic .bubble{background:var(--gold-light);border-color:var(--gold);border-left:3px solid var(--gold)}
+/* 紧凑内联图片上传 + OCR — 不影响布局 */
+.input-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;min-height:32px}
+.inline-upload-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;color:var(--sub);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.inline-upload-btn:hover{border-color:var(--jade);color:var(--jade);background:var(--jade-light)}
+.inline-upload-btn input[type=file]{display:none}
+.upload-preview{display:none;align-items:center;gap:6px;height:32px;padding:0 8px;background:var(--jade-light);border:1px solid var(--jade-mid);border-radius:6px;font-size:11px;flex-shrink:1;min-width:0;max-width:100%}
+.upload-preview.show{display:inline-flex}
+.upload-preview .up-thumb-name{font-weight:500;color:var(--jade);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.upload-preview .up-status{color:var(--sub);white-space:nowrap;flex-shrink:0}
+.upload-preview .up-status.success{color:var(--jade)}
+.upload-preview .up-status.error{color:var(--coral)}
+.upload-preview .up-clear{background:none;border:none;color:var(--sub);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;flex-shrink:0}
+.upload-preview .up-clear:hover{color:var(--coral)}
+.ocr-status-inline{display:none;font-size:11px;color:var(--hint);margin-bottom:6px}
+.ocr-status-inline.show{display:block}
+@keyframes qb-spin{to{transform:rotate(360deg)}}
+.qb-spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--jade);border-radius:50%;animation:qb-spin .6s linear infinite;vertical-align:middle;margin-right:4px}
+/* 题库管理 */
+.qb-mgr-zone{border:2px dashed var(--jade-mid);border-radius:var(--radius);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px}
+.qb-mgr-zone:hover{border-color:var(--jade);background:var(--jade-light)}
+.qb-mgr-zone .upload-icon{font-size:36px;margin-bottom:8px}
+.qb-mgr-zone .upload-text{font-size:13px;color:var(--sub)}
+.qb-mgr-zone .upload-hint{font-size:11px;color:var(--hint);margin-top:4px}
+.qb-mgr-zone input[type=file]{display:none}
+.qb-file-list{margin-top:12px}
+.qb-file-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;margin-bottom:6px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);font-size:12px}
+.qb-file-item .qb-file-name{font-weight:500;color:var(--ink)}
+.qb-file-item .qb-file-meta{font-size:10px;color:var(--hint)}
+.qb-file-item .qb-file-del{font-size:11px;color:var(--coral);cursor:pointer;background:none;border:none}
+.qb-search-box{display:flex;gap:8px;margin-bottom:12px}
+.qb-search-box input{flex:1;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-family:inherit;font-size:14px}
+.qb-search-box button{padding:10px 20px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.qb-search-results{margin-top:8px}
+.qb-search-result-item{padding:12px;margin-bottom:8px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.qb-search-result-item:hover{border-color:var(--jade);background:var(--jade-light)}
+.qb-search-result-item .qb-sr-title{font-weight:600;font-size:13px;color:var(--jade)}
+.qb-search-result-item .qb-sr-snippet{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.6}
+/* 打卡 */
+.checkin-calendar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.checkin-day-circle{width:36px;height:36px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--hint);background:var(--bg);border:1.5px solid var(--border);position:relative;cursor:default;transition:all .2s}
+.checkin-day-circle.checked{background:var(--jade);color:#fff;border-color:var(--jade)}
+.checkin-day-circle.today{border-color:var(--jade);box-shadow:0 0 0 2px var(--jade-light)}
+.checkin-day-circle.missed{background:#fef0eb;border-color:#f5c6b7;color:var(--coral)}
+.checkin-day-circle .day-num{font-size:12px;font-weight:600}
+.checkin-day-circle .day-label{font-size:9px;line-height:1}
+.streak-bar{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--gold-light);border-radius:var(--radius-sm);margin-bottom:14px}
+.streak-fire{font-size:24px}
+.streak-text{font-size:13px;color:var(--gold);font-weight:600}
+.streak-text .num{font-size:20px}
+.checkin-modules{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.checkin-module{font-family:inherit;font-size:12px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all .15s;white-space:nowrap}
+.checkin-module:hover{border-color:var(--jade)}
+.checkin-module.picked{background:var(--jade);color:#fff;border-color:var(--jade)}
+.checkin-stats-row{display:flex;gap:10px;margin-bottom:10px}
+.checkin-stat{flex:1;text-align:center;padding:10px 8px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.checkin-stat .stat-val{font-size:20px;font-weight:700;color:var(--jade)}
+.checkin-stat .stat-label{font-size:11px;color:var(--hint);margin-top:2px}
+/* 提醒 */
+.reminder-list{display:flex;flex-direction:column;gap:8px}
+.reminder-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff}
+.reminder-item.urgent{background:var(--coral-light);border-color:#f5c6b7}
+.reminder-item .rem-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.reminder-item .rem-body{flex:1}
+.reminder-item .rem-title{font-size:13px;font-weight:600;color:var(--ink)}
+.reminder-item .rem-desc{font-size:11px;color:var(--hint);margin-top:2px}
+.reminder-item .rem-countdown{font-size:12px;color:var(--coral);font-weight:600;white-space:nowrap}
+/* 选岗 */
+.select-form{display:flex;flex-direction:column;gap:10px}
+.select-form select,.select-form input{font-family:inherit;font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--ink)}
+.select-form button{font-family:inherit;font-size:13px;font-weight:500;padding:10px;border:none;border-radius:var(--radius-sm);background:var(--jade);color:#fff;cursor:pointer;transition:opacity .15s}
+.select-form button:hover{opacity:.9}
+.cta-banner{margin-top:36px;padding:24px 28px;background:var(--jade-light);border:1px solid var(--jade-mid);border-radius:var(--radius);text-align:center}
+.cta-banner .quote{font-family:var(--font-serif);font-size:15px;color:var(--jade);margin:8px 0 16px;line-height:1.8}
+.cta-banner .action-btn{display:inline-block;font-family:inherit;font-size:14px;font-weight:600;padding:10px 32px;border:none;border-radius:var(--radius-sm);background:var(--jade);color:#fff;cursor:pointer;text-decoration:none;transition:all .15s}
+.cta-banner .action-btn:hover{opacity:.9;transform:translateY(-1px)}
+.footer{text-align:center;padding:32px 0 20px;font-size:12px;color:var(--hint)}
+.section-anchor{scroll-margin-top:72px}
+@media(max-width:768px){.layout{padding:16px}.top-bar .nav-links.desktop{display:none}.top-bar .nav-links.mobile{display:flex}.grid-2,.grid-3{grid-template-columns:1fr}.hero-section{padding:24px 0 16px}.countdown-card{min-width:110px;padding:12px 20px}.countdown-card .num{font-size:28px}.seal-stamp{top:70px;right:12px;width:44px;height:44px;font-size:14px}.section-title{margin:28px 0 12px}.sl-form-grid{grid-template-columns:1fr}.st-module-grid{grid-template-columns:1fr}.idiom-pair{flex-direction:column}.teacher-card-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.compare-table{font-size:11px}}
+/* API 设置面板 */
+.api-settings-toggle{background:none;border:none;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;color:var(--sub);transition:all .15s;margin-left:8px}
+.api-settings-toggle:hover{background:var(--jade-light);color:var(--jade)}
+.api-settings-toggle.configured{color:var(--jade)}
+.api-settings-panel{display:none;position:fixed;top:60px;right:20px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;box-shadow:0 8px 30px rgba(0,0,0,.12);width:320px;max-width:90vw}
+.api-settings-panel.show{display:block}
+.api-settings-panel h3{font-size:14px;margin-bottom:12px;color:var(--ink)}
+.api-settings-panel label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px}
+.api-settings-panel input[type=text],.api-settings-panel input[type=password]{width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:monospace;margin-bottom:10px}
+.api-settings-panel .api-hint{font-size:11px;color:var(--hint);margin:-6px 0 10px;line-height:1.5}
+.api-settings-panel .api-hint a{color:var(--jade)}
+.api-settings-panel .api-status{font-size:12px;padding:6px 10px;border-radius:6px;margin-bottom:10px}
+.api-settings-panel .api-status.ok{background:var(--jade-light);color:var(--jade)}
+.api-settings-panel .api-status.unset{background:var(--gold-light);color:var(--gold)}
+.api-settings-panel .api-actions{display:flex;gap:8px}
+.api-settings-panel .api-actions button{flex:1;font-family:inherit;font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:#fff}
+.api-settings-panel .api-actions button.primary{background:var(--jade);color:#fff;border-color:var(--jade)}
+/* API Loading */
+.chat-msg.loading .bubble{background:var(--jade-light);color:var(--jade);font-size:12px;display:flex;align-items:center;gap:8px}
+.chat-msg.loading .bubble .dots{display:inline-flex;gap:3px}
+.chat-msg.loading .bubble .dots span{width:6px;height:6px;border-radius:50%;background:var(--jade);animation:typing-dot 1.2s infinite}
+.chat-msg.loading .bubble .dots span:nth-child(2){animation-delay:.2s}
+.chat-msg.loading .bubble .dots span:nth-child(3){animation-delay:.4s}
+@keyframes typing-dot{0%,60%,100%{opacity:.3;transform:scale(.8)}30%{opacity:1;transform:scale(1)}}
+/* Chat error */
+.chat-msg.error .bubble{background:var(--coral-light);color:var(--coral);border-color:var(--coral)}
+.api-key-warning{text-align:center;padding:20px;color:var(--sub)}
+.api-key-warning .setup-btn{display:inline-block;margin-top:12px;padding:8px 20px;background:var(--jade);color:#fff;border:none;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer}
+/* 反馈按钮 */
+.feedback-fab{position:fixed;bottom:24px;right:24px;z-index:300;width:48px;height:48px;border-radius:50%;background:var(--jade);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(15,110,86,.3);transition:all .2s;display:flex;align-items:center;justify-content:center}
+.feedback-fab:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(15,110,86,.4)}
+.feedback-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:rgba(0,0,0,.4);align-items:center;justify-content:center}
+.feedback-modal.show{display:flex}
+.feedback-modal .fm-card{background:var(--card);border-radius:var(--radius);padding:24px;width:400px;max-width:90vw;max-height:85vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.feedback-modal .fm-card h3{font-size:16px;margin-bottom:16px;color:var(--ink)}
+.feedback-modal .fm-card textarea{width:100%;min-height:100px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:inherit;font-size:13px;resize:vertical;margin-bottom:12px}
+.feedback-modal .fm-card input{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:inherit;font-size:13px;margin-bottom:12px}
+.feedback-modal .fm-actions{display:flex;gap:8px;justify-content:flex-end}
+.feedback-modal .fm-actions button{font-family:inherit;font-size:13px;padding:8px 20px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:#fff}
+.feedback-modal .fm-actions button.primary{background:var(--jade);color:#fff;border-color:var(--jade)}
+.fm-status{font-size:12px;padding:8px 12px;border-radius:6px;margin-top:8px;display:none}
+.fm-status.show{display:block}
+.fm-status.success{background:var(--jade-light);color:var(--jade)}
+.fm-status.error{background:var(--coral-light);color:var(--coral)}
+/* 免费次数提示 */
+.free-usage-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--blue-light);border-radius:8px;font-size:12px;color:var(--blue);margin-bottom:12px}
+.free-usage-bar.none{background:var(--coral-light);color:var(--coral)}
+.free-usage-bar .fu-count{font-weight:700;font-size:14px}
+.free-usage-bar .fu-key-hint{font-size:11px;margin-left:auto;cursor:pointer;text-decoration:underline}
+/* 关注引流区 */
+.follow-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.follow-card{display:block;border:2px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;background:var(--card);transition:all .2s;text-decoration:none;cursor:pointer}
+.follow-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:var(--blue)}
+.follow-card.coming-soon{cursor:default;opacity:.75}
+.follow-card.coming-soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
+.follow-card .fc-icon{font-size:32px;margin-bottom:10px}
+.follow-card .fc-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.follow-card .fc-desc{font-size:12px;color:var(--sub);line-height:1.8;margin-bottom:14px}
+.follow-card .fc-link{display:inline-block;font-size:13px;font-weight:600;padding:8px 20px;border-radius:6px;background:var(--jade);color:#fff;transition:all .15s}
+.follow-card.coming-soon .fc-link{background:var(--border);color:var(--hint);cursor:default}
+.follow-card:hover .fc-link{opacity:.9}
+.follow-card.coming-soon:hover .fc-link{opacity:1}
+@media(max-width:768px){.follow-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <span>公考AI全流程备考</span>
+    <button class="api-settings-toggle" id="api-settings-btn" onclick="toggleApiSettings()" title="AI设置">⚙</button>
+  </div>
+  <div class="nav-links desktop" id="nav-desktop">
+    <button class="active" data-target="hero">总览</button>
+    <button data-target="studydays">学习天数</button>
+    <button data-target="selftest">自测</button>
+    <button data-target="shenlun">申论</button>
+    <button data-target="warmup">预热</button>
+    <button data-target="fupan">复盘</button>
+    <button data-target="xuangang">选岗</button>
+    <button data-target="daka">打卡</button>
+    <button data-target="tixing">提醒</button>
+    <button data-target="guide">指南</button>
+  </div>
+</div>
+<div class="nav-links mobile" id="nav-mobile">
+  <button class="active" data-target="hero">总览</button>
+  <button data-target="studydays">天数</button>
+  <button data-target="selftest">自测</button>
+  <button data-target="shenlun">申论</button>
+  <button data-target="warmup">预热</button>
+  <button data-target="fupan">复盘</button>
+  <button data-target="xuangang">选岗</button>
+  <button data-target="daka">打卡</button>
+  <button data-target="tixing">提醒</button>
+  <button data-target="guide">指南</button>
+</div>
+<div class="api-settings-panel" id="api-settings-panel">
+  <h3>⚙ AI引擎 & 系统设置</h3>
+  <div class="free-usage-bar" id="free-usage-bar" style="margin-bottom:14px;">
+    📊 今日免费次数：<span class="fu-count" id="free-usage-count">5/5</span>
+    <span class="fu-key-hint" onclick="document.getElementById('api-key-input').focus()">用完？点此绑Key解锁无限</span>
+  </div>
+  <label>DeepSeek API Key <span style="color:var(--hint);font-weight:400;">（绑定你自己的Key，无限使用）</span></label>
+  <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
+  <div class="api-hint">注册地址：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>，新用户赠送500万tokens免费额度</div>
+  <div class="api-status unset" id="api-status-indicator">⚠️ 未配置API Key — 每天5次免费额度</div>
+  <label style="margin-top:10px;">飞书群机器人 Webhook <span style="color:var(--hint);font-weight:400;">（用于接收用户反馈）</span></label>
+  <input type="text" id="webhook-input" placeholder="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxxxxxxxx">
+  <div class="api-hint">在飞书群 → 设置 → 群机器人 → 添加自定义机器人 → 复制webhook地址</div>
+  <div class="api-actions">
+    <button class="primary" onclick="saveApiKey()">💾 保存全部</button>
+    <button onclick="testApiKey()">🔍 测试AI连接</button>
+    <button onclick="testWebhook()">📤 测试推送</button>
+    <button onclick="clearApiKey()">🗑 清除</button>
+    <button onclick="toggleApiSettings()">✕ 关闭</button>
+  </div>
+</div>
+<div class="seal-stamp">备考</div>
+<div class="layout">
+
+<!-- ===== 1. Hero: 省份选择 + 倒计时 + 考情分析 ===== -->
+<div class="hero-section section-anchor" id="section-hero">
+  <div style="margin-bottom:8px;text-align:center;">
+    <div style="font-size:13px;color:var(--sub);margin-bottom:12px;">选择目标考试，倒计时与考情分析会自动切换</div>
+    <div class="province-grid" id="province-chips" style="justify-content:center;"></div>
+  </div>
+  <div style="margin-bottom:16px;">
+    <h1>距离考试</h1>
+    <div class="countdown-row">
+      <div class="countdown-card"><div class="num urgent" id="guokao-days">115</div><div class="label" id="guokao-label">天国考笔试<br>2026年11月底</div></div>
+      <div class="countdown-card"><div class="num urgent" id="shengkao-days">117</div><div class="label" id="shengkao-label">天省考笔试<br>请选择省份</div></div>
+      <div class="countdown-card"><div class="num" id="gonggao-days">65</div><div class="label" id="gonggao-label">天省考公告<br>请选择省份</div></div>
+    </div>
+  </div>
+  <div class="province-detail" id="province-detail" style="text-align:left;"></div>
+</div>
+
+<!-- ===== 2. 学习天数 ===== -->
+<div class="section-anchor" id="section-studydays">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  <h2>学习天数</h2>
+  <span class="tag tag-jade">备考进度</span>
+</div>
+<div class="card study-days-card">
+  <div class="study-days-num" id="study-days-num">0</div>
+  <div class="study-days-label">已备考天数</div>
+  <div class="study-days-sub" id="study-days-sub"></div>
+  <div class="study-days-set" onclick="resetStudyDate()">重新设置开始日期</div>
+</div>
+</div>
+
+<!-- ===== 3. 学习情况自测 ===== -->
+<div class="section-anchor" id="section-selftest">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <h2>学习情况自测</h2>
+  <span class="tag tag-coral">个性化诊断</span>
+</div>
+<div class="card">
+  <div class="st-tabs">
+    <button class="st-tab active" data-st="chat">💬 直接和AI说</button>
+    <button class="st-tab" data-st="choice">📋 选择题自测</button>
+  </div>
+  <!-- Mode 1: 直接和AI说 -->
+  <div class="st-panel active" data-st-panel="chat">
+    <p style="font-size:13px;color:var(--sub);margin-bottom:12px;">直接告诉AI你的学习情况、困惑、瓶颈，AI会给出针对性建议。</p>
+    <textarea id="st-chat-input" rows="5" placeholder="例如：我备考3个月了，资料分析正确率只有40%，数量关系基本放弃，言语还行但不稳定，申论还没开始写..." style="width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-family:inherit;font-size:13px;resize:vertical;"></textarea>
+    <button onclick="stChatSubmit()" style="margin-top:10px;padding:10px 24px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">提交分析</button>
+    <div id="st-chat-result" style="margin-top:16px;"></div>
+  </div>
+  <!-- Mode 2: 选择题自测 -->
+  <div class="st-panel" data-st-panel="choice">
+    <div id="st-choice-stage">
+      <p style="font-size:13px;color:var(--sub);margin-bottom:14px;">你目前处于哪个阶段？</p>
+      <button class="st-stage-btn" onclick="stChoiceStage('notstart')"><span class="st-stage-icon">🌱</span>还没开始<span class="st-stage-desc">刚开始了解公考，还没系统学习</span></button>
+      <button class="st-stage-btn" onclick="stChoiceStage('basic')"><span class="st-stage-icon">📖</span>巩固基础中<span class="st-stage-desc">正在听课/看教材，打基础阶段</span></button>
+      <button class="st-stage-btn" onclick="stChoiceStage('brushing')"><span class="st-stage-icon">✏️</span>刷题中<span class="st-stage-desc">基础学完了，正在大量刷题</span></button>
+    </div>
+    <div id="st-choice-basic" style="display:none;">
+      <p style="font-size:13px;color:var(--sub);margin-bottom:12px;">你学了哪些模块？勾选后填写每个模块的正确率：</p>
+      <div class="st-module-grid" id="st-basic-modules"></div>
+      <div id="st-basic-accuracy" style="margin-top:16px;"></div>
+      <button onclick="stChoiceSubmit('basic')" style="margin-top:12px;padding:10px 24px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">生成诊断</button>
+      <button onclick="stChoiceBack()" style="margin-top:12px;margin-left:8px;padding:10px 16px;background:#fff;color:var(--sub);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:inherit;">返回</button>
+    </div>
+    <div id="st-choice-brushing" style="display:none;">
+      <p style="font-size:13px;color:var(--sub);margin-bottom:12px;">填写每个模块的正确率：</p>
+      <div id="st-brushing-accuracy"></div>
+      <button onclick="stChoiceSubmit('brushing')" style="margin-top:12px;padding:10px 24px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">生成诊断</button>
+      <button onclick="stChoiceBack()" style="margin-top:12px;margin-left:8px;padding:10px 16px;background:#fff;color:var(--sub);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:inherit;">返回</button>
+    </div>
+    <div id="st-choice-result" style="display:none;"></div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 4. 申论 ===== -->
+<div class="section-anchor" id="section-shenlun">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+  <h2>申论学习进度</h2>
+  <span class="tag tag-jade">袁东2027全家桶</span>
+</div>
+<div class="card">
+  <h3 style="margin-bottom:12px;">📋 小题得分情况</h3>
+  <div class="sl-form-grid">
+    <div class="sl-score-item">
+      <label>概括题</label>
+      <input type="number" id="sl-gaikuang" min="0" max="20" placeholder="得分">
+      <div class="sl-max">/20分</div>
+    </div>
+    <div class="sl-score-item">
+      <label>启示分析</label>
+      <input type="number" id="sl-qishi" min="0" max="20" placeholder="得分">
+      <div class="sl-max">/20分</div>
+    </div>
+    <div class="sl-score-item">
+      <label>公文写作</label>
+      <input type="number" id="sl-gongwen" min="0" max="25" placeholder="得分">
+      <div class="sl-max">/25分</div>
+    </div>
+  </div>
+  <h3 style="margin:20px 0 12px;">✍️ 大作文进度</h3>
+  <div class="sl-essay-progress">
+    <div class="sl-essay-row">
+      <label>是否开始积累素材？</label>
+      <div class="sl-radio">
+        <label><input type="radio" name="sl-sucai" value="yes"> 是</label>
+        <label><input type="radio" name="sl-sucai" value="no"> 否</label>
+      </div>
+    </div>
+    <div class="sl-essay-row">
+      <label>是否开始写大作文？</label>
+      <div class="sl-radio">
+        <label><input type="radio" name="sl-kaishi" value="yes"> 是</label>
+        <label><input type="radio" name="sl-kaishi" value="no"> 否</label>
+      </div>
+    </div>
+    <div class="sl-essay-row">
+      <label>已经写了多少篇？</label>
+      <input type="number" id="sl-piancount" min="0" placeholder="篇数" style="padding:6px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;">
+    </div>
+    <div class="sl-essay-row">
+      <label>是否有固定写作习惯？</label>
+      <div class="sl-radio">
+        <label><input type="radio" name="sl-xiguan" value="yes"> 是</label>
+        <label><input type="radio" name="sl-xiguan" value="no"> 否</label>
+      </div>
+    </div>
+  </div>
+  <button onclick="slSubmit()" style="margin-top:16px;padding:10px 24px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">生成申论诊断</button>
+  <div class="sl-result" id="sl-result"></div>
+</div>
+</div>
+
+<!-- ===== 5. 学习预热 ===== -->
+<div class="section-anchor" id="section-warmup">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <h2>学习预热</h2>
+  <span class="tag tag-gold">每日更新</span>
+</div>
+<!-- 时政热点 -->
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-header"><div class="card-header-left">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <h3>今日时政热点</h3>
+  </div>
+  <span class="tag tag-jade" id="warmup-date"></span></div>
+  <div id="warmup-news"></div>
+</div>
+<!-- 成语每日三组 -->
+<div class="card">
+  <div class="card-header"><div class="card-header-left">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <h3>言语理解 · 每日成语辨析</h3>
+  </div>
+  <span class="tag tag-coral">每天3组·不重复</span></div>
+  <p style="font-size:12px;color:var(--hint);margin-bottom:14px;">每天提供3组易混淆成语，配合例句区分用法。言语理解逻辑填空高频考点。</p>
+  <div id="idiom-container"></div>
+</div>
+</div>
+
+<!-- ===== 6. 复盘（讲师库+工作台+题库管理） ===== -->
+<div class="section-anchor" id="section-fupan">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  <h2>复盘题目</h2>
+  <span class="tag tag-coral">讲师对话+逐题录入+题库管理</span>
+</div>
+<div class="card">
+  <div class="fupan-subtabs">
+    <button class="fupan-subtab active" data-fp="teacher">👨‍🏫 讲师对话</button>
+    <button class="fupan-subtab" data-fp="workbench">📝 逐题录入</button>
+    <button class="fupan-subtab" data-fp="qb-mgr">📁 题库管理</button>
+  </div>
+
+  <!-- Sub-tab 1: 讲师对话 -->
+  <div class="fupan-subpanel active" data-fp-panel="teacher">
+    <p style="font-size:12px;color:var(--hint);margin-bottom:10px;">选择模块和讲师，上传错题截图（自动OCR转文字）或直接粘贴题目，AI用名师方法论帮你复盘。</p>
+    <div class="teacher-module-bar" id="teacher-module-bar"></div>
+    <div class="teacher-card-grid" id="teacher-cards"></div>
+    <div class="teacher-chat" id="teacher-chat">
+      <div class="chat-header">
+        <span class="ch-name" id="chat-teacher-name">讲师对话</span>
+        <div style="display:flex;gap:8px;">
+          <button class="ch-toggle" id="chat-toggle-btn" onclick="toggleChatExpand()" title="放大/缩小">⛶ 放大</button>
+          <button class="ch-close" onclick="closeTeacherChat()">✕ 关闭</button>
+        </div>
+      </div>
+      <div class="review-step-indicator" id="review-step-indicator" style="display:none;"></div>
+      <div class="teacher-question-pin" id="teacher-question-pin"><div class="pin-label">📌 当前正在复盘的题目：<button class="pin-toggle" id="pin-toggle" onclick="togglePin()">展开</button></div><div class="pin-content collapsed" id="pin-content"></div></div>
+      <div class="chat-body" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <div class="input-toolbar">
+          <label class="inline-upload-btn" title="上传错题截图，AI自动OCR识别文字">
+            📷 上传截图
+            <input type="file" id="qb-file-input" accept="image/*" onchange="handleImageUpload(event)">
+          </label>
+          <span class="upload-preview" id="upload-preview">
+            <span class="up-thumb-name" id="up-thumb-name"></span>
+            <span class="up-status" id="up-status-widget"></span>
+            <button class="up-clear" onclick="clearImagePreview()" title="移除图片">×</button>
+          </span>
+        </div>
+        <div class="ocr-status-inline" id="ocr-status-inline"></div>
+        <textarea id="chat-input" placeholder="把错题粘贴到这里，然后点「🧠 开始复盘」。上传截图后AI自动OCR识别填入。" rows="3" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}"></textarea>
+        <div class="chat-actions">
+          <button class="primary" id="chat-primary-btn" onclick="analyzeWithTeacher()">🧠 开始复盘</button>
+          <button onclick="sendChatMessage()">💬 发送回答</button>
+          <button onclick="clearChat()">🔄 重新开始</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub-tab 2: 逐题录入 -->
+  <div class="fupan-subpanel" data-fp-panel="workbench">
+    <div class="review-tabs" id="review-tabs">
+      <button class="review-tab urgent active" data-module="ziliao">资料分析 ⚡</button>
+      <button class="review-tab" data-module="yanyu">言语理解</button>
+      <button class="review-tab" data-module="panduan">判断推理</button>
+      <button class="review-tab" data-module="shuliang">数量关系</button>
+      <button class="review-tab" data-module="changshi">常识/政治</button>
+    </div>
+    <div class="review-panel active" data-panel="ziliao">
+      <div style="margin-bottom:16px;padding:14px;background:var(--gold-light);border:1px solid var(--gold);border-radius:var(--radius-sm);">
+        <div style="font-weight:700;font-size:14px;color:var(--gold);margin-bottom:4px;">🥜 花生十三 ABRX理论体系</div>
+        <div class="method-desc">A(基期) B(现期) R(增长率) X(增长量)——所有资料分析题归入四个类型。圈时间→判ABRX→选方法。</div>
+      </div>
+      <div class="method-card"><div class="method-name">第一步：圈时间 · 判ABRX</div><div class="method-desc">圈出题干时间词 → 判断求A(基期)/B(现期)/R(增长率)/X(增长量) → 定公式。ABRX是花生十三最核心的思维框架。</div></div>
+      <div class="method-card"><div class="method-name">第二步：415份数法速算</div><div class="method-desc">1/3=33.3%丨1/4=25%丨1/5=20%丨1/6=16.7%丨1/7=14.3%丨1/8=12.5%丨1/9=11.1%。看到增长率→立刻反应分数→份数思维秒出答案。</div></div>
+      <div class="method-card"><div class="method-name">第三步：假设分配法（增长量计算）</div><div class="method-desc">R=10%=1/10→分10份增量1份；R=20%=1/5→分5份增量1份；R=14.3%=1/7→分7份增量1份。增长量=现期÷(份数+1)。</div></div>
+      <div class="method-card"><div class="method-name">第四步：盐水思想（混合/比重变化）</div><div class="method-desc">整体增长率介于两部分之间，偏向体量大的那方。部分R>整体R→比重上升。比重变化 = 盐水思想的直接应用。</div></div>
+      <div class="method-card"><div class="method-name">第五步：比值增长率 R≈a-b</div><div class="method-desc">平均数增长率≈分子增长率-分母增长率。人均/利润率/平均数通用。秒杀技：找分子和分母的增长率，直接减。</div></div>
+      <hr style="border:none;border-top:1px dashed var(--border);margin:14px 0;">
+      <div style="font-weight:600;font-size:13px;color:var(--jade);margin-bottom:8px;">📐 高照资料分析复盘法（配合花生使用）</div>
+      <div class="method-card"><div class="method-name">判断错因类型</div><div class="method-desc">公式用错 / 找错数据 / 计算失误 / 时间不够 / 完全不会</div></div>
+      <div class="method-card"><div class="method-name">重做计算 + 提炼速算技巧</div><div class="method-desc">不看解析，用正确方法重新算一遍，限时1.5分钟/题。能用截位直除/特征数字/分数比较？写在旁边。</div></div>
+      <div class="review-form" id="ziliao-form" style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input type="text" id="zl-title" placeholder="题目来源（如：2024国考真题第116题）">
+          <select id="zl-error"><option value="">选择错因类型</option><option value="formula">公式不懂</option><option value="reading">找错数据</option><option value="calc">计算粗心</option><option value="speed">速度太慢</option><option value="noid">完全不会</option></select>
+        </div>
+        <textarea id="zl-question" rows="2" placeholder="题目大意（如：求2023年同比增速，给了现期和基期）"></textarea>
+        <textarea id="zl-analysis" rows="3" placeholder="复盘分析：我当时怎么想的？正确答案用什么方法？速算技巧是什么？"></textarea>
+        <button class="analyze-btn" onclick="addReviewItem('ziliao')">保存这条复盘</button>
+      </div>
+      <div id="zl-history" style="margin-top:12px;"></div>
+    </div>
+    <div class="review-panel" data-panel="yanyu">
+      <div style="font-weight:600;font-size:13px;color:var(--jade);margin-bottom:8px;">📖 红领巾言语复盘法</div>
+      <div class="method-card"><div class="method-name">逻辑填空：三看原则</div><div class="method-desc">一看搭配对象、二看感情色彩、三看上下文逻辑。每个空至少找2个线索。</div></div>
+      <div class="method-card"><div class="method-name">阅读理解：主旨题定位法</div><div class="method-desc">转折后是重点、首尾句定框架、高频词是主题词。排除法先干掉绝对化表述。</div></div>
+      <div class="method-card"><div class="method-name">语句排序：首句排除+捆绑验证</div><div class="method-desc">先看首句特征，再找捆绑组合，最后代入验证。</div></div>
+      <div class="review-form" style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input type="text" id="yy-title" placeholder="题目来源">
+          <select id="yy-type"><option value="">题型</option><option>逻辑填空</option><option>阅读理解</option><option>语句排序</option><option>接语选择</option></select>
+        </div>
+        <textarea id="yy-analysis" rows="3" placeholder="复盘分析：错误原因+正确思路+解题技巧"></textarea>
+        <button class="analyze-btn" onclick="addReviewItem('yanyu')">保存这条复盘</button>
+      </div>
+      <div id="yy-history" style="margin-top:12px;"></div>
+    </div>
+    <div class="review-panel" data-panel="panduan">
+      <div style="font-weight:600;font-size:13px;color:var(--jade);margin-bottom:8px;">薛睿逻辑 + 龙飞图推 复盘法</div>
+      <div class="method-card"><div class="method-name">逻辑判断：薛睿三段论</div><div class="method-desc">①翻译题干（A→B, B→C）②找矛盾/等价 ③排除法锁定。加强削弱题先找论点论据。</div></div>
+      <div class="method-card"><div class="method-name">图形推理：龙飞六步法</div><div class="method-desc">1对称→2直曲→3封闭→4位置→5数量→6叠加。按顺序排查，不走回头路。</div></div>
+      <div class="method-card"><div class="method-name">类比推理：造句子法</div><div class="method-desc">把词组装成句子，看关系是否一致。二级辨析注意词性、感情色彩、必然/可能。</div></div>
+      <div class="review-form" style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input type="text" id="pd-title" placeholder="题目来源">
+          <select id="pd-type"><option value="">题型</option><option>图形推理</option><option>逻辑判断</option><option>类比推理</option><option>定义判断</option></select>
+        </div>
+        <textarea id="pd-analysis" rows="3" placeholder="复盘分析：错误原因+正确思路+解题技巧"></textarea>
+        <button class="analyze-btn" onclick="addReviewItem('panduan')">保存这条复盘</button>
+      </div>
+      <div id="pd-history" style="margin-top:12px;"></div>
+    </div>
+    <div class="review-panel" data-panel="shuliang">
+      <div style="font-weight:600;font-size:13px;color:var(--jade);margin-bottom:8px;">🔢 数量关系复盘法（抓大放小）</div>
+      <div class="method-card"><div class="method-name">核心策略：死磕4大必考题型</div><div class="method-desc">工程问题、行程问题、容斥原理、概率问题——这4类占数量关系60%以上分值。</div></div>
+      <div class="method-card"><div class="method-name">做题策略</div><div class="method-desc">10道数量：先挑4道简单题认真做，剩下6道统一蒙B或C。目标5-6道。</div></div>
+      <div class="review-form" style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input type="text" id="sl-title" placeholder="题目来源">
+          <select id="sl-type"><option value="">题型</option><option>工程问题</option><option>行程问题</option><option>容斥原理</option><option>概率问题</option><option>排列组合</option><option>几何问题</option><option>其他</option></select>
+        </div>
+        <textarea id="sl-analysis" rows="3" placeholder="复盘分析：这题用了什么公式？我当时卡在哪里？"></textarea>
+        <button class="analyze-btn" onclick="addReviewItem('shuliang')">保存这条复盘</button>
+      </div>
+      <div id="sl-history" style="margin-top:12px;"></div>
+    </div>
+    <div class="review-panel" data-panel="changshi">
+      <div style="font-weight:600;font-size:13px;color:var(--jade);margin-bottom:8px;">📚 小黑政治理论复盘法</div>
+      <div class="method-card"><div class="method-name">框架记忆法</div><div class="method-desc">不要死记单个知识点，按"二十大报告→新思想→重要会议→科技成就→法律新规"框架梳理。</div></div>
+      <div class="method-card"><div class="method-name">错题折叠法</div><div class="method-desc">每个错题提炼成一句话考点，存进手机备忘录。每天碎片时间翻一遍。</div></div>
+      <div class="review-form" style="margin-top:12px;">
+        <input type="text" id="cs-title" placeholder="题目来源/知识点">
+        <textarea id="cs-analysis" rows="2" placeholder="一句话考点提炼（如：2024中央一号文件首提'千万工程'）"></textarea>
+        <button class="analyze-btn" onclick="addReviewItem('changshi')">保存考点</button>
+      </div>
+      <div id="cs-history" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- Sub-tab 3: 题库管理 -->
+  <div class="fupan-subpanel" data-fp-panel="qb-mgr">
+    <p style="font-size:12px;color:var(--hint);margin-bottom:14px;">上传你自己的题库文件（支持文件夹批量上传），系统自动解析存储。之后搜索题目直接从你的题库检索。</p>
+    <div class="qb-mgr-zone" onclick="document.getElementById('qb-folder-input').click()">
+      <div class="upload-icon">📁</div>
+      <div class="upload-text">点击上传题库文件/文件夹</div>
+      <div class="upload-hint">支持 .txt / .md / .csv 文本文件 · 图片自动OCR · 支持文件夹批量上传</div>
+      <input type="file" id="qb-folder-input" webkitdirectory multiple onchange="handleQBUpload(event)">
+    </div>
+    <div class="qb-search-box">
+      <input type="text" id="qb-mgr-search" placeholder="搜索你的题库内容，如「资料分析增长率」">
+      <button onclick="searchUserQB()">🔍 搜索</button>
+    </div>
+    <div class="qb-search-results" id="qb-mgr-results"></div>
+    <div class="qb-file-list" id="qb-file-list"></div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 7. 选岗 ===== -->
+<div class="section-anchor" id="section-xuangang">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <h2>AI选岗助手</h2>
+  <span class="tag tag-gold">国考公告发布后启用</span>
+</div>
+<div class="card">
+  <div class="select-form">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <select><option>学历：本科</option><option>硕士</option><option>大专</option></select>
+      <select><option>目标省份：广东</option><option>不限</option></select>
+      <select><option>专业：待输入</option></select>
+      <select><option>政治面貌：不限</option><option>中共党员</option></select>
+    </div>
+    <button>开始智能匹配</button>
+  </div>
+  <p style="font-size:12px;color:var(--hint);margin-top:12px;">国考公告发布后（预计10月中旬），AI将根据你的条件匹配适合岗位，标注历年进面分数和竞争比。</p>
+</div>
+</div>
+
+<!-- ===== 8. 打卡 ===== -->
+<div class="section-anchor" id="section-daka">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+  <h2>学习打卡</h2>
+  <span class="tag tag-jade">每日记录</span>
+</div>
+<div class="card">
+  <div class="streak-bar" id="streak-bar">
+    <span class="streak-fire">🔥</span>
+    <div>
+      <div class="streak-text">连续打卡 <span class="num" id="streak-count">0</span> 天</div>
+      <div style="font-size:11px;color:var(--hint);">本周累计学习 <strong id="week-hours">0</strong> 小时 · <strong id="week-questions">0</strong> 题</div>
+    </div>
+  </div>
+  <div class="checkin-calendar" id="mini-calendar"></div>
+  <div id="today-checkin-form">
+    <h3 style="font-size:13px;color:var(--sub);margin-bottom:8px;">📝 今日学习打卡</h3>
+    <p style="font-size:11px;color:var(--hint);margin-bottom:8px;">选择今天学了哪些模块：</p>
+    <div class="checkin-modules" id="checkin-modules">
+      <button class="checkin-module" data-mod="yanyu">📖 言语</button>
+      <button class="checkin-module" data-mod="ziliao">📐 资料分析</button>
+      <button class="checkin-module" data-mod="panduan">🧩 判断推理</button>
+      <button class="checkin-module" data-mod="shuliang">🔢 数量关系</button>
+      <button class="checkin-module" data-mod="changshi">📚 常识/政治</button>
+      <button class="checkin-module" data-mod="shenlun">✏️ 申论</button>
+    </div>
+    <div class="checkin-stats-row">
+      <div class="checkin-stat">
+        <input type="number" id="ci-hours" placeholder="小时" min="0" max="24" step="0.5" style="width:60px;border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:13px;font-family:inherit;text-align:center;">
+        <div class="stat-label">学习时长</div>
+      </div>
+      <div class="checkin-stat">
+        <input type="number" id="ci-questions" placeholder="题数" min="0" max="999" style="width:60px;border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:13px;font-family:inherit;text-align:center;">
+        <div class="stat-label">刷题数量</div>
+      </div>
+      <div class="checkin-stat">
+        <select id="ci-mood" style="padding:4px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;"><option value="good">😊 不错</option><option value="normal">😐 一般</option><option value="tired">😫 累了</option></select>
+        <div class="stat-label">今日状态</div>
+      </div>
+    </div>
+    <textarea id="ci-note" placeholder="备注：今天学了什么、遇到什么问题..." style="width:100%;height:50px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical;margin-bottom:8px;"></textarea>
+    <button onclick="doCheckin()" style="width:100%;padding:10px;background:var(--jade);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">✅ 完成打卡</button>
+    <p style="font-size:10px;color:var(--hint);margin-top:6px;text-align:center;" id="today-checkin-status"></p>
+  </div>
+</div>
+<div class="card" style="margin-top:16px;">
+  <div class="card-header"><div class="card-header-left">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <h3>打卡统计</h3>
+  </div></div>
+  <div class="checkin-stats-row">
+    <div class="checkin-stat"><div class="stat-val" id="stat-total-days">0</div><div class="stat-label">累计打卡天</div></div>
+    <div class="checkin-stat"><div class="stat-val" id="stat-total-hours">0</div><div class="stat-label">总学习时长(h)</div></div>
+    <div class="checkin-stat"><div class="stat-val" id="stat-total-questions">0</div><div class="stat-label">总刷题数</div></div>
+    <div class="checkin-stat"><div class="stat-val" id="stat-avg-hours">0</div><div class="stat-label">日均时长(h)</div></div>
+    <div class="checkin-stat"><div class="stat-val" id="stat-best-streak">0</div><div class="stat-label">最长连续天</div></div>
+  </div>
+  <div style="margin-top:10px;">
+    <h4 style="font-size:12px;color:var(--sub);margin-bottom:6px;">各模块打卡次数</h4>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;" id="module-count-bars"></div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 9. 提醒 ===== -->
+<div class="section-anchor" id="section-tixing">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  <h2>学习提醒</h2>
+  <span class="tag tag-coral">倒计时驱动</span>
+</div>
+<div class="card">
+  <div class="reminder-list" id="reminder-list"></div>
+</div>
+<div class="card" style="margin-top:16px;">
+  <div class="card-header"><div class="card-header-left">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <h3>今日建议学习量</h3>
+  </div></div>
+  <div id="daily-goal-render"></div>
+  <p style="font-size:11px;color:var(--hint);margin-top:10px;">建议量根据距离考试天数、各模块正确率和历史打卡数据动态调整。</p>
+</div>
+</div>
+
+<!-- ===== 10. 指南 ===== -->
+<div class="section-anchor" id="section-guide">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <h2>使用指南</h2>
+  <span class="tag tag-jade">收藏这个页面</span>
+</div>
+<div class="card">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;">
+      <div style="font-size:13px;font-weight:600;color:var(--jade);margin-bottom:6px;">第一步：选省份看考情</div>
+      <p style="font-size:12px;color:var(--sub);">页面顶部选择目标省份，查看考试时间、题量分布、特殊题型。</p>
+    </div>
+    <div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;">
+      <div style="font-size:13px;font-weight:600;color:var(--jade);margin-bottom:6px;">第二步：自测学习情况</div>
+      <p style="font-size:12px;color:var(--sub);">在「自测」tab选择阶段、填写正确率，AI生成个性化诊断和名师匹配。</p>
+    </div>
+    <div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;">
+      <div style="font-size:13px;font-weight:600;color:var(--jade);margin-bottom:6px;">第三步：每日预热</div>
+      <p style="font-size:12px;color:var(--sub);">看时政热点+学3组成语辨析，每天内容不重复。碎片时间就能完成。</p>
+    </div>
+    <div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;">
+      <div style="font-size:13px;font-weight:600;color:var(--jade);margin-bottom:6px;">第四步：上传题库+复盘</div>
+      <p style="font-size:12px;color:var(--sub);">在「复盘」tab上传你的题库文件，搜题直接弹出。错题截图上传自动OCR转文字，选讲师一对一复盘。</p>
+    </div>
+  </div>
+  <hr style="border:none;border-top:1px dashed var(--border);margin:16px 0;">
+  <div style="font-size:12px;color:var(--sub);line-height:1.8;">
+    <strong style="color:var(--jade);">9个Skill分工：</strong><br>
+    <span style="color:var(--coral);">核心三件套</span> — gk-yuandong-planner / gk-weekly-coach / gk-screenshot-review<br>
+    <span style="color:var(--gold);">行测五名师</span> — gk-honglingjin-verbal / gk-gaozhao-data / gk-xuerui-logic / gk-longfei-figure / gk-xiaohei-politics<br>
+    <span style="color:var(--jade);">申论核武器</span> — gk-yuandong-shenlun
+  </div>
+</div>
+</div>
+
+<div class="section-anchor" id="section-pay" style="margin-top:36px">>
+  <div class="section-title">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v10H2V10"/><path d="M2 10l10-6 10 6"/><path d="M12 4v12"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/></svg>
+    <h2>关注我，获取更多备考干货</h2>
+  </div>
+  <div class="follow-grid">
+    <a href="https://v.douyin.com/X2SddCHK1VY/" target="_blank" class="follow-card">
+      <div class="fc-icon">🎵</div>
+      <div class="fc-name">抖音主页</div>
+      <div class="fc-desc">AI公考实战演示<br>备考干货 & 软件测评<br>每周更新</div>
+      <span class="fc-link">👉 点我关注</span>
+    </a>
+    <div class="follow-card coming-soon">
+      <div class="fc-icon">📦</div>
+      <div class="fc-name">搭建课程</div>
+      <div class="fc-desc">从零搭建AI备考系统<br>HTML/CSS/JS实操<br>DeepSeek API接入<br>全程录屏教学</div>
+      <span class="fc-link">即将上线</span>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;text-align:center;">
+    <span style="font-size:13px;color:var(--sub);">💡 课程和Skill包正在准备中，先在抖音关注，上线第一时间通知你</span>
+  </div>
+</div>
+
+  <h2 style="color:var(--jade);">备考不是拼时间，是拼策略</h2>
+  <p class="quote">"先算账，再干活。每一小时花在得分率最高的地方。"</p>
+  <button class="action-btn" onclick="alert('公考工作区路径：C:\\Users\\真烦人还要我取名\\WorkBuddy\\公考\\')">查看所有Skill</button>
+</div>
+
+<div class="footer">
+  公考AI全流程备考系统 · 基于WorkBuddy + 9个专项Skill<br>
+  数据来源：粉笔错题本 + 袁东申论全家桶 + AI实时分析
+</div>
+</div>
+
+<script>
+(function(){
+  window.TESSERACT_LOADED=false;
+  window.TESSERACT_ERROR=false;
+  window.TESSERACT_LOAD_ERROR='';
+  // 优先国内/稳定CDN，多个源依次尝试
+  var cdns=[
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js',
+    'https://lib.baomitu.com/tesseract.js/5.0.4/tesseract.min.js',
+    'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/tesseract.js/5.0.4/tesseract.min.js',
+    'https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js'
+  ];
+  var idx=0;
+  function tryLoad(){
+    if(window.Tesseract){window.TESSERACT_LOADED=true;window.TESSERACT_ERROR=false;return;}
+    if(idx>=cdns.length){window.TESSERACT_ERROR=true;window.TESSERACT_LOAD_ERROR='所有CDN源均无法加载（'+cdns.join(', ')+'）';return;}
+    var s=document.createElement('script');
+    s.src=cdns[idx++];
+    s.async=true;
+    s.onload=function(){
+      // 有些CDN返回空脚本或广告拦截，额外校验Tesseract对象
+      setTimeout(function(){
+        if(typeof window.Tesseract!=='undefined' && window.Tesseract.recognize){
+          window.TESSERACT_LOADED=true;window.TESSERACT_ERROR=false;
+        }else{
+          window.TESSERACT_LOAD_ERROR='CDN加载的脚本无效（'+s.src+'）';
+          tryLoad();
+        }
+      },100);
+    };
+    s.onerror=function(){window.TESSERACT_LOAD_ERROR='加载失败：'+s.src;tryLoad();};
+    document.head.appendChild(s);
+  }
+  window.loadTesseractBackup=function(){idx=1;tryLoad();};
+  window.checkTesseract=function(cb,retries){
+    retries=retries||0;
+    if(window.Tesseract && window.Tesseract.recognize){cb(true);return;}
+    if(window.TESSERACT_ERROR){cb(false);return;}
+    if(retries>60){cb(false);return;} // 最多等12秒
+    setTimeout(function(){checkTesseract(cb,retries+1);},200);
+  };
+  // 页面加载后立即启动主CDN加载
+  tryLoad();
+  // OCR语言包预载：Tesseract.js加载成功后多CDN回退下载中文语言包到IndexedDB（首次~8MB，之后毫秒级）
+  var _langPreloaded=false;
+  var _langPreloading=false;
+  window.preloadOcrLang=function(){
+    if(_langPreloading||_langPreloaded||!window.Tesseract)return;
+    _langPreloading=true;
+    var langSources=[
+      'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best',
+      'https://tessdata.projectnaptha.com/4.0.0_best',
+      'https://raw.githubusercontent.com/naptha/tessdata/gh-pages/4.0.0'
+    ];
+    var idx=0;
+    function tryPreload(){
+      Tesseract.createWorker('chi_sim',1,{
+        corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
+        workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
+        langPath:langSources[idx]+'/',
+        cacheMethod:'idb'
+      }).then(function(worker){
+        worker.terminate();
+        _langPreloaded=true;
+        _langPreloading=false;
+        console.log('OCR语言包已预载到IndexedDB缓存（源：'+langSources[idx]+'）');
+      }).catch(function(err){
+        if(idx<langSources.length-1){idx++;console.warn('预载源'+idx+'失败，尝试备用源...');tryPreload();}
+        else{_langPreloading=false;console.warn('OCR语言包预载失败：',err.message);}
+      });
+    }
+    tryPreload();
+  };
+  // Tesseract.js加载成功后立即预载（1秒延迟，缩短等待）
+  setTimeout(function(){if(window.TESSERACT_LOADED||window.Tesseract)preloadOcrLang();},1000);
+  // 监听Tesseract加载（如果是走备用CDN慢加载的情况）
+  var _preloadInterval=setInterval(function(){
+    if(_langPreloaded||_langPreloading){clearInterval(_preloadInterval);return;}
+    if(window.Tesseract&&window.Tesseract.recognize){preloadOcrLang();clearInterval(_preloadInterval);}
+  },3000);
+})();
+</script>
+<script>
+(function(){
+'use strict';
+
+// ===== 倒计时 =====
+var DEFAULT_GUOKAO_DATE=new Date(2026,10,29);
+var DEFAULT_GUOKAO_GONGGAO=new Date(2026,9,15);
+var currentProvinceId=localStorage.getItem('gk_current_province')||'guangdong';
+function daysBetween(a,b){return Math.max(0,Math.ceil((a-b)/(1000*60*60*24)));}
+function parseExamDate(str){
+  if(!str)return null;
+  var m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})[-~](\d{1,2})日/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  m=str.match(/(\d{4})年(\d{1,2})月上旬/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  m=str.match(/(\d{4})年(\d{1,2})月/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  return null;
+}
+function parseAnnounceDate(str){
+  if(!str)return null;
+  var m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  m=str.match(/(\d{4})年(\d{1,2})月中旬/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,15);
+  m=str.match(/(\d{4})年(\d{1,2})月下旬/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,25);
+  m=str.match(/(\d{4})年(\d{1,2})月/);
+  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  return null;
+}
+function getProvinceExamInfo(pid){
+  var p=PROVINCE_DB[pid]||PROVINCE_DB['guangdong'];
+  var examDate=parseExamDate(p.examDate)||DEFAULT_GUOKAO_DATE;
+  var announceDate=parseAnnounceDate(p.announceDate)||DEFAULT_GUOKAO_GONGGAO;
+  var shortName=p.name.replace('省考','').replace('(','').replace(')','');
+  if(pid==='guokao')shortName='国考';
+  return {p:p,examDate:examDate,announceDate:announceDate,shortName:shortName};
+}
+function updateCountdown(){
+  var info=getProvinceExamInfo(currentProvinceId);
+  var today=new Date();
+  var gkDays=daysBetween(DEFAULT_GUOKAO_DATE,today);
+  var skDays=daysBetween(info.examDate,today);
+  var ggDays=daysBetween(info.announceDate,today);
+  document.getElementById('guokao-days').textContent=gkDays;
+  document.getElementById('shengkao-days').textContent=skDays;
+  document.getElementById('gonggao-days').textContent=ggDays;
+  document.getElementById('guokao-label').innerHTML='天国考笔试<br>'+(PROVINCE_DB['guokao'].examDate||'2026年11月底');
+  document.getElementById('shengkao-label').innerHTML='天'+info.shortName+'省考笔试<br>'+info.p.examDate;
+  document.getElementById('gonggao-label').innerHTML='天'+info.shortName+'省考公告<br>'+info.p.announceDate;
+}
+
+// ===== 导航 =====
+var navButtons=document.querySelectorAll('.nav-links button');
+navButtons.forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var target=this.getAttribute('data-target');
+    var el=document.getElementById('section-'+target);
+    if(el){el.scrollIntoView({behavior:'smooth'});}
+    navButtons.forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.nav-links button[data-target="'+target+'"]').forEach(function(b){b.classList.add('active');});
+  });
+});
+var observer=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      var id=entry.target.id.replace('section-','');
+      navButtons.forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('.nav-links button[data-target="'+id+'"]').forEach(function(b){b.classList.add('active');});
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.section-anchor').forEach(function(el){observer.observe(el);});
+
+// ===== 学习天数 =====
+var studyStart=localStorage.getItem('gk_study_start');
+if(!studyStart){
+  studyStart=new Date().toISOString().split('T')[0];
+  localStorage.setItem('gk_study_start',studyStart);
+}
+function updateStudyDays(){
+  var days=Math.floor((new Date()-new Date(studyStart))/(1000*60*60*24))+1;
+  document.getElementById('study-days-num').textContent=days;
+  var d=new Date(studyStart);
+  var info=getProvinceExamInfo(currentProvinceId);
+  var targetName=currentProvinceId==='guokao'?'国考':(info.shortName+'省考');
+  document.getElementById('study-days-sub').textContent='开始日期：'+(d.getMonth()+1)+'月'+d.getDate()+'日 · 距'+targetName+'还有'+daysBetween(info.examDate,new Date())+'天';
+}
+window.resetStudyDate=function(){
+  var input=prompt('请输入备考开始日期（格式：2026-01-15）：',studyStart);
+  if(input){
+    var d=new Date(input);
+    if(!isNaN(d.getTime())){
+      studyStart=input;
+      localStorage.setItem('gk_study_start',studyStart);
+      updateStudyDays();
+    }else{alert('日期格式不对，请用 2026-01-15 这种格式');}
+  }
+};
+
+// ===== 省份数据 =====
+var PROVINCE_DB={guokao:{name:'国考(国家公务员)',flag:'🏛️',examDate:'2026年11月28-29日',announceDate:'2026年10月14日',time:120,notes:'分副省级(135题)/市地级(130题)/行政执法(130题)三类。2025年起新增政治理论模块约20题。全国最权威考公考试，难度最高。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:'2025新增'},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'40',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'40',note:'图形10+定义10+类比10+逻辑10'},ziliao:{name:'资料分析',qty:'20',note:''}},special:[],difficulty:'★★★★★'},guangdong:{name:'广东省考',flag:'🐉',examDate:'2026年12月上旬',announceDate:'2026年10月中下旬',time:90,isIndependent:true,notes:'⚠️ 2025年起大幅提前至年末！题量90题。申论分四类。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:'单选+多选+判断'},changshi:{name:'常识应用',qty:'15',note:'含广东省情'},yanyu:{name:'言语理解',qty:'15',note:''},shuliang:{name:'数量关系',qty:'15',note:'含数字推理'},panduan:{name:'判断推理',qty:'25',note:'含科学推理'},ziliao:{name:'资料分析',qty:'10',note:'提分关键'}},special:['科学推理(物理/化学/生物)','数字推理','申论四类分卷','广东省情素材'],compareGuokao:'广东仅90题(国考130-135题)，时间仅90分钟。独有科学推理模块。难度低于国考但时间压力更大。',difficulty:'★★★★☆'},jiangsu:{name:'江苏省考',flag:'🏯',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A类135题/B类135题/C类130题。申论分A/B/C三类。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~20',note:'含数字推理'},panduan:{name:'判断推理',qty:'~40',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['数字推理','篇章阅读','A/B/C分类'],compareGuokao:'题量接近国考。独有数字推理和篇章阅读。难度与国考相当。',difficulty:'★★★★☆'},zhejiang:{name:'浙江省考',flag:'🌊',examDate:'2026年12月6-7日',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A卷125题/B卷120题。综合应用能力替代申论。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:''},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15-20',note:'难度较高'},panduan:{name:'判断推理',qty:'35-40',note:'图形推理占比高'},ziliao:{name:'资料分析',qty:'10-15',note:''}},special:['综合应用能力(替代申论)','图形推理占比超15%','数字推理难度高'],compareGuokao:'数量关系难度突出，图形推理占比高。另考综合应用能力而非传统申论。',difficulty:'★★★★★'},shandong:{name:'山东省考',flag:'⛰️',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'题量120题左右。竞争极其激烈，2025年报考45万+。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:'偏向山东省情'},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['常考乡村振兴','山东省情素材'],compareGuokao:'题量略少于国考。竞争比全国最高之一。',difficulty:'★★★★☆'},beijing:{name:'北京市考',flag:'🏘️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约135题。常识判断涉及时政深度解读。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:''},changshi:{name:'常识判断',qty:'~15',note:'深度时政'},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['篇章阅读','常识判断深度时政'],compareGuokao:'题量与国考相当。独有篇章阅读题型。',difficulty:'★★★★★'},shanghai:{name:'上海市考',flag:'🏙️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约130题。政治理论不定项选择是最大特色。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:'不定项选择!'},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~25',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:'含科学素养'},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['政治理论不定项选择(选错不得分)','科学素养(物理/化学)'],compareGuokao:'最特殊：不定项选择。答错即零分，难度大增。',difficulty:'★★★★☆'},sichuan:{name:'四川省考',flag:'🐼',examDate:'2026年12月',announceDate:'2026年10-11月',time:120,isIndependent:true,notes:'100题。已独立命题，12月笔试。',modules:{zhengzhi:{name:'政治理论',qty:'~10',note:''},changshi:{name:'常识判断',qty:'10',note:''},yanyu:{name:'言语理解',qty:'35',note:'占比最大'},shuliang:{name:'数量关系',qty:'10',note:''},panduan:{name:'判断推理',qty:'30',note:''},ziliao:{name:'资料分析',qty:'15',note:''}},special:['言语理解占比35%最高'],compareGuokao:'仅100题，题量最少。言语理解占比高达35%。',difficulty:'★★★★★'},tianjin:{name:'天津市考',flag:'🎡',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~15',note:''}},special:[],compareGuokao:'题量少于国考，难度适中。',difficulty:'★★★☆☆'},henan:{name:'河南省考',flag:'🐘',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。联考省份，人口大省竞争激烈。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。难度中等偏上。',difficulty:'★★★★☆'},hubei:{name:'湖北省考',flag:'🏗️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'125题。',modules:{zhengzhi:{name:'政治理论',qty:'15',note:''},changshi:{name:'常识判断',qty:'10',note:'含湖北省情'},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'35',note:''},ziliao:{name:'资料分析',qty:'20',note:''}},special:['知悉湖北"51020"现代产业集群'],compareGuokao:'联考代表省份。题量125题略少于国考。',difficulty:'★★☆☆☆'},hunan:{name:'湖南省考',flag:'🌶️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['部分岗位加试财经专业知识'],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},fujian:{name:'福建省考',flag:'🌺',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},anhui:{name:'安徽省考',flag:'🏔️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jiangxi:{name:'江西省考',flag:'🏮',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guangxi:{name:'广西省考',flag:'🏞️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},yunnan:{name:'云南省考',flag:'🌈',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guizhou:{name:'贵州省考',flag:'🍶',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'竞争最激烈联考省份之一(报录比92.7:1)。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型，但报录比极高。',difficulty:'★★★☆☆'},hebei:{name:'河北省考',flag:'🏟️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shanxi:{name:'山西省考',flag:'🏛️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shaanxi:{name:'陕西省考',flag:'🕌',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},liaoning:{name:'辽宁省考',flag:'🐯',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jilin:{name:'吉林省考',flag:'❄️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。报录比仅28.5:1，较友好。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:'2026取消篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['2026年取消篇章阅读','报录比低(28.5:1)'],compareGuokao:'联考标准题型。竞争相对友好。',difficulty:'★★☆☆☆'},heilongjiang:{name:'黑龙江省考',flag:'🐲',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比最低(27.8:1)，上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['报录比全国最低(27.8:1)'],compareGuokao:'联考标准题型。上岸最友好的省份之一。',difficulty:'★★☆☆☆'},neimenggu:{name:'内蒙古省考',flag:'🐴',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},xinjiang:{name:'新疆省考',flag:'🕌',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'基层岗占比高。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['基层岗位占比超60%'],compareGuokao:'联考标准题型。基层岗位充足。',difficulty:'★★★☆☆'},xizang:{name:'西藏省考',flag:'🏔️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★☆☆☆'},qinghai:{name:'青海省考',flag:'🌅',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。上岸友好。',difficulty:'★★☆☆☆'},gansu:{name:'甘肃省考',flag:'🐫',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},ningxia:{name:'宁夏省考',flag:'🏜️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比66.7:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},hainan:{name:'海南省考',flag:'🏝️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比78:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},chongqing:{name:'重庆市考',flag:'🌆',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'}};
+var INDEPENDENT_PROVINCES=['guangdong','jiangsu','zhejiang','shandong','beijing','shanghai','sichuan','tianjin'];
+var JOINT_PROVINCES=['henan','hubei','hunan','fujian','anhui','jiangxi','guangxi','yunnan','guizhou','hebei','shanxi','shaanxi','liaoning','jilin','heilongjiang','neimenggu','xinjiang','xizang','qinghai','gansu','ningxia','hainan','chongqing'];
+function renderProvinceChips(){
+  var chips='';
+  chips+='<span class="province-chip guokao-ch" data-pid="guokao" onclick="selectProvince(\'guokao\')">'+PROVINCE_DB['guokao'].flag+' '+PROVINCE_DB['guokao'].name+'</span>';
+  INDEPENDENT_PROVINCES.forEach(function(pid){var p=PROVINCE_DB[pid];chips+='<span class="province-chip" data-pid="'+pid+'" onclick="selectProvince(\''+pid+'\')">'+p.flag+' '+p.name+'</span>';});
+  chips+='<span style="font-size:12px;color:var(--sub);font-weight:600;margin-top:8px;width:100%;">联考省份（2026年3月14日）：</span>';
+  JOINT_PROVINCES.forEach(function(pid){var p=PROVINCE_DB[pid];chips+='<span class="province-chip" data-pid="'+pid+'" onclick="selectProvince(\''+pid+'\')">'+p.flag+' '+p.name+'</span>';});
+  document.getElementById('province-chips').innerHTML=chips;
+}
+window.selectProvince=function(pid){
+  currentProvinceId=pid;
+  localStorage.setItem('gk_current_province',pid);
+  document.querySelectorAll('.province-chip').forEach(function(c){c.classList.remove('active');});
+  var sel=document.querySelector('.province-chip[data-pid="'+pid+'"]');
+  if(sel)sel.classList.add('active');
+  var p=PROVINCE_DB[pid];
+  if(!p)return;
+  updateCountdown();
+  updateStudyDays();
+  var mods=p.modules;
+  var modKeys=['zhengzhi','changshi','yanyu','shuliang','panduan','ziliao'];
+  var modHtml=modKeys.map(function(k){var m=mods[k];if(!m)return'';return '<tr><td style="font-weight:600;">'+m.name+'</td><td>'+m.qty+'题</td><td style="font-size:11px;color:var(--hint);">'+(m.note||'')+'</td></tr>';}).join('');
+  var specialHtml=p.special&&p.special.length>0?p.special.map(function(s){return '<span class="tag tag-coral" style="margin:2px;">'+s+'</span>';}).join(''):'<span style="color:var(--hint);font-size:11px;">无特殊题型</span>';
+  var diffStars=p.difficulty||'★★★☆☆';
+  document.getElementById('province-detail').innerHTML=
+    '<div class="pd-header"><span class="pd-flag">'+p.flag+'</span><div><div class="pd-name">'+p.name+'</div><div style="font-size:12px;color:var(--hint);">总分100 · '+p.time+'分钟 · 难度'+diffStars+'</div></div></div>'+
+    (p.isIndependent?'<span class="pd-alert warn" style="margin-bottom:8px;">⚠️ 独立命题省</span>':'<span class="pd-alert info" style="margin-bottom:8px;">📋 参加全国联考</span>')+
+    '<p style="font-size:13px;color:var(--sub);margin:10px 0;line-height:1.7;">📅 考试时间：<strong>'+p.examDate+'</strong> | 公告时间：'+p.announceDate+'</p>'+
+    '<p style="font-size:12px;color:var(--ink);line-height:1.7;margin-bottom:10px;">'+p.notes+'</p>'+
+    '<table class="compare-table"><thead><tr><th>模块</th><th>题量</th><th>特点</th></tr></thead><tbody>'+modHtml+'</tbody></table>'+
+    '<div style="margin-top:12px;"><strong style="font-size:12px;">特殊题型：</strong><div style="margin-top:4px;">'+specialHtml+'</div></div>'+
+    (p.compareGuokao?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);"><strong style="font-size:12px;color:var(--jade);">📊 与国考对比：</strong><p style="font-size:12px;color:var(--sub);margin-top:4px;line-height:1.7;">'+p.compareGuokao+'</p></div>':'');
+};
+
+// ===== 学习情况自测 =====
+var stModules=[{id:'yanyu',name:'言语理解',icon:'📖'},{id:'ziliao',name:'资料分析',icon:'📐'},{id:'panduan',name:'判断推理',icon:'🧩'},{id:'shuliang',name:'数量关系',icon:'🔢'},{id:'changshi',name:'常识/政治',icon:'📚'},{id:'shenlun',name:'申论',icon:'✏️'}];
+var stCheckedModules={};
+var stAccuracyData={};
+
+// Tab switching
+document.querySelectorAll('.st-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    var st=this.getAttribute('data-st');
+    document.querySelectorAll('.st-tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.st-panel').forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    document.querySelector('.st-panel[data-st-panel="'+st+'"]').classList.add('active');
+  });
+});
+
+// Build module checkboxes for basic stage
+(function buildStBasicModules(){
+  var container=document.getElementById('st-basic-modules');
+  if(!container)return;
+  stModules.forEach(function(m){
+    var div=document.createElement('div');
+    div.className='st-module-check';
+    div.setAttribute('data-mod',m.id);
+    div.innerHTML='<input type="checkbox" data-mod="'+m.id+'"> <span>'+m.icon+' '+m.name+'</span>';
+    div.addEventListener('click',function(e){
+      if(e.target.tagName!=='INPUT'){
+        var cb=div.querySelector('input');
+        cb.checked=!cb.checked;
+      }
+      stCheckedModules[m.id]=div.querySelector('input').checked;
+      div.classList.toggle('checked',div.querySelector('input').checked);
+      renderStBasicAccuracy();
+    });
+    container.appendChild(div);
+  });
+})();
+
+function renderStBasicAccuracy(){
+  var container=document.getElementById('st-basic-accuracy');
+  var html='';
+  stModules.forEach(function(m){
+    if(stCheckedModules[m.id]){
+      html+='<div class="st-accuracy-row"><label>'+m.icon+' '+m.name+'</label><input type="number" min="0" max="100" placeholder="正确率" data-acc="'+m.id+'"><span>%</span></div>';
+    }
+  });
+  container.innerHTML=html||'<p style="font-size:12px;color:var(--hint);">请先勾选已学模块</p>';
+}
+
+// Build brushing accuracy inputs
+(function buildStBrushingAccuracy(){
+  var container=document.getElementById('st-brushing-accuracy');
+  if(!container)return;
+  var html='';
+  stModules.forEach(function(m){
+    html+='<div class="st-accuracy-row"><label>'+m.icon+' '+m.name+'</label><input type="number" min="0" max="100" placeholder="正确率" data-acc="'+m.id+'"><span>%</span></div>';
+  });
+  container.innerHTML=html;
+})();
+
+window.stChoiceStage=function(stage){
+  if(stage==='notstart'){
+    document.getElementById('st-choice-stage').style.display='none';
+    document.getElementById('st-choice-result').style.display='block';
+    document.getElementById('st-choice-result').innerHTML='<div style="padding:20px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);">'+
+      '<h3 style="color:var(--jade);margin-bottom:10px;">🌱 刚开始备考？别慌，按这个路线走：</h3>'+
+      '<div style="font-size:13px;color:var(--sub);line-height:1.8;">'+
+      '<p><strong>第1-4周：</strong>系统听课（粉笔980或华图模块宝典），每天2小时。先攻言语理解和资料分析——行测得分底盘。</p>'+
+      '<p><strong>第5-8周：</strong>专项刷题（粉笔5000题），每模块每天30-50道。错题立即复盘。</p>'+
+      '<p><strong>第9-12周：</strong>套题实战，每2天一套真题。申论同步启动。</p>'+
+      '<p><strong>第13周+：</strong>全真模拟+查漏补缺。</p>'+
+      '<p style="margin-top:12px;color:var(--coral);">💡 现在距'+getProvinceExamInfo(currentProvinceId).shortName+'省考还有'+daysBetween(getProvinceExamInfo(currentProvinceId).examDate,new Date())+'天，时间充裕。先把基础打牢，不要急着刷题。</p>'+
+      '</div></div>'+
+      '<button onclick="stChoiceBack()" style="margin-top:12px;padding:8px 16px;background:#fff;color:var(--sub);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:inherit;">← 返回</button>';
+    return;
+  }
+  if(stage==='basic'){
+    document.getElementById('st-choice-stage').style.display='none';
+    document.getElementById('st-choice-basic').style.display='block';
+    return;
+  }
+  if(stage==='brushing'){
+    document.getElementById('st-choice-stage').style.display='none';
+    document.getElementById('st-choice-brushing').style.display='block';
+    return;
+  }
+};
+
+window.stChoiceBack=function(){
+  document.getElementById('st-choice-stage').style.display='block';
+  document.getElementById('st-choice-basic').style.display='none';
+  document.getElementById('st-choice-brushing').style.display='none';
+  document.getElementById('st-choice-result').style.display='none';
+};
+
+window.stChoiceSubmit=function(type){
+  var accuracy={};
+  if(type==='basic'){
+    document.querySelectorAll('#st-basic-accuracy input[data-acc]').forEach(function(inp){
+      var mod=inp.getAttribute('data-acc');
+      var val=parseInt(inp.value);
+      if(!isNaN(val))accuracy[mod]=val;
+    });
+    if(Object.keys(accuracy).length===0){alert('请至少填写一个模块的正确率');return;}
+  }else{
+    document.querySelectorAll('#st-brushing-accuracy input[data-acc]').forEach(function(inp){
+      var mod=inp.getAttribute('data-acc');
+      var val=parseInt(inp.value);
+      if(!isNaN(val))accuracy[mod]=val;
+    });
+    if(Object.keys(accuracy).length===0){alert('请至少填写一个模块的正确率');return;}
+  }
+  localStorage.setItem('gk_selftest',JSON.stringify({type:type,accuracy:accuracy,date:new Date().toLocaleDateString('zh-CN')}));
+  renderStChoiceResult(type,accuracy);
+};
+
+function renderStChoiceResult(type,accuracy){
+  document.getElementById('st-choice-basic').style.display='none';
+  document.getElementById('st-choice-brushing').style.display='none';
+  document.getElementById('st-choice-result').style.display='block';
+  var weak=[],mid=[],strong=[];
+  stModules.forEach(function(m){
+    var v=accuracy[m.id];
+    if(v===undefined)return;
+    if(v<50)weak.push(m);
+    else if(v<70)mid.push(m);
+    else strong.push(m);
+  });
+  var teacherMap={yanyu:'红领巾(言语)',ziliao:'高照(资料)',panduan:'薛睿/龙飞(判断)',shuliang:'数量关系策略',changshi:'小黑(政治)',shenlun:'袁东(申论)'};
+  var html='<div style="padding:20px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);">';
+  html+='<h3 style="color:var(--jade);margin-bottom:12px;">📊 你的学习诊断报告</h3>';
+  if(weak.length>0){
+    html+='<div style="margin-bottom:14px;"><div style="font-size:13px;font-weight:600;color:var(--coral);margin-bottom:6px;">⚠️ 薄弱模块（正确率<50%）</div>';
+    weak.forEach(function(m){html+='<div style="font-size:12px;color:var(--sub);padding:4px 0;">'+m.icon+' '+m.name+'：'+accuracy[m.id]+'% → 建议'+teacherMap[m.id]+'方法论重点突破</div>';});
+    html+='</div>';
+  }
+  if(mid.length>0){
+    html+='<div style="margin-bottom:14px;"><div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:6px;">📌 待提升模块（50%-70%）</div>';
+    mid.forEach(function(m){html+='<div style="font-size:12px;color:var(--sub);padding:4px 0;">'+m.icon+' '+m.name+'：'+accuracy[m.id]+'% → 巩固'+teacherMap[m.id]+'方法论，专项刷题提速</div>';});
+    html+='</div>';
+  }
+  if(strong.length>0){
+    html+='<div style="margin-bottom:14px;"><div style="font-size:13px;font-weight:600;color:var(--jade);margin-bottom:6px;">✅ 稳定模块（≥70%）</div>';
+    strong.forEach(function(m){html+='<div style="font-size:12px;color:var(--sub);padding:4px 0;">'+m.icon+' '+m.name+'：'+accuracy[m.id]+'% → 保持手感，定期套题验证</div>';});
+    html+='</div>';
+  }
+  var avg=0,cnt=0;
+  Object.keys(accuracy).forEach(function(k){avg+=accuracy[k];cnt++;});
+  avg=cnt>0?Math.round(avg/cnt):0;
+  html+='<div style="padding:10px 12px;background:#fff;border-radius:6px;margin-top:10px;"><strong style="color:var(--jade);">综合正确率：'+avg+'%</strong>';
+  if(avg<60)html+='<span style="color:var(--coral);font-size:12px;margin-left:8px;">基础薄弱，建议系统听课+专项刷题</span>';
+  else if(avg<75)html+='<span style="color:var(--gold);font-size:12px;margin-left:8px;">有基础但不够稳，进入刷题提速阶段</span>';
+  else html+='<span style="color:var(--jade);font-size:12px;margin-left:8px;">基础扎实，进入套题实战+查漏补缺</span>';
+  html+='</div>';
+  if(type==='basic'){
+    html+='<p style="font-size:12px;color:var(--hint);margin-top:10px;">💡 你还在打基础阶段，重点是理解方法论而非追求速度。每学完一个模块就做对应专项题验证正确率。</p>';
+  }else{
+    html+='<p style="font-size:12px;color:var(--hint);margin-top:10px;">💡 你已进入刷题阶段，重点转向速度+正确率双提升。每2天一套真题，严格计时。</p>';
+  }
+  html+='</div>';
+  html+='<button onclick="stChoiceBack()" style="margin-top:12px;padding:8px 16px;background:#fff;color:var(--sub);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:inherit;">← 返回重新测</button>';
+  document.getElementById('st-choice-result').innerHTML=html;
+}
+
+window.stChatSubmit=function(){
+  var input=document.getElementById('st-chat-input').value.trim();
+  if(!input){alert('请输入你的学习情况');return;}
+  var lower=input.toLowerCase();
+  var advice='<div style="padding:16px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);"><h3 style="color:var(--jade);margin-bottom:10px;">🤖 AI分析结果</h3><div style="font-size:13px;color:var(--sub);line-height:1.8;">';
+  if(lower.indexOf('放弃')>=0||lower.indexOf('不会')>=0){
+    advice+='<p>检测到你提到"放弃/不会"——公考行测120分钟130题，放弃部分题目是正确策略。数量关系可只做4道简单题，剩下统一蒙。关键是<strong>不要在考场上死磕</strong>。</p>';
+  }
+  if(lower.indexOf('资料分析')>=0||lower.indexOf('资料')>=0){
+    advice+='<p><strong>📐 资料分析</strong>是行测提分性价比最高的模块。建议用高照"截位直除法"，每天练2篇（20题），限时15分钟。正确率目标80%+。</p>';
+  }
+  if(lower.indexOf('言语')>=0){
+    advice+='<p><strong>📖 言语理解</strong>：逻辑填空靠成语积累+语境分析，阅读理解靠主旨定位法。建议每天3组成语辨析（本页面"学习预热"已提供）。</p>';
+  }
+  if(lower.indexOf('申论')>=0){
+    advice+='<p><strong>✏️ 申论</strong>：先从概括题练起，每次写完对照参考答案找差距。大作文积累素材比练手速更重要。推荐袁东申论全家桶。</p>';
+  }
+  if(lower.indexOf('数量')>=0){
+    advice+='<p><strong>🔢 数量关系</strong>：抓大放小。工程问题、行程问题、容斥原理、概率问题——这4类占60%分值，优先突破。</p>';
+  }
+  if(lower.indexOf('判断')>=0||lower.indexOf('逻辑')>=0){
+    advice+='<p><strong>🧩 判断推理</strong>：图形推理用龙飞"六步排查法"，逻辑判断用薛睿"翻译+排除法"。每天各练10题。</p>';
+  }
+  if(lower.indexOf('瓶颈')>=0||lower.indexOf('卡')>=0){
+    advice+='<p>遇到瓶颈说明你的方法论需要升级了。建议去"复盘"模块选对应讲师，用名师方法论重新审视你的解题思路。</p>';
+  }
+  if(advice.indexOf('<p>')<0){
+    advice+='<p>感谢你的分享！建议你用"选择题自测"模式，填写各模块正确率，AI能给出更精准的诊断和建议。也可以去"复盘"模块选讲师一对一分析错题。</p>';
+  }
+  advice+='<p style="margin-top:12px;color:var(--hint);font-size:11px;">💬 想要更深度的个性化分析？把你的错题截图上传到"复盘"模块，选讲师进行一对一复盘。</p>';
+  advice+='</div></div>';
+  document.getElementById('st-chat-result').innerHTML=advice;
+};
+
+// ===== 申论诊断 =====
+window.slSubmit=function(){
+  var gk=parseInt(document.getElementById('sl-gaikuang').value)||0;
+  var qs=parseInt(document.getElementById('sl-qishi').value)||0;
+  var gw=parseInt(document.getElementById('sl-gongwen').value)||0;
+  var sucai=document.querySelector('input[name="sl-sucai"]:checked');
+  var kaishi=document.querySelector('input[name="sl-kaishi"]:checked');
+  var piancount=parseInt(document.getElementById('sl-piancount').value)||0;
+  var xiguan=document.querySelector('input[name="sl-xiguan"]:checked');
+  var total=gk+qs+gw;
+  var html='<div style="padding:16px;background:var(--jade-light);border-radius:var(--radius-sm);border:1px solid var(--jade-mid);"><h3 style="color:var(--jade);margin-bottom:10px;">📋 申论诊断报告</h3>';
+  html+='<div style="font-size:13px;color:var(--sub);line-height:1.8;">';
+  html+='<p><strong>小题总分：'+total+'/65分</strong>';
+  if(total<30)html+=' <span style="color:var(--coral);">（偏低，需要加强基础训练）</span>';
+  else if(total<45)html+=' <span style="color:var(--gold);">（中等，还有提升空间）</span>';
+  else html+=' <span style="color:var(--jade);">（不错，保持练习）</span>';
+  html+='</p>';
+  if(gk<10)html+='<p>📌 概括题('+gk+'/20)：练习找关键词、分层归纳。每篇材料至少提炼3-5个要点。</p>';
+  if(qs<10)html+='<p>📌 启示分析('+qs+'/20)：注意"启示"和"做法"的区别，启示要上升到普遍性原则。</p>';
+  if(gw<12)html+='<p>📌 公文写作('+gw+'/25)：掌握格式模板（通知/倡议书/调研报告），格式分占30%。</p>';
+  html+='</div>';
+  html+='<div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);"><strong style="font-size:13px;color:var(--jade);">✍️ 大作文进度</strong>';
+  if(!sucai)html+='<p style="font-size:12px;color:var(--coral);">⚠️ 还没开始积累素材——这是最大的隐患！建议每天读1篇人民日报评论员文章，摘抄金句。</p>';
+  else if(sucai.value==='no')html+='<p style="font-size:12px;color:var(--coral);">⚠️ 没有素材积累=大作文裸考。立刻开始：每天读1篇评论员文章+摘抄3个金句。</p>';
+  else html+='<p style="font-size:12px;color:var(--jade);">✅ 已开始积累素材，继续坚持！</p>';
+  if(!kaishi||kaishi.value==='no')html+='<p style="font-size:12px;color:var(--gold);">📌 还没开始写大作文。建议先模仿范文结构，每周写1篇。</p>';
+  else html+='<p style="font-size:12px;color:var(--jade);">✅ 已开始写大作文，已写'+piancount+'篇。' +(piancount<5?'建议增加到每周2篇。':'保持频率，注意每次写完找老师批改。')+'</p>';
+  if(!xiguan)html+='<p style="font-size:12px;color:var(--coral);">⚠️ 没有固定写作习惯——申论大作文不练手就会生疏。建议每周固定1-2个时间段写作。</p>';
+  else if(xiguan.value==='no')html+='<p style="font-size:12px;color:var(--coral);">⚠️ 没有固定写作习惯。设定每周三、周日各写1篇，养成节奏。</p>';
+  else html+='<p style="font-size:12px;color:var(--jade);">✅ 有固定写作习惯，这是高分的关键！</p>';
+  html+='</div>';
+  var score=0;
+  if(sucai&&sucai.value==='yes')score+=25;
+  if(kaishi&&kaishi.value==='yes')score+=25;
+  if(piancount>=5)score+=25;
+  if(xiguan&&xiguan.value==='yes')score+=25;
+  html+='<div style="margin-top:12px;padding:10px 12px;background:#fff;border-radius:6px;"><strong>大作文准备度：'+score+'%</strong>';
+  if(score<50)html+='<span style="color:var(--coral);font-size:12px;margin-left:8px;">严重不足，立刻行动！</span>';
+  else if(score<75)html+='<span style="color:var(--gold);font-size:12px;margin-left:8px;">有基础，继续加强</span>';
+  else html+='<span style="color:var(--jade);font-size:12px;margin-left:8px;">准备充分</span>';
+  html+='</div>';
+  html+='<p style="font-size:12px;color:var(--hint);margin-top:10px;">💡 推荐使用袁东申论全家桶，系统学习概括→分析→公文→大作文的完整方法论。</p>';
+  html+='</div>';
+  var result=document.getElementById('sl-result');
+  result.innerHTML=html;
+  result.classList.add('show');
+  localStorage.setItem('gk_shenlun',JSON.stringify({gk:gk,qs:qs,gw:gw,sucai:sucai?sucai.value:null,kaishi:kaishi?kaishi.value:null,piancount:piancount,xiguan:xiguan?xiguan.value:null,date:new Date().toLocaleDateString('zh-CN')}));
+};
+
+// ===== 时政热点 =====
+var SHIZHENG_DATA=[
+  {title:'二十届三中全会：进一步全面深化改革',angle:'公报/决定全文必考，重点关注"六个坚持"原则和改革时间表。'},
+  {title:'新质生产力：科技创新引领产业升级',angle:'常识判断高频考点。关联词：人工智能、低空经济、商业航天。'},
+  {title:'2025年中央一号文件：全面推进乡村振兴',angle:'重点关注粮食安全、千万工程经验推广、县域经济发展。'},
+  {title:'人工智能+行动：AI赋能千行百业',angle:'常识/政治理论交叉考点。关注大模型应用、AI立法。'},
+  {title:'全国统一大市场建设：破除地方保护',angle:'经济常识考点。关注要素市场化配置、破除市场壁垒。'},
+  {title:'碳达峰碳中和：绿色低碳转型',angle:'常识考点。关注新能源、碳交易市场、ESG理念。'},
+  {title:'高质量就业：16-24岁青年就业服务',angle:'申论素材。关注职业技能培训、灵活就业保障。'},
+  {title:'一带一路：共建"人类命运共同体"',angle:'外交常识+申论素材。关注第三届峰会成果。'},
+  {title:'数字中国建设：数字经济+数字政府',angle:'政治理论+常识。关注数据要素、政务数字化。'},
+  {title:'全过程人民民主：基层治理创新',angle:'政治理论考点。关注基层立法联系点、社区治理。'},
+  {title:'粮食安全：守住18亿亩耕地红线',angle:'常识+申论。关注种业振兴、高标准农田建设。'},
+  {title:'银发经济：积极应对人口老龄化',angle:'申论热点。关注养老服务体系建设、适老化改造。'},
+  {title:'中国式现代化：五个特征要记牢',angle:'政治理论核心考点。人口规模巨大/共同富裕/物质精神协调/人与自然和谐/和平发展。'},
+  {title:'加快建设科技强国：基础研究+关键核心技术',angle:'常识考点。关注芯片、量子计算、生物制造。'},
+  {title:'区域协调发展：京津冀/长三角/粤港澳大湾区',angle:'经济常识。关注区域重大战略和主体功能区。'},
+  {title:'营商环境优化：民营经济促进法立法',angle:'经济常识+申论素材。关注公平竞争、产权保护。'},
+  {title:'教育强国建设：拔尖创新人才培养',angle:'申论素材。关注基础教育改革、职业教育。'},
+  {title:'健康中国：深化医药卫生体制改革',angle:'常识考点。关注分级诊疗、医保改革。'},
+  {title:'国家安全体系：总体国家安全观',angle:'政治理论。关注粮食/能源/数据/生物安全。'},
+  {title:'文化自信：中华优秀传统文化创造性转化',angle:'申论素材。关注非遗保护、文旅融合。'}
+];
+function getDayOfYear(){
+  var now=new Date();
+  var start=new Date(now.getFullYear(),0,0);
+  return Math.floor((now-start)/(1000*60*60*24));
+}
+function renderShizheng(){
+  var day=getDayOfYear();
+  var picks=[];
+  for(var i=0;i<3;i++){
+    var idx=(day*3+i)%SHIZHENG_DATA.length;
+    picks.push(SHIZHENG_DATA[idx]);
+  }
+  var now=new Date();
+  document.getElementById('warmup-date').textContent=(now.getMonth()+1)+'月'+now.getDate()+'日';
+  var html='';
+  picks.forEach(function(item,i){
+    html+='<div class="news-item"><div class="title-row"><span class="dot"></span><span style="font-size:13px;font-weight:600;">'+item.title+'</span></div><div class="exam-angle">📌 '+item.angle+'</div></div>';
+  });
+  document.getElementById('warmup-news').innerHTML=html;
+}
+
+// ===== 成语辨析 =====
+var IDIOM_POOL=[
+  {a:'不以为然',b:'不以为意',aMeaning:'不认为是对的',bMeaning:'不放在心上',aExample:'他对此说法不以为然，当场反驳。',bExample:'他对别人的提醒不以为意，照旧我行我素。',distinction:'"然"=对，侧重不同意；"意"=在意，侧重不在意。'},
+  {a:'无可厚非',b:'无可非议',aMeaning:'不必过分指责',bMeaning:'没有什么可以指责的',aExample:'年轻人犯错无可厚非。',bExample:'他的做法完全正确，无可非议。',distinction:'厚非=过分指责；非议=指责。前者有错但不严重，后者完全正确。'},
+  {a:'不刊之论',b:'不易之论',aMeaning:'不能更改的言论',bMeaning:'不可改变的论断',aExample:'这篇文章提出了不刊之论。',bExample:'这是不易之论，经得起时间考验。',distinction:'刊=删改/消除；易=改变。前者强调不能删改，后者强调不能改变。'},
+  {a:'耳濡目染',b:'耳闻目睹',aMeaning:'不知不觉受到影响',bMeaning:'亲自听到看到',aExample:'在书香门第长大，耳濡目染。',bExample:'这些事我耳闻目睹，千真万确。',distinction:'濡染=受到影响；目睹=只是看到，不一定受影响。'},
+  {a:'另眼相看',b:'刮目相看',aMeaning:'用不同眼光看待',bMeaning:'用新眼光看待',aExample:'他出身贫寒，被人另眼相看。',bExample:'他进步神速，令人刮目相看。',distinction:'另眼=不同眼光（可褒可贬）；刮目=进步后用新眼光看（褒义）。'},
+  {a:'鱼龙混杂',b:'良莠不齐',aMeaning:'好坏混在一起（人）',bMeaning:'好坏混在一起（物/人）',aExample:'娱乐圈鱼龙混杂。',bExample:'网上的信息良莠不齐。',distinction:'鱼龙=人的好坏；良莠=可指人也可指物。'},
+  {a:'无微不至',b:'无所不至',aMeaning:'关怀周到细致',bMeaning:'什么坏事都干',aExample:'母亲对我无微不至。',bExample:'骗子无所不至，防不胜防。',distinction:'微至=关怀褒义；不至=干坏事贬义。'},
+  {a:'耸人听闻',b:'骇人听闻',aMeaning:'夸大事实使人震惊',bMeaning:'真实事件令人震惊',aExample:'这则谣言耸人听闻。',bExample:'这起案件骇人听闻。',distinction:'耸=故意夸大（可能假）；骇=真实可怕。'},
+  {a:'处心积虑',b:'殚精竭虑',aMeaning:'蓄谋已久干坏事',bMeaning:'用尽精力做好事',aExample:'他处心积虑要害人。',bExample:'科学家殚精竭虑攻克难题。',distinction:'处心=贬义；殚精=褒义。'},
+  {a:'毋庸置疑',b:'无可讳言',aMeaning:'不用怀疑',bMeaning:'不必隐讳',aExample:'他的能力毋庸置疑。',bExample:'无可讳言，我们还有不足。',distinction:'置疑=怀疑；讳言=隐瞒。前者强调确定，后者强调坦承。'},
+  {a:'南辕北辙',b:'背道而驰',aMeaning:'行动和目的相反',bMeaning:'方向完全相反',aExample:'想南行却往北走，南辕北辙。',bExample:'这做法与目标背道而驰。',distinction:'南辕北辙强调自身行动与目的矛盾；背道而驰强调两者方向相反。'},
+  {a:'望尘莫及',b:'鞭长莫及',aMeaning:'赶不上',bMeaning:'力量达不到',aExample:'他的成绩让我望尘莫及。',bExample:'偏远地区，救援鞭长莫及。',distinction:'望尘=追赶不上；鞭长=距离/能力达不到。'},
+  {a:'潜移默化',b:'耳濡目染',aMeaning:'暗中受到影响',bMeaning:'听到看到受影响',aExample:'文化潜移默化地影响着人。',bExample:'在音乐世家长大，耳濡目染。',distinction:'潜移默化=不知不觉的变化；耳濡目染=感官上的接触。'},
+  {a:'釜底抽薪',b:'扬汤止沸',aMeaning:'从根本上解决',bMeaning:'暂时缓解不彻底',aExample:'反腐要釜底抽薪。',bExample:'这只是扬汤止沸，治标不治本。',distinction:'抽薪=彻底解决；扬汤=临时措施。'},
+  {a:'锦上添花',b:'雪中送炭',aMeaning:'好上加好',bMeaning:'急难时帮助',aExample:'获奖后又得到奖金，锦上添花。',bExample:'困难时他伸出援手，雪中送炭。',distinction:'锦上=已有基础上更好；雪中=困境中的帮助。'},
+  {a:'曲高和寡',b:'阳春白雪',aMeaning:'水平太高懂的人少',bMeaning:'高雅不通俗的文艺',aExample:'这首诗曲高和寡。',bExample:'这种音乐太阳春白雪了。',distinction:'和寡=响应者少；阳春白雪=文艺本身高雅。'},
+  {a:'司空见惯',b:'习以为常',aMeaning:'看惯了不觉得奇怪',bMeaning:'习惯了觉得正常',aExample:'这种事司空见惯。',bExample:'加班已经习以为常。',distinction:'司空=客观常见；习以为常=主观习惯。'},
+  {a:'捉襟见肘',b:'顾此失彼',aMeaning:'困难多应付不过来',bMeaning:'照顾了这个丢了那个',aExample:'经费捉襟见肘。',bExample:'他顾此失彼，两头不讨好。',distinction:'捉襟见肘=全面困难；顾此失彼=选择上的矛盾。'},
+  {a:'一蹴而就',b:'一挥而就',aMeaning:'踏一步就成功',bMeaning:'一动笔就写成',aExample:'成功不是一蹴而就的。',bExample:'他文思敏捷，一挥而就。',distinction:'蹴=踏步（指事情成功）；挥=挥笔（指写作）。'},
+  {a:'按部就班',b:'循序渐进',aMeaning:'按照条理做事',bMeaning:'按顺序逐步深入',aExample:'工作要按部就班。',bExample:'学习要循序渐进。',distinction:'按部=按条理（可含贬义刻板）；循序=强调逐步深入。'},
+  {a:'殚精竭虑',b:'呕心沥血',aMeaning:'用尽精力思考',bMeaning:'费尽心血创作',aExample:'他殚精竭虑设计方案。',bExample:'这部作品呕心沥血三年完成。',distinction:'殚精=思考谋划；呕心=创作付出。'},
+  {a:'画蛇添足',b:'多此一举',aMeaning:'多余的东西破坏效果',bMeaning:'做不必要的事',aExample:'加这段话是画蛇添足。',bExample:'已经说清楚了，不用多此一举。',distinction:'画蛇添足=反而有害；多此一举=只是多余。'},
+  {a:'置若罔闻',b:'充耳不闻',aMeaning:'听了像没听到',bMeaning:'塞住耳朵不听',aExample:'他对警告置若罔闻。',bExample:'他对建议充耳不闻。',distinction:'置若=不理会；充耳=故意不听。'},
+  {a:'焕然一新',b:'耳目一新',aMeaning:'面貌完全变新',bMeaning:'听到看到的感觉新鲜',aExample:'房间装修后焕然一新。',bExample:'新节目让人耳目一新。',distinction:'焕然=外观变化；耳目=感受变化。'},
+  {a:'络绎不绝',b:'川流不息',aMeaning:'人马车辆来来往往',bMeaning:'像河流一样不停',aExample:'游客络绎不绝。',bExample:'马路上的车川流不息。',distinction:'络绎=人多连续；川流=车/水流不断。'},
+  {a:'微言大义',b:'言简意赅',aMeaning:'精微语言含深义',bMeaning:'言语简练意思完备',aExample:'这句话微言大义。',bExample:'他发言言简意赅。',distinction:'微言=含义深远；言简=表达简洁。'},
+  {a:'触目惊心',b:'触目皆是',aMeaning:'看到十分震惊',bMeaning:'到处都是',aExample:'灾后景象触目惊心。',bExample:'街头广告触目皆是。',distinction:'惊心=可怕震惊；皆是=数量多。'},
+  {a:'独树一帜',b:'别具一格',aMeaning:'自成一家',bMeaning:'另有风格',aExample:'他在画坛独树一帜。',bExample:'这篇文章别具一格。',distinction:'独树=创立流派；别具=风格独特。'},
+  {a:'恰到好处',b:'适可而止',aMeaning:'正好到合适程度',bMeaning:'到了适当就停止',aExample:'话说得恰到好处。',bExample:'开玩笑要适可而止。',distinction:'恰到=程度刚好；适可=知道停止。'},
+  {a:'墨守成规',b:'固步自封',aMeaning:'守着老规矩不变',bMeaning:'安于现状不求进步',aExample:'他墨守成规，不接受新方法。',bExample:'企业固步自封就会被淘汰。',distinction:'墨守=守旧规矩；固步=不求进取。'}
+];
+function renderIdioms(){
+  var day=getDayOfYear();
+  var html='';
+  for(var i=0;i<3;i++){
+    var idx=(day*3+i)%IDIOM_POOL.length;
+    var item=IDIOM_POOL[idx];
+    html+='<div class="idiom-card"><div class="idiom-pair">'+
+      '<div class="idiom-item"><div class="idiom-name">'+item.a+'</div><div class="idiom-meaning">'+item.aMeaning+'</div><div class="idiom-example">例：'+item.aExample+'</div></div>'+
+      '<div class="idiom-item"><div class="idiom-name">'+item.b+'</div><div class="idiom-meaning">'+item.bMeaning+'</div><div class="idiom-example">例：'+item.bExample+'</div></div>'+
+      '</div><div class="idiom-distinction">🔑 区分：'+item.distinction+'</div></div>';
+  }
+  document.getElementById('idiom-container').innerHTML=html;
+}
+
+// ===== 讲师库 =====
+var TEACHER_LIBRARY={
+  yanyu:[
+    {name:'红领巾',platform:'粉笔',style:'言语理解天花板。三看原则（看搭配/看色彩/看逻辑），主旨题定位法，语句排序首句排除法。',badge:'skill',skill:'gk-honglingjin-verbal'},
+    {name:'顾斐',platform:'华图',style:'言语理解+表达双修。擅长从选项差异切入，快速排除干扰项。',badge:'new-t'},
+    {name:'赵晓进',platform:'中公',style:'阅读理解专家，"关键词锚定法"解决长文阅读速度问题。'}
+  ],
+  ziliao:[
+    {name:'花生十三',platform:'独立',style:'资料分析+数量双修大神。ABRX理论体系/假设分配法/415份数法/盐水思想——一套框架统一所有题型。',badge:'skill',skill:'gk-huasheng13-data'},
+    {name:'高照',platform:'粉笔',style:'截位直除法、特征数字法、分数比较法。超大杯系列是提分神器。与花生互补，花生重思维框架，高照重计算落地。',badge:'skill',skill:'gk-gaozhao-data'},
+    {name:'刘凯',platform:'华图',style:'资料分析+数量双修。擅长估算技巧，"首位估算法"提速30%。'}
+  ],
+  panduan:[
+    {name:'薛睿',platform:'粉笔',style:'逻辑判断大师。翻译推理三段论、加强削弱找论点法。',badge:'skill',skill:'gk-xuerui-logic'},
+    {name:'龙飞',platform:'粉笔',style:'图形推理专家。六步排查法（对称→直曲→封闭→位置→数量→叠加），不走回头路。',badge:'skill',skill:'gk-longfei-figure'},
+    {name:'宋显晶',platform:'华图',style:'类比推理+定义判断。造句子法、核心要素提取法。'}
+  ],
+  shuliang:[
+    {name:'花生十三',platform:'独立',style:'数量关系速解。行程/工程/利润/排列组合/概率/容斥核心题型全覆盖，赋值法+比例法快速求解。',badge:'skill',skill:'gk-huasheng13-data'},
+    {name:'李委明',platform:'粉笔',style:'数量关系+资料分析双修。"抓大放小"策略，死磕4大必考题型。'},
+    {name:'齐麟',platform:'华图',style:'数量关系速解专家。代入排除法、数字特性法。'}
+  ],
+  changshi:[
+    {name:'小黑',platform:'粉笔',style:'政治理论+常识。框架记忆法+错题折叠法。2025新增政治理论模块核心讲师。',badge:'skill',skill:'gk-xiaohei-politics'},
+    {name:'李梦娇',platform:'华图',style:'常识判断口诀大师。"常识88条"覆盖高频考点。'}
+  ],
+  shenlun:[
+    {name:'袁东',platform:'独立',style:'申论核武器。概括题分层法、大作文万能框架、素材积累体系。全家桶系列口碑炸裂。',badge:'skill',skill:'gk-yuandong-shenlun'}
+  ]
+};
+var currentTeacherModule='yanyu';
+var currentTeacher=null;
+// ===== AI讲师配置（状态变量）=====
+var currentTeacherModule='yanyu';
+var currentTeacher=null;
+var chatHistory=[];
+var reviewState=null; // {round:0, module:'', teacher:'', question:'', messages:[], finished:false}
+var chatLoading=false;
+
+// ===== API 配置 =====
+var API_KEY=localStorage.getItem('gk_llm_api_key')||'';
+var SHARED_KEY=''; // ← 在这对单引号里粘贴你的DeepSeek API Key（如 sk-xxx），用于免费试用
+var API_URL='https://api.deepseek.com/chat/completions';
+var API_MODEL='deepseek-chat';
+var FREE_LIMIT=5;
+var WEBHOOK_URL=localStorage.getItem('gk_webhook_url')||'';
+
+// ===== 免费额度管理 =====
+function getFreeUsage(){
+  var raw=localStorage.getItem('gk_free_usage');
+  if(!raw)return{date:todayStr(),count:0};
+  try{var u=JSON.parse(raw);if(u.date!==todayStr())return{date:todayStr(),count:0};return u;}catch(e){return{date:todayStr(),count:0};}
+}
+function hasFreeQuota(){var u=getFreeUsage();return !!API_KEY||!!SHARED_KEY||u.count<FREE_LIMIT;}
+function getFreeRemaining(){return API_KEY?Infinity:FREE_LIMIT-getFreeUsage().count;}
+function useFreeToken(){
+  if(API_KEY)return;
+  var u=getFreeUsage();
+  if(u.count>=FREE_LIMIT)throw new Error('今日免费次数已用完（'+FREE_LIMIT+'/'+FREE_LIMIT+'）。请绑定你自己的DeepSeek API Key（点击顶栏⚙图标设置，新用户免费送500万tokens），即可无限使用。');
+  u.count++;
+  localStorage.setItem('gk_free_usage',JSON.stringify(u));
+  updateFreeUsageUI();
+}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function updateFreeUsageUI(){
+  var remaining=getFreeRemaining();
+  var bar=document.getElementById('free-usage-bar');
+  var count=document.getElementById('free-usage-count');
+  if(!bar||!count)return;
+  if(API_KEY){count.textContent='∞ 无限';bar.className='free-usage-bar';}
+  else if(remaining<=0){count.textContent='0/'+FREE_LIMIT;bar.className='free-usage-bar none';}
+  else{count.textContent=(FREE_LIMIT-remaining)+'/'+FREE_LIMIT;bar.className='free-usage-bar';}
+}
+
+// 关注引流入口
+window.toggleFeedback=function(){
+  document.getElementById('feedback-modal').classList.toggle('show');
+};
+window.submitFeedback=function(){
+  var content=document.getElementById('fb-content').value.trim();
+  var contact=document.getElementById('fb-contact').value.trim();
+  if(!content){alert('请输入反馈内容');return;}
+  var status=document.getElementById('fb-status');
+  status.textContent='⏳ 发送中...';status.className='fm-status show';
+  if(WEBHOOK_URL){
+    var payload={msg_type:'interactive',card:{header:{title:{tag:'plain_text',content:'公考仪表盘 - 用户反馈'},template:'green'},elements:[{tag:'div',text:{tag:'lark_md',content:'**反馈内容：**\n'+content+(contact?'\n\n**联系方式：**'+contact:'')+(navigator.userAgent.includes('Mobile')?'\n\n📱 移动端':'💻 桌面端')+'  \n⏰ '+new Date().toLocaleString()}}]}};
+    fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){
+      if(r.ok){status.textContent='✅ 反馈已发送，感谢！';status.className='fm-status show success';document.getElementById('fb-content').value='';status.textContent='反馈已发送!';}
+      else{status.textContent='❌ 发送失败('+r.status+')';status.className='fm-status show error';}
+    }).catch(function(e){status.textContent='❌ 网络错误: '+e.message;status.className='fm-status show error';});
+  }else{
+    status.textContent='⚠️ 管理员尚未配置反馈渠道（飞书webhook未设置）。请通过其他方式联系。';status.className='fm-status show error';
+  }
+};
+window.testWebhook=function(){
+  var url=document.getElementById('webhook-input').value.trim()||WEBHOOK_URL;
+  if(!url){alert('请先输入飞书群机器人 Webhook URL');return;}
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({msg_type:'text',content:{text:'✅ 飞书机器人推送测试成功！如果你在飞书群看到这条消息，说明配置正确。'}})}).then(function(r){
+    if(r.ok){alert('✅ 测试消息已发送！请查看你的飞书群是否收到。');}
+    else{r.text().then(function(t){alert('❌ 发送失败('+r.status+')：'+t.substring(0,200));});}
+  }).catch(function(e){alert('❌ 网络错误: '+e.message);});
+};
+
+// ===== 渲染函数（保留原有UI渲染逻辑）=====
+function renderReviewStepIndicator(){
+  var el=document.getElementById('review-step-indicator');
+  if(!reviewState){
+    el.style.display='none';
+    return;
+  }
+  el.style.display='block';
+  el.innerHTML='<span>🥜 AI名师复盘中 · 第'+reviewState.round+'轮</span>';
+}
+
+function renderChatMessages(){
+  var html='';
+  chatHistory.forEach(function(msg,i){
+    var cls='chat-msg '+(msg.role==='teacher'?'teacher-t':'student-t');
+    if(msg.socratic)cls+=' socratic';
+    if(msg.loading)cls+=' loading';
+    var text=msg.text;
+    if(msg.loading){
+      text='AI讲师正在思考中 <span class="dots"><span></span><span></span><span></span></span>';
+    }
+    html+='<div class="'+cls+'"'+(msg.loading?' id="chat-loading"':'')+'><div class="bubble">'+text.replace(/\n/g,'<br>')+'</div></div>';
+  });
+  var body=document.getElementById('chat-messages');
+  body.innerHTML=html;
+  body.scrollTop=body.scrollHeight;
+}
+
+function renderTeacherModuleBar(){
+  var modules=[
+    {id:'yanyu',name:'📖 言语'},{id:'ziliao',name:'📐 资料'},{id:'panduan',name:'🧩 判断'},
+    {id:'shuliang',name:'🔢 数量'},{id:'changshi',name:'📚 常识'},{id:'shenlun',name:'✏️ 申论'}
+  ];
+  var html='';
+  modules.forEach(function(m){
+    html+='<button class="tm-btn'+(m.id===currentTeacherModule?' active':'')+'" onclick="selectTeacherModule(\''+m.id+'\')">'+m.name+'</button>';
+  });
+  document.getElementById('teacher-module-bar').innerHTML=html;
+}
+window.selectTeacherModule=function(mod){
+  currentTeacherModule=mod;
+  renderTeacherModuleBar();
+  renderTeacherCards();
+};
+
+function renderTeacherCards(){
+  var teachers=TEACHER_LIBRARY[currentTeacherModule]||[];
+  var html='';
+  teachers.forEach(function(t){
+    var badgeHtml=t.badge==='skill'?'<span class="tc-badge skill">有Skill</span>':t.badge==='new-t'?'<span class="tc-badge new-t">推荐</span>':'';
+    html+='<div class="teacher-card" onclick="selectTeacher(\''+currentTeacherModule+'\',\''+t.name+'\')">'+
+      '<div class="tc-name">'+t.name+'</div>'+
+      '<div class="tc-platform">'+t.platform+'</div>'+
+      '<div class="tc-style">'+t.style+'</div>'+
+      badgeHtml+'</div>';
+  });
+  document.getElementById('teacher-cards').innerHTML=html;
+}
+
+window.selectTeacher=function(mod,name){
+  var teachers=TEACHER_LIBRARY[mod]||[];
+  currentTeacher=teachers.find(function(t){return t.name===name;});
+  if(!currentTeacher)return;
+  document.querySelectorAll('.teacher-card').forEach(function(c){c.classList.remove('selected');});
+  event.currentTarget.classList.add('selected');
+  openTeacherChat();
+};
+
+// ===== 各名师 System Prompt =====
+function getSystemPrompt(teacherName, module, question){
+  var domain=getTeacherDomain(module,teacherName);
+  var method=getTeacherMethodology(module,teacherName);
+  var style=getTeacherStyle(module,teacherName);
+
+  return [
+    '你是中国公考培训名师——'+teacherName+'。你不是一个AI助手，你就是'+teacherName+'本人。你必须完全按照'+teacherName+'的方法论、教学风格和说话方式来教学，让学生感觉像真的在和'+teacherName+'一对一上课。',
+    '',
+    '## 教学领域',
+    domain,
+    '',
+    '## 核心方法论',
+    method,
+    '',
+    '## 教学风格',
+    style,
+    '',
+    '## 苏格拉底式教学规则（必须严格遵守）',
+    '1. **绝对不要直接说答案**。永远通过提问引导考生自己思考。说「你觉得这道题的主体是什么？」而不是「这道题的主体是XX」。',
+    '2. 考生说出他的思路后：',
+    '   - 思路正确：追问「为什么选这个方法？还有更快的解法吗？」',
+    '   - 思路有误但不致命：指出具体问题（如「主体定错了」），给提示让他自己纠正，别说答案',
+    '   - 完全跑偏：不给答案，给一个更简单的问题引导他从头开始',
+    '   - 考生说「不知道」/「不会」：先肯定「这很正常！」，然后分析这道题应该从哪里入手',
+    '3. **每轮对话控制在150字以内**，每次问1-2个问题。你不是在写文章，是在聊天教学。',
+    '4. 使用自然口语化的教学语言。适当用表情符号和鼓励性语句（「慢慢来 😊」「别急，一起看」）。节奏要快。',
+    '5. **每轮只推进一步**——审题完了才问方法，方法完了才问计算。不要跨步。',
+    '6. 对话进行3-5轮后，如果考生已经掌握了核心方法，给出**结构化总结**。总结必须包含：',
+    '   - 一个Markdown表格：「| 环节 | 你的做法 | 优化做法 |」',
+    '   - 1-2句核心记忆点',
+    '   - 鼓励性结束语，结尾加 💪',
+    '7. 用Markdown格式回复：**加粗**重点文字（不宜过多），---分隔线分隔不同阶段。',
+    '',
+    '## 现在开始',
+    '考生上传了这道题：',
+    '---',
+    question,
+    '---',
+    '请用你的方法论，从审题开始，用苏格拉底式提问引导他彻底搞懂这道题。先只问审题，等他回答了再推进下一步。'
+  ].join('\n');
+}
+
+function getTeacherDomain(mod,name){
+  var m={
+    'ziliao':'资料分析——行测第五模块，考察图表阅读和速算能力。题型：基期/现期/增长率/增长量/比重/倍数/平均数。时间压力最大的模块（平均1分钟/题）。',
+    'yanyu':'言语理解与表达——行测第二模块，考察汉语阅读理解能力。题型：逻辑填空/阅读理解/语句排序/接语选择。黄金法则是看搭配、看感情色彩、看上下文逻辑。',
+    'panduan':'判断推理——行测第四模块，考察逻辑思维。题型：图形推理/定义判断/类比推理/逻辑判断。核心是找规律、找矛盾、找等价命题。',
+    'shuliang':'数量关系——行测第三模块，数学计算。题型：行程/工程/利润/排列组合/概率/容斥。考场上最容易被放弃的模块，但40%的题可用代入排除秒杀。',
+    'changshi':'常识判断与政治理论——行测第一模块。2025年起新增政治理论。重点：二十大报告/新思想/重要会议/科技成就。框架记忆+一句话口诀才是王道。',
+    'shenlun':'申论——公务员考试写作科目。题型：概括归纳/启示分析/公文写作/大作文。核心能力：阅读理解+归纳概括+提出对策+文字表达。评分标准：要点全不全占60%、表述准不准占30%、字数合不合占10%。'
+  };
+  return m[mod]||'行测/申论考试内容';
+}
+
+function getTeacherMethodology(mod,name){
+  var key=mod+'-'+name;
+  var t={
+    'ziliao-花生十三':'ABRX体系——4个字母统一所有题型：A基期/B现期/R增长率/X增长量。假设分配法：R化成1/N分数，增量=现期÷(N+1)。415份数法：R=1/N时，基期=N份,增长量=1份,现期=N+1份。盐水思想：混合增长率在中间、偏向基期大的一边。比重变化趋势：上升/下降看增速差。核心哲学：行测不是考计算，是考方法选择。',
+    'ziliao-高照':'截位直除法——选项差距大截两位，差距小截三位。特征数字法——将百分数化为最简分数（33.3%=1/3, 16.7%=1/6, 14.3%=1/7等）。分数比较法——差分法/直除比较。超大杯系列速算训练。核心哲学：基础计算先过关，再学技巧，每天50道速算，目标1.5分钟/题。',
+    'ziliao-刘凯':'首位估算法——看选项的首位数字有没有差异，有差异用首位估算就够。核心哲学：速度来自估算能力，不是精算能力。',
+    'yanyu-红领巾':'三看原则——看搭配（动词配什么宾语）、看感情色彩（褒义/贬义）、看上下文逻辑（转折/递进/因果/并列）。主旨题定位法——首句+尾句+高频词锁定。语句排序首句排除法——不适合作首句的常见类型。核心哲学：言语不是凭感觉，每个空都有逻辑依据，每个选项都能用三看原则逐一排除。',
+    'panduan-薛睿':'翻译推理三段论——把题干翻译成逻辑表达式（A→B→C）。加强削弱找论点法——先定位论点再判断。逆否命题——A→B等价于非B→非A。核心哲学：逻辑题的本质是翻译和等价变换。',
+    'panduan-龙飞':'图形推理六步排查法——1对称2直曲3封闭4位置5数量6叠加，按固定顺序排查不走回头路。每一步之间不交叉，找到规律就停。核心哲学：图形题的规律有限，固定排查顺序就能稳定得分。',
+    'panduan-宋显晶':'类比推理造句子法——造一个句子框架，把选项逐个套入比关系。定义判断核心要素提取法——提取定义中的核心要素，逐条与选项比对。',
+    'shuliang-花生十三':'数量关系速解体系。赋值法（赋值总量=时间的最小公倍数）、比例法、方程法。重点六类：行程/工程/利润/排列组合/概率/容斥。核心哲学：先判断哪道值得做，再判断用哪种方法做。40%用代入排除秒杀。',
+    'changshi-小黑':'政治理论框架记忆法——先把知识点放入框架（二十大报告/新思想/重要会议/科技成就），在框架里定位。错题折叠法——每个错题提炼成一句话，碎片时间翻一遍。核心哲学：常识不求全对，求快速排除+高概率蒙对。',
+    'shenlun-袁东':'概括题分层法——按主题/层次/逻辑分层归纳，要点用动词+名词结构。大作文万能框架——观点+分论点×3+论据+总结。核心哲学：申论是踩点得分，不是文采比赛——要点全不全占60%。'
+  };
+  return t[key]||'行测/申论通用解题方法论。根据具体题型和考点，选择最合适的解题路径和速算技巧。';
+}
+
+function getTeacherStyle(mod,name){
+  var key=mod+'-'+name;
+  var s={
+    'ziliao-花生十三':'说话节奏快、直接、犀利。喜欢反问学生检查思路。「你这里踩坑了」是口头禅。常把复杂公式转化为简单口诀。教学节奏：审题→判题型→选方法→计算→优化→一句总结。',
+    'ziliao-高照':'注重基本功、强调练习量。说话较温和但要求严格。「你这个截位规则还没背熟」是常见点评。教学节奏：纠错→正确方法→速度分析→练习建议。',
+    'ziliao-刘凯':'强调估算和速判。说话简洁务实。「这道题根本不用算」是口头禅。',
+    'yanyu-红领巾':'言语理解天花板老师。有语文老师的条理感。善于从选项差异中找突破口。「看搭配，所有空都能从上下文找到线索」。教学节奏：题型→找线索→排除→确认。',
+    'panduan-薛睿':'逻辑严密、步步推演。说话像数学老师，每一步都有逻辑依据。「翻译对了就做对了一半」。教学节奏：翻译→找逻辑关系→看选项→排除。',
+    'panduan-龙飞':'条理清晰、按部就班。强调「不走回头路」。教学节奏：一步一步排查→找到规律→验证选项。',
+    'panduan-宋显晶':'实用主义教学风格。告诉学生「不要想太多，就用造句子法」。教学节奏：识别题型→套用框架→对比选项。',
+    'shuliang-花生十三':'快节奏、重实效。强调「先判断值不值得做，再判断怎么做」。教学节奏：判断→题型→方法→速算。',
+    'changshi-小黑':'框架感强，擅长把零散知识串起来。说话干脆不拖沓。常对学生说「这个考点在XX框架里，记一下」。教学节奏：判断框架→定位考点→提炼一句话。',
+    'shenlun-袁东':'申论教练风格，耐心但标准高。「要点找全了吗？」是核心追问。注重评分标准。教学节奏：题型→要点→表述→对比参考答案。'
+  };
+  return s[key]||'专业的公考培训老师。教学风格认真、负责、有耐心，擅长用简单方式解释复杂问题。';
+}
+
+// ===== LLM API 调用 =====
+function parseDeepSeekError(resp,errText){
+  var msg='';
+  try{
+    var err=JSON.parse(errText).error;
+    if(err&&err.message)msg=err.message;
+    if(err&&err.code)msg+=' (code:'+err.code+')';
+  }catch(e){}
+  if(!msg)msg=errText.substring(0,160);
+  if(resp.status===401)return 'API Key无效，请检查Key是否复制完整';
+  if(resp.status===402)return '账户余额不足：'+msg+'。请去 DeepSeek 控制台充值，或确认赠送额度是否已到账/完成实名认证';
+  if(resp.status===429)return 'API调用频率超限，请稍后再试';
+  if(resp.status>=500)return 'DeepSeek服务器繁忙，请稍后重试';
+  return 'API错误('+resp.status+'): '+msg;
+}
+async function callLLM(messages){
+  var keyToUse=API_KEY||SHARED_KEY;
+  if(!keyToUse)throw new Error('请先绑定你的DeepSeek API Key（点击顶栏⚙图标→注册→复制Key→粘贴保存）。完全免费！DeepSeek新用户赠送500万tokens（约可复盘5000+次）。');
+  if(!API_KEY)useFreeToken(); // 无自己Key → 消耗免费额度
+  var resp=await fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+keyToUse},
+    body:JSON.stringify({model:API_MODEL,messages:messages,temperature:0.7,max_tokens:2048})
+  });
+  if(!resp.ok){
+    var errText=await resp.text();
+    throw new Error(parseDeepSeekError(resp,errText));
+  }
+  var data=await resp.json();
+  if(!data.choices||!data.choices[0]||!data.choices[0].message)throw new Error('API返回格式异常');
+  // 已绑Key的用户不耗免费额度
+  return data.choices[0].message.content;
+}
+
+function addLoadingMessage(){
+  chatHistory.push({role:'teacher',text:'',loading:true});
+  renderChatMessages();
+  var el=document.getElementById('chat-loading');
+  if(el)el.scrollIntoView({behavior:'smooth'});
+}
+function removeLoadingMessage(){
+  for(var i=chatHistory.length-1;i>=0;i--)if(chatHistory[i].loading){chatHistory.splice(i,1);return;}
+}
+
+// ===== API 设置面板 =====
+window.toggleApiSettings=function(){
+  var panel=document.getElementById('api-settings-panel');
+  panel.classList.toggle('show');
+  if(panel.classList.contains('show')){
+    document.getElementById('api-key-input').value=API_KEY;
+    document.getElementById('webhook-input').value=WEBHOOK_URL;
+    updateApiStatusUI();
+    updateFreeUsageUI();
+  }
+};
+window.saveApiKey=function(){
+  var key=document.getElementById('api-key-input').value.trim();
+  var wh=document.getElementById('webhook-input').value.trim();
+  if(key)API_KEY=key;
+  if(wh)WEBHOOK_URL=wh;
+  if(key){localStorage.setItem('gk_llm_api_key',key);}
+  else{localStorage.removeItem('gk_llm_api_key');API_KEY='';}
+  if(wh){localStorage.setItem('gk_webhook_url',wh);}
+  else{localStorage.removeItem('gk_webhook_url');WEBHOOK_URL='';}
+  updateApiStatusUI();
+  updateFreeUsageUI();
+  document.getElementById('api-settings-panel').classList.remove('show');
+};
+window.testApiKey=async function(){
+  var key=document.getElementById('api-key-input').value.trim()||API_KEY;
+  if(!key){alert('请先输入API Key');return;}
+  var status=document.getElementById('api-status-indicator');
+  status.textContent='🔄 测试中...';
+  status.className='api-status ok';
+  try{
+    var resp=await fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:API_MODEL,messages:[{role:'user',content:'回复"OK"'}],max_tokens:5})
+    });
+    if(resp.ok){status.textContent='✅ 连接成功！DeepSeek API正常工作';status.className='api-status ok';}
+    else{
+      var errText=await resp.text();
+      status.textContent='❌ '+parseDeepSeekError(resp,errText);
+      status.className='api-status unset';
+    }
+  }catch(e){status.textContent='❌ 网络错误: '+e.message;status.className='api-status unset';}
+};
+window.clearApiKey=function(){
+  API_KEY='';
+  localStorage.removeItem('gk_llm_api_key');
+  document.getElementById('api-key-input').value='';
+  updateApiStatusUI();
+};
+function updateApiStatusUI(){
+  var btn=document.getElementById('api-settings-btn');
+  var status=document.getElementById('api-status-indicator');
+  if(API_KEY){btn.classList.add('configured');status.textContent='✅ API Key已配置 — AI讲师就绪（无限使用）';status.className='api-status ok';}
+  else if(SHARED_KEY){btn.classList.add('configured');status.textContent='🎁 今日可免费试用 '+getFreeRemaining()+' 次 — 绑定你的Key解锁无限使用';status.className='api-status ok';}
+  else{btn.classList.remove('configured');status.textContent='⚠️ 未配置API Key — 请绑定你的DeepSeek Key（免费注册送500万tokens）';status.className='api-status unset';}
+  updateFreeUsageUI();
+}
+updateApiStatusUI();
+
+// ===== 讲师对话核心流程 =====
+function openTeacherChat(){
+  if(!currentTeacher)return;
+  var chat=document.getElementById('teacher-chat');
+  chat.classList.add('active');
+  chat.classList.add('expanded');
+  document.getElementById('chat-toggle-btn').innerHTML='⛶ 缩小';
+  document.getElementById('chat-toggle-btn').title='缩小对话框';
+  document.getElementById('chat-teacher-name').textContent=currentTeacher.name+' · '+currentTeacher.platform+((API_KEY||SHARED_KEY)?' ⚡AI':'');
+  chatHistory=[];
+  reviewState=null;
+  chatLoading=false;
+  document.getElementById('review-step-indicator').style.display='none';
+  document.getElementById('teacher-question-pin').classList.remove('active');
+  var greet='你好！我是'+currentTeacher.name+'。\n\n请把错题粘贴到下方输入框（或上传截图），然后点「🧠 开始复盘」。\n\n我会用苏格拉底式提问一步步带你深度复盘——不直接给答案，而是通过提问引导你发现问题和最优解法。准备好了吗？';
+  chatHistory.push({role:'teacher',text:greet});
+  renderChatMessages();
+}
+
+window.closeTeacherChat=function(){
+  document.getElementById('teacher-chat').classList.remove('active');
+  currentTeacher=null;
+  chatHistory=[];
+  reviewState=null;
+  chatLoading=false;
+  document.getElementById('review-step-indicator').style.display='none';
+  document.getElementById('teacher-question-pin').classList.remove('active');
+  document.getElementById('chat-input').value='';
+  setChatPrimaryBtn('start');
+};
+
+window.togglePin=function(){
+  var pin=document.getElementById('pin-content');
+  var btn=document.getElementById('pin-toggle');
+  if(pin.classList.contains('collapsed')){pin.classList.remove('collapsed');btn.textContent='收起';}
+  else{pin.classList.add('collapsed');btn.textContent='展开';}
+};
+
+window.toggleChatExpand=function(){
+  var chat=document.getElementById('teacher-chat');
+  var btn=document.getElementById('chat-toggle-btn');
+  if(chat.classList.contains('expanded')){chat.classList.remove('expanded');btn.innerHTML='⛶ 放大';btn.title='放大对话框';}
+  else{chat.classList.add('expanded');btn.innerHTML='⛶ 缩小';btn.title='缩小对话框';}
+};
+
+// ===== 核心复盘（LLM API 驱动）=====
+window.analyzeWithTeacher=async function(){
+  if(chatLoading)return;
+  var chat=document.getElementById('teacher-chat');
+  chat.classList.add('expanded');
+  document.getElementById('chat-toggle-btn').innerHTML='⛶ 缩小';
+  var input=document.getElementById('chat-input');
+  var text=input.value.trim();
+  if(!text){alert('请先把题目粘贴到输入框中');return;}
+
+  chatHistory.push({role:'student',text:text});
+  input.value='';
+  document.getElementById('pin-content').textContent=text;
+  document.getElementById('teacher-question-pin').classList.add('active');
+  renderChatMessages();
+
+  reviewState={round:1,module:currentTeacherModule,teacher:currentTeacher?currentTeacher.name:'',question:text,messages:[],finished:false};
+
+  if(!API_KEY){
+    chatHistory.push({role:'teacher',text:'⚠️ **AI讲师未配置**\n\n你需要先配置DeepSeek API Key才能使用真正的AI对话。\n\n点击顶栏 ⚙ 图标 → 输入API Key → 保存，然后重新点「🧠 开始复盘」。\n\n注册地址：https://platform.deepseek.com（新用户免费送500万tokens）'});
+    renderChatMessages();
+    reviewState=null;
+    return;
+  }
+
+  var systemPrompt=getSystemPrompt(reviewState.teacher,reviewState.module,text);
+  reviewState.messages=[{role:'system',content:systemPrompt},{role:'user',content:text}];
+
+  addLoadingMessage();
+  setChatPrimaryBtn('loading');
+  chatLoading=true;
+  try{
+    var response=await callLLM(reviewState.messages);
+    removeLoadingMessage();
+    reviewState.messages.push({role:'assistant',content:response});
+    chatHistory.push({role:'teacher',text:response,socratic:true});
+    renderReviewStepIndicator();
+  }catch(e){
+    removeLoadingMessage();
+    chatHistory.push({role:'teacher',text:'❌ **AI讲师暂时不可用**\n\n'+e.message+'\n\n请检查：\n1. API Key是否正确（顶栏⚙设置）\n2. 网络是否正常\n3. DeepSeek服务状态：status.deepseek.com'});
+    reviewState=null;
+    document.getElementById('teacher-question-pin').classList.remove('active');
+    setChatPrimaryBtn('start');
+  }
+  chatLoading=false;
+  renderChatMessages();
+  setChatPrimaryBtn(reviewState?'answer':'start');
+};
+
+window.sendChatMessage=async function(){
+  if(chatLoading)return;
+  var input=document.getElementById('chat-input');
+  var text=input.value.trim();
+  if(!text)return;
+  chatHistory.push({role:'student',text:text});
+  input.value='';
+  renderChatMessages();
+
+  if(!reviewState){
+    chatHistory.push({role:'teacher',text:'如果你想让AI用名师方法论带你复盘，请先把错题粘贴到输入框，然后点下方「🧠 开始复盘」按钮。'});
+    renderChatMessages();
+    return;
+  }
+
+  reviewState.messages.push({role:'user',content:text});
+  reviewState.round++;
+  renderReviewStepIndicator();
+  addLoadingMessage();
+  setChatPrimaryBtn('loading');
+  chatLoading=true;
+  try{
+    var response=await callLLM(reviewState.messages);
+    removeLoadingMessage();
+    reviewState.messages.push({role:'assistant',content:response});
+    chatHistory.push({role:'teacher',text:response,socratic:true});
+    var isSummary=response.indexOf('| 环节')>=0||response.indexOf('|环节')>=0||(response.indexOf('总结')>=0&&response.indexOf('💪')>=0)||reviewState.round>=5;
+    if(isSummary){
+      reviewState.finished=true;
+      document.getElementById('teacher-question-pin').classList.remove('active');
+      setChatPrimaryBtn('start');
+      reviewState=null;
+      document.getElementById('review-step-indicator').style.display='none';
+    }
+  }catch(e){
+    removeLoadingMessage();
+    chatHistory.push({role:'teacher',text:'❌ **API调用失败**\n\n'+e.message+'\n\n你可以重新发送刚才的回答试试。'});
+  }
+  chatLoading=false;
+  renderChatMessages();
+  if(reviewState&&!reviewState.finished)setChatPrimaryBtn('answer');
+};
+
+function setChatPrimaryBtn(mode){
+  var btn=document.getElementById('chat-primary-btn');
+  if(!btn)return;
+  btn.disabled=false;
+  btn.style.opacity='1';
+  if(mode==='answer'){btn.textContent='💬 发送回答';btn.onclick=function(){sendChatMessage();};}
+  else if(mode==='loading'){btn.textContent='⏳ AI思考中...';btn.disabled=true;}
+  else{btn.textContent='🧠 开始复盘';btn.onclick=function(){analyzeWithTeacher();};}
+}
+
+window.clearChat=function(){
+  chatHistory=[];
+  reviewState=null;
+  chatLoading=false;
+  document.getElementById('chat-input').value='';
+  document.getElementById('upload-preview').classList.remove('show');
+  document.getElementById('ocr-status-inline').classList.remove('show');
+  document.getElementById('qb-file-input').value='';
+  _ocrImgData=null;
+  document.getElementById('review-step-indicator').style.display='none';
+  document.getElementById('teacher-question-pin').classList.remove('active');
+  setChatPrimaryBtn('start');
+  if(currentTeacher){chatHistory.push({role:'teacher',text:'对话已清空。请粘贴新的错题，重新开始复盘。'});}
+  renderChatMessages();
+};
+
+// ===== 图片上传 + OCR =====
+var _ocrImgData=null; // 保存最近上传的图片dataURL，供重试用
+window.clearImagePreview=function(){
+  document.getElementById('upload-preview').classList.remove('show');
+  document.getElementById('ocr-status-inline').classList.remove('show');
+  document.getElementById('qb-file-input').value='';
+  _ocrImgData=null;
+};
+window.handleImageUpload=function(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  var preview=document.getElementById('upload-preview');
+  var thumbName=document.getElementById('up-thumb-name');
+  var statusWidget=document.getElementById('up-status-widget');
+  var statusLine=document.getElementById('ocr-status-inline');
+  // 显示紧凑预览
+  thumbName.textContent=file.name.length>15?file.name.slice(0,13)+'…':file.name;
+  statusWidget.textContent='加载引擎…';
+  statusWidget.className='up-status';
+  preview.classList.add('show');
+  statusLine.classList.add('show');
+  statusLine.innerHTML='<span class="qb-spinner"></span>正在加载OCR引擎...';
+  // 读文件
+  var reader=new FileReader();
+  reader.onload=function(e){
+    _ocrImgData=e.target.result;
+    checkTesseract(function(loaded){
+      if(!loaded){
+        statusWidget.textContent='引擎加载失败';
+        statusWidget.className='up-status error';
+        statusLine.innerHTML='⚠️ OCR引擎加载失败。可能原因：网络不通或CDN被拦截。<br>解决方法：①刷新页面重试 ②直接手动粘贴题目文字 ③按F12查看控制台错误';
+        return;
+      }
+      statusWidget.textContent='识别中…';
+      statusLine.innerHTML='<span class="qb-spinner"></span>正在下载中文识别包（约8MB，首次需要30-60秒，之后秒开）...';
+      // 多CDN源回退 — jsdelivr优先（国内有节点，更快）
+      var langSources=[
+        'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best',
+        'https://tessdata.projectnaptha.com/4.0.0_best',
+        'https://raw.githubusercontent.com/naptha/tessdata/gh-pages/4.0.0'
+      ];
+      var langIdx=0;
+      var _dlStartTime=Date.now();
+      function tryOCR(){
+        var opts={
+          corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
+          workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
+          langPath:langSources[langIdx]+'/',
+          cacheMethod:'idb',
+          logger:function(m){
+            if(m.status==='recognizing text'){
+              statusLine.innerHTML='<span class="qb-spinner"></span>识别中... '+Math.round(m.progress*100)+'%';
+              statusWidget.textContent='识别…'+Math.round(m.progress*100)+'%';
+            }else if(m.status==='loading language traineddata'){
+              var elapsed=Math.round((Date.now()-_dlStartTime)/1000);
+              statusLine.innerHTML='<span class="qb-spinner"></span>下载中文识别包（约8MB，首次较慢请耐心等待）... 已用时 '+elapsed+' 秒';
+            }else if(m.status==='initializing tesseract'){
+              statusLine.innerHTML='<span class="qb-spinner"></span>初始化OCR引擎...';
+            }
+          }
+        };
+        // 使用 createWorker 获得明确错误信息
+        Tesseract.createWorker('chi_sim+eng',1,opts).then(function(worker){
+          return worker.recognize(_ocrImgData).then(function(result){
+            worker.terminate();
+            var text=result.data.text.trim();
+            if(text){
+              statusWidget.textContent='✅ 已填入';
+              statusWidget.className='up-status success';
+              statusLine.innerHTML='✅ 识别完成！文字已填入下方输入框，请检查修正后点「🧠 开始复盘」。';
+              var textarea=document.getElementById('chat-input');
+              textarea.value+=(textarea.value?'\n\n':'')+text;
+              textarea.focus();
+            }else{
+              statusWidget.textContent='无文字';
+              statusWidget.className='up-status error';
+              statusLine.innerHTML='⚠️ 图片中未识别到文字，请换一张更清晰的图片或手动输入。';
+            }
+          });
+        }).catch(function(err){
+          if(langIdx<langSources.length-1){
+            langIdx++;
+            statusLine.innerHTML='<span class="qb-spinner"></span>源 '+(langIdx)+' 失败，尝试备用源（'+(langIdx+1)+'/'+langSources.length+'）...';
+            setTimeout(tryOCR,500);
+          }else{
+            statusWidget.textContent='识别失败';
+            statusWidget.className='up-status error';
+            var errMsg=err.message||err.toString();
+            statusLine.innerHTML='⚠️ OCR失败：'+errMsg+'。<br>请手动输入题目文字，或刷新页面后重试。';
+          }
+        });
+      }
+      tryOCR();
+    });
+  };
+  reader.readAsDataURL(file);
+};
+
+// ===== 复盘工作台 =====
+var REVIEW_DB={};
+(function loadReviewDB(){
+  var saved=localStorage.getItem('gk_review_db');
+  if(saved){try{REVIEW_DB=JSON.parse(saved);}catch(e){REVIEW_DB={};}}
+})();
+function saveReviewDB(){
+  localStorage.setItem('gk_review_db',JSON.stringify(REVIEW_DB));
+}
+var MODULE_NAMES={ziliao:'资料分析',yanyu:'言语理解',panduan:'判断推理',shuliang:'数量关系',changshi:'常识/政治'};
+var MODULE_PREFIX={ziliao:'zl',yanyu:'yy',panduan:'pd',shuliang:'sl',changshi:'cs'};
+window.addReviewItem=function(mod){
+  var prefix=MODULE_PREFIX[mod];
+  var title=document.getElementById(prefix+'-title');
+  var analysis=document.getElementById(prefix+'-analysis');
+  var typeSel=document.getElementById(prefix+'-type')||document.getElementById(prefix+'-error');
+  if(!REVIEW_DB[mod])REVIEW_DB[mod]=[];
+  var item={
+    id:Date.now(),
+    title:title?title.value:'',
+    type:typeSel?typeSel.value:'',
+    analysis:analysis?analysis.value:'',
+    date:new Date().toLocaleDateString('zh-CN')
+  };
+  if(!item.analysis){
+    alert('请填写复盘分析内容');
+    return;
+  }
+  REVIEW_DB[mod].unshift(item);
+  saveReviewDB();
+  if(title)title.value='';
+  if(analysis)analysis.value='';
+  if(typeSel)typeSel.value='';
+  renderHistory(mod);
+};
+function renderHistory(mod){
+  var container=document.getElementById(MODULE_PREFIX[mod]+'-history');
+  if(!container)return;
+  var items=REVIEW_DB[mod]||[];
+  if(items.length===0){
+    container.innerHTML='<p style="font-size:12px;color:var(--hint);">暂无复盘记录</p>';
+    return;
+  }
+  var html='';
+  items.forEach(function(item){
+    html+='<div class="method-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
+      '<div><div class="method-name">'+(item.title||'未命名')+'</div>'+
+      (item.type?'<span class="tag tag-jade" style="margin-top:4px;">'+item.type+'</span>':'')+
+      '</div>'+
+      '<button onclick="deleteReview(\''+mod+'\','+item.id+')" style="font-size:11px;color:var(--coral);background:none;border:none;cursor:pointer;">删除</button>'+
+      '</div>'+
+      '<div class="method-desc" style="margin-top:6px;">'+item.analysis.replace(/\n/g,'<br>')+'</div>'+
+      '<div style="font-size:10px;color:var(--hint);margin-top:4px;">'+item.date+'</div></div>';
+  });
+  container.innerHTML=html;
+}
+window.deleteReview=function(mod,id){
+  if(!REVIEW_DB[mod])return;
+  REVIEW_DB[mod]=REVIEW_DB[mod].filter(function(i){return i.id!==id;});
+  saveReviewDB();
+  renderHistory(mod);
+};
+
+// ===== 题库管理（用户上传） =====
+var USER_QB=[];
+(function loadUserQB(){
+  var saved=localStorage.getItem('gk_user_qb');
+  if(saved){try{USER_QB=JSON.parse(saved);}catch(e){USER_QB=[];}}
+})();
+function saveUserQB(){
+  try{localStorage.setItem('gk_user_qb',JSON.stringify(USER_QB));}catch(e){
+    alert('存储空间不足，请删除部分题库文件后再上传');
+  }
+}
+window.handleQBUpload=function(event){
+  var files=event.target.files;
+  if(!files||files.length===0)return;
+  var textFiles=[];
+  var imageFiles=[];
+  for(var i=0;i<files.length;i++){
+    var f=files[i];
+    if(f.type.startsWith('image/')){
+      imageFiles.push(f);
+    }else if(f.type==='text/plain'||f.type==='text/csv'||f.type==='text/markdown'||f.name.match(/\.(txt|md|csv)$/i)){
+      textFiles.push(f);
+    }
+  }
+  var processed=0;
+  var total=textFiles.length+imageFiles.length;
+  if(total===0){alert('未找到支持的文件类型（.txt/.md/.csv/图片）');return;}
+  var results=document.getElementById('qb-mgr-results');
+  results.innerHTML='<div style="padding:12px;background:var(--jade-light);border-radius:6px;font-size:12px;color:var(--jade);"><span class="qb-spinner"></span>正在处理 '+total+' 个文件...</div>';
+  textFiles.forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var content=e.target.result;
+      var chunks=splitContentToChunks(content,file.name);
+      chunks.forEach(function(chunk){
+        USER_QB.push({title:chunk.title,content:chunk.content,source:file.name,date:new Date().toLocaleDateString('zh-CN')});
+      });
+      processed++;
+      checkAllDone();
+    };
+    reader.onerror=function(){processed++;checkAllDone();};
+    reader.readAsText(file,'UTF-8');
+  });
+  var ocrDone=0;
+  imageFiles.forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      if(typeof Tesseract!=='undefined' && (Tesseract.createWorker||Tesseract.recognize)){
+        var ocrFn=Tesseract.createWorker?function(imgData,cb,errCb){
+          Tesseract.createWorker('chi_sim+eng',1,{
+            corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
+            workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
+            langPath:'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best/',
+            cacheMethod:'idb' // 复用预载缓存，毫秒级加载
+          }).then(function(worker){
+            return worker.recognize(imgData).then(function(result){worker.terminate();cb(result);});
+          }).catch(function(err){errCb(err);});
+        }:function(imgData,cb,errCb){
+          Tesseract.recognize(imgData,'chi_sim+eng',{
+            corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
+            workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js'
+          }).then(cb).catch(errCb);
+        };
+        ocrFn(e.target.result,function(result){
+          var text=result.data.text.trim();
+          if(text){
+            USER_QB.push({title:file.name.replace(/\.[^.]+$/,''),content:text,source:file.name,date:new Date().toLocaleDateString('zh-CN')});
+          }
+          processed++;
+          checkAllDone();
+        }).catch(function(){processed++;checkAllDone();});
+      }else{processed++;checkAllDone();}
+    };
+    reader.onerror=function(){processed++;checkAllDone();};
+    reader.readAsDataURL(file);
+  });
+  function checkAllDone(){
+    if(processed>=total){
+      saveUserQB();
+      renderQBFileList();
+      results.innerHTML='<div style="padding:12px;background:var(--jade-light);border-radius:6px;font-size:12px;color:var(--jade);">✅ 成功处理 '+total+' 个文件，共解析出 '+USER_QB.length+' 条题目内容</div>';
+    }
+  }
+};
+function splitContentToChunks(text,fileName){
+  var chunks=[];
+  var lines=text.split(/\n/);
+  var current={title:'',content:''};
+  var hasContent=false;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(line.match(/^#{1,3}\s/)||line.match(/^\d+[\.、）]/)||line.match(/^第\d+题/)){
+      if(hasContent){
+        chunks.push({title:current.title||'未命名',content:current.content.trim()});
+      }
+      current={title:line.replace(/^#{1,3}\s*/,'').replace(/^\d+[\.、）]\s*/,''),content:line+'\n'};
+      hasContent=true;
+    }else if(line.length>0){
+      current.content+=line+'\n';
+      hasContent=true;
+    }
+  }
+  if(hasContent){
+    chunks.push({title:current.title||fileName,content:current.content.trim()});
+  }
+  return chunks.length>0?chunks:[{title:fileName,content:text}];
+}
+window.searchUserQB=function(){
+  var query=document.getElementById('qb-mgr-search').value.trim();
+  var results=document.getElementById('qb-mgr-results');
+  if(!query){alert('请输入搜索关键词');return;}
+  if(USER_QB.length===0){
+    results.innerHTML='<p style="font-size:12px;color:var(--hint);">题库为空，请先上传题库文件</p>';
+    return;
+  }
+  var matches=[];
+  var lowerQuery=query.toLowerCase();
+  USER_QB.forEach(function(item){
+    var inTitle=item.title.toLowerCase().indexOf(lowerQuery)>=0;
+    var inContent=item.content.toLowerCase().indexOf(lowerQuery)>=0;
+    if(inTitle||inContent){
+      var idx=item.content.toLowerCase().indexOf(lowerQuery);
+      var start=Math.max(0,idx-40);
+      var end=Math.min(item.content.length,idx+query.length+80);
+      var snippet=(start>0?'...':'')+item.content.substring(start,end)+(end<item.content.length?'...':'');
+      matches.push({title:item.title,snippet:snippet,source:item.source,content:item.content});
+    }
+  });
+  if(matches.length===0){
+    results.innerHTML='<p style="font-size:12px;color:var(--hint);">未找到包含"'+query+'"的题目</p>';
+    return;
+  }
+  var html='<p style="font-size:12px;color:var(--jade);margin-bottom:8px;">找到 '+matches.length+' 条结果：</p>';
+  matches.slice(0,20).forEach(function(m){
+    html+='<div class="qb-search-result-item" onclick=\'loadQBToChat('+JSON.stringify(m.content).replace(/'/g,"\\'")+')\'><div class="qb-sr-title">'+m.title+'</div><div class="qb-sr-snippet">'+m.snippet.replace(/</g,'&lt;')+'</div><div style="font-size:10px;color:var(--hint);margin-top:2px;">来源：'+m.source+'</div></div>';
+  });
+  if(matches.length>20){
+    html+='<p style="font-size:11px;color:var(--hint);text-align:center;">还有'+(matches.length-20)+'条结果未显示，请细化搜索关键词</p>';
+  }
+  results.innerHTML=html;
+};
+window.loadQBToChat=function(content){
+  document.querySelector('.fupan-subtab[data-fp="teacher"]').click();
+  document.getElementById('chat-input').value=content;
+  document.getElementById('chat-input').focus();
+};
+function renderQBFileList(){
+  var container=document.getElementById('qb-file-list');
+  if(USER_QB.length===0){
+    container.innerHTML='<p style="font-size:12px;color:var(--hint);">暂未上传题库文件</p>';
+    return;
+  }
+  var sources={};
+  USER_QB.forEach(function(item){
+    if(!sources[item.source])sources[item.source]={count:0,date:item.date};
+    sources[item.source].count++;
+  });
+  var html='<h4 style="font-size:12px;color:var(--sub);margin-bottom:8px;">已上传文件（共'+USER_QB.length+'条内容）</h4>';
+  Object.keys(sources).forEach(function(src){
+    html+='<div class="qb-file-item"><div><div class="qb-file-name">'+src+'</div><div class="qb-file-meta">'+sources[src].count+'条 · '+sources[src].date+'</div></div><button class="qb-file-del" onclick="clearUserQB()">清空全部</button></div>';
+  });
+  container.innerHTML=html;
+}
+window.clearUserQB=function(){
+  if(confirm('确定清空所有上传的题库内容吗？')){
+    USER_QB=[];
+    saveUserQB();
+    renderQBFileList();
+    document.getElementById('qb-mgr-results').innerHTML='';
+  }
+};
+
+// ===== 打卡系统 =====
+var CHECKIN_DB={};
+(function loadCheckinDB(){
+  var saved=localStorage.getItem('gk_checkin');
+  if(saved){try{CHECKIN_DB=JSON.parse(saved);}catch(e){CHECKIN_DB={};}}
+})();
+function saveCheckinDB(){
+  localStorage.setItem('gk_checkin',JSON.stringify(CHECKIN_DB));
+}
+var CHECKIN_MODULES=['yanyu','ziliao','panduan','shuliang','changshi','shenlun'];
+var CHECKIN_MOD_NAMES={yanyu:'📖 言语',ziliao:'📐 资料',panduan:'🧩 判断',shuliang:'🔢 数量',changshi:'📚 常识',shenlun:'✏️ 申论'};
+var pickedModules=[];
+document.querySelectorAll('.checkin-module').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var mod=btn.getAttribute('data-mod');
+    var idx=pickedModules.indexOf(mod);
+    if(idx>=0){pickedModules.splice(idx,1);btn.classList.remove('picked');}
+    else{pickedModules.push(mod);btn.classList.add('picked');}
+  });
+});
+window.doCheckin=function(){
+  var today=new Date().toISOString().split('T')[0];
+  if(CHECKIN_DB[today]){
+    if(!confirm('今天已经打卡了，确定覆盖？'))return;
+  }
+  var hours=parseFloat(document.getElementById('ci-hours').value)||0;
+  var questions=parseInt(document.getElementById('ci-questions').value)||0;
+  var mood=document.getElementById('ci-mood').value;
+  var note=document.getElementById('ci-note').value;
+  CHECKIN_DB[today]={modules:pickedModules.slice(),hours:hours,questions:questions,mood:mood,note:note};
+  saveCheckinDB();
+  document.getElementById('today-checkin-status').textContent='✅ '+new Date().toLocaleTimeString('zh-CN')+' 打卡成功！';
+  updateCheckinUI();
+};
+function calcStreak(){
+  var streak=0;
+  var d=new Date();
+  while(true){
+    var key=d.toISOString().split('T')[0];
+    if(CHECKIN_DB[key]){streak++;d.setDate(d.getDate()-1);}
+    else break;
+  }
+  return streak;
+}
+function calcWeekStats(){
+  var now=new Date();
+  var weekHours=0,weekQuestions=0;
+  for(var i=0;i<7;i++){
+    var d=new Date(now);
+    d.setDate(d.getDate()-i);
+    var key=d.toISOString().split('T')[0];
+    if(CHECKIN_DB[key]){
+      weekHours+=CHECKIN_DB[key].hours||0;
+      weekQuestions+=CHECKIN_DB[key].questions||0;
+    }
+  }
+  return {hours:weekHours,questions:weekQuestions};
+}
+function calcTotalStats(){
+  var days=0,totalHours=0,totalQuestions=0,bestStreak=0;
+  var dates=Object.keys(CHECKIN_DB).sort();
+  dates.forEach(function(d){
+    if(CHECKIN_DB[d].hours>0||CHECKIN_DB[d].questions>0){
+      days++;
+      totalHours+=CHECKIN_DB[d].hours||0;
+      totalQuestions+=CHECKIN_DB[d].questions||0;
+    }
+  });
+  var tempStreak=0;
+  var prevDate=null;
+  dates.forEach(function(d){
+    if(CHECKIN_DB[d].hours>0||CHECKIN_DB[d].questions>0){
+      if(prevDate){
+        var diff=(new Date(d)-new Date(prevDate))/(1000*60*60*24);
+        if(diff===1)tempStreak++;
+        else tempStreak=1;
+      }else{tempStreak=1;}
+      if(tempStreak>bestStreak)bestStreak=tempStreak;
+      prevDate=d;
+    }
+  });
+  var avgHours=days>0?(totalHours/days).toFixed(1):0;
+  return {days:days,totalHours:totalHours.toFixed(1),totalQuestions:totalQuestions,avgHours:avgHours,bestStreak:bestStreak};
+}
+function calcModuleCounts(){
+  var counts={};
+  CHECKIN_MODULES.forEach(function(m){counts[m]=0;});
+  Object.keys(CHECKIN_DB).forEach(function(d){
+    var mods=CHECKIN_DB[d].modules||[];
+    mods.forEach(function(m){if(counts[m]!==undefined)counts[m]++;});
+  });
+  return counts;
+}
+function renderMiniCalendar(){
+  var now=new Date();
+  var html='';
+  var dayLabels=['日','一','二','三','四','五','六'];
+  for(var i=6;i>=0;i--){
+    var d=new Date(now);
+    d.setDate(d.getDate()-i);
+    var key=d.toISOString().split('T')[0];
+    var checked=!!CHECKIN_DB[key];
+    var isToday=i===0;
+    var cls='checkin-day-circle';
+    if(checked)cls+=' checked';
+    if(isToday)cls+=' today';
+    html+='<div class="'+cls+'"><div class="day-num">'+d.getDate()+'</div><div class="day-label">'+dayLabels[d.getDay()]+'</div></div>';
+  }
+  document.getElementById('mini-calendar').innerHTML=html;
+}
+function updateCheckinUI(){
+  var streak=calcStreak();
+  document.getElementById('streak-count').textContent=streak;
+  var week=calcWeekStats();
+  document.getElementById('week-hours').textContent=week.hours.toFixed(1);
+  document.getElementById('week-questions').textContent=week.questions;
+  renderMiniCalendar();
+  var total=calcTotalStats();
+  document.getElementById('stat-total-days').textContent=total.days;
+  document.getElementById('stat-total-hours').textContent=total.totalHours;
+  document.getElementById('stat-total-questions').textContent=total.totalQuestions;
+  document.getElementById('stat-avg-hours').textContent=total.avgHours;
+  document.getElementById('stat-best-streak').textContent=total.bestStreak;
+  var modCounts=calcModuleCounts();
+  var modHtml='';
+  CHECKIN_MODULES.forEach(function(m){
+    var c=modCounts[m];
+    modHtml+='<span style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:12px;background:'+(c>0?'var(--jade-light)':'var(--bg)')+';color:'+(c>0?'var(--jade)':'var(--hint)')+';border:1px solid var(--border);">'+CHECKIN_MOD_NAMES[m]+' <strong>'+c+'</strong></span>';
+  });
+  document.getElementById('module-count-bars').innerHTML=modHtml;
+  var today=new Date().toISOString().split('T')[0];
+  if(CHECKIN_DB[today]){
+    var c=CHECKIN_DB[today];
+    document.getElementById('ci-hours').value=c.hours||'';
+    document.getElementById('ci-questions').value=c.questions||'';
+    document.getElementById('ci-mood').value=c.mood||'good';
+    document.getElementById('ci-note').value=c.note||'';
+    document.getElementById('today-checkin-status').textContent='✅ 今天已打卡';
+    pickedModules=c.modules||[];
+    document.querySelectorAll('.checkin-module').forEach(function(btn){
+      var mod=btn.getAttribute('data-mod');
+      btn.classList.toggle('picked',pickedModules.indexOf(mod)>=0);
+    });
+  }
+}
+
+// ===== 提醒系统 =====
+function renderReminders(){
+  var info=getProvinceExamInfo(currentProvinceId);
+  var gkDays=daysBetween(DEFAULT_GUOKAO_DATE,new Date());
+  var skDays=daysBetween(info.examDate,new Date());
+  var ggDays=daysBetween(info.announceDate,new Date());
+  var skName=currentProvinceId==='guokao'?'国考':info.shortName+'省考';
+  var reminders=[];
+  if(ggDays<=30&&ggDays>0){
+    reminders.push({icon:'📢',title:skName+'公告即将发布',desc:'预计'+ggDays+'天后发布，开始准备报名材料',countdown:ggDays+'天',urgent:true});
+  }
+  if(gkDays<=120){
+    reminders.push({icon:'⏰',title:'国考笔试冲刺',desc:'距国考笔试仅'+gkDays+'天，进入套题实战阶段',countdown:gkDays+'天',urgent:gkDays<=60});
+  }
+  if(skDays<=120&&currentProvinceId!=='guokao'){
+    reminders.push({icon:'⏰',title:skName+'笔试冲刺',desc:'距'+skName+'笔试仅'+skDays+'天，注意省份特殊题型',countdown:skDays+'天',urgent:skDays<=60});
+  }
+  var selftest=localStorage.getItem('gk_selftest');
+  if(selftest){
+    try{
+      var st=JSON.parse(selftest);
+      var weakMods=[];
+      Object.keys(st.accuracy).forEach(function(k){
+        if(st.accuracy[k]<50)weakMods.push(k);
+      });
+      if(weakMods.length>0){
+        reminders.push({icon:'⚡',title:'薄弱模块待突破',desc:'自测显示'+weakMods.length+'个模块正确率低于50%，建议专项突破',countdown:'立即',urgent:true});
+      }
+    }catch(e){}
+  }
+  var sl=localStorage.getItem('gk_shenlun');
+  if(sl){
+    try{
+      var slData=JSON.parse(sl);
+      if(slData.piancount<5){
+        reminders.push({icon:'✏️',title:'大作文练习不足',desc:'已写'+slData.piancount+'篇，建议每周至少1篇',countdown:'本周'});
+      }
+    }catch(e){}
+  }
+  reminders.push({icon:'📖',title:'每日成语+时政',desc:'今天的3组成语辨析和时政热点已更新，碎片时间完成',countdown:'今天'});
+  reminders.push({icon:'📝',title:'每日复盘',desc:'今天做错的题目上传到复盘模块，选讲师深度分析',countdown:'今天'});
+  var html='';
+  reminders.forEach(function(r){
+    html+='<div class="reminder-item'+(r.urgent?' urgent':'')+'"><div class="rem-icon">'+r.icon+'</div><div class="rem-body"><div class="rem-title">'+r.title+'</div><div class="rem-desc">'+r.desc+'</div></div><div class="rem-countdown">'+r.countdown+'</div></div>';
+  });
+  document.getElementById('reminder-list').innerHTML=html;
+}
+function renderDailyGoal(){
+  var info=getProvinceExamInfo(currentProvinceId);
+  var targetDays=daysBetween(info.examDate,new Date());
+  var goal='';
+  if(targetDays>180){
+    goal='<div style="display:flex;gap:12px;flex-wrap:wrap;">'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--jade-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--jade);">2h</div><div style="font-size:11px;color:var(--sub);">系统听课</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--blue-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--blue);">50题</div><div style="font-size:11px;color:var(--sub);">专项刷题</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--gold-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--gold);">1组</div><div style="font-size:11px;color:var(--sub);">成语辨析</div></div>'+
+      '</div>';
+  }else if(gkDays>60){
+    goal='<div style="display:flex;gap:12px;flex-wrap:wrap;">'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--coral-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--coral);">1套</div><div style="font-size:11px;color:var(--sub);">真题套题</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--jade-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--jade);">100题</div><div style="font-size:11px;color:var(--sub);">专项刷题</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--gold-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--gold);">1篇</div><div style="font-size:11px;color:var(--sub);">申论练习</div></div>'+
+      '</div>';
+  }else{
+    goal='<div style="display:flex;gap:12px;flex-wrap:wrap;">'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--coral-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--coral);">2套</div><div style="font-size:11px;color:var(--sub);">全真模拟</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--gold-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--gold);">错题复盘</div><div style="font-size:11px;color:var(--sub);">所有错题</div></div>'+
+      '<div style="flex:1;min-width:120px;padding:12px;background:var(--blue-light);border-radius:8px;text-align:center;"><div style="font-size:24px;font-weight:700;color:var(--blue);">1篇</div><div style="font-size:11px;color:var(--sub);">大作文</div></div>'+
+      '</div>';
+  }
+  document.getElementById('daily-goal-render').innerHTML=goal;
+}
+
+// ===== 复盘子tab切换 =====
+document.querySelectorAll('.fupan-subtab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    var fp=this.getAttribute('data-fp');
+    document.querySelectorAll('.fupan-subtab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.fupan-subpanel').forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    document.querySelector('.fupan-subpanel[data-fp-panel="'+fp+'"]').classList.add('active');
+  });
+});
+
+// ===== 复盘工作台tab切换 =====
+document.querySelectorAll('.review-tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    var mod=this.getAttribute('data-module');
+    document.querySelectorAll('.review-tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.review-panel').forEach(function(p){p.classList.remove('active');});
+    this.classList.add('active');
+    document.querySelector('.review-panel[data-panel="'+mod+'"]').classList.add('active');
+  });
+});
+
+// ===== 初始化 =====
+renderProvinceChips();
+selectProvince(currentProvinceId);
+renderStBasicAccuracy();
+renderShizheng();
+renderIdioms();
+renderTeacherModuleBar();
+renderTeacherCards();
+Object.keys(MODULE_PREFIX).forEach(function(mod){renderHistory(mod);});
+renderQBFileList();
+updateCheckinUI();
+renderReminders();
+renderDailyGoal();
+// 预加载OCR引擎，避免首次上传时等待
+setTimeout(function(){checkTesseract(function(loaded){console.log('Tesseract preload:',loaded?'success':'failed');});},1000);
+
+})();
+</script>
+
+<!-- 反馈悬浮按钮 -->
+<button class="feedback-fab" onclick="toggleFeedback()" title="反馈建议">💬</button>
+
+<!-- 反馈弹窗 -->
+<div class="feedback-modal" id="feedback-modal">
+  <div class="fm-card">
+    <h3>💬 反馈 & 建议</h3>
+    <p style="font-size:12px;color:var(--hint);margin-bottom:12px;">有问题、建议或Bug？直接告诉我，我收到后及时改进。</p>
+    <input type="text" id="fb-contact" placeholder="联系方式（选填，方便我回复你）">
+    <textarea id="fb-content" placeholder="描述你的问题或建议..."></textarea>
+    <div class="fm-status" id="fb-status"></div>
+    <div class="fm-actions">
+      <button onclick="toggleFeedback()">取消</button>
+      <button class="primary" onclick="submitFeedback()">发送反馈</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
