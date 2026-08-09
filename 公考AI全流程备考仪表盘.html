@@ -360,13 +360,24 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 <div class="api-settings-panel" id="api-settings-panel">
   <h3>⚙ AI引擎 & 系统设置</h3>
+  <div style="background:var(--jade-light);border:1px solid var(--jade-mid);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--jade);line-height:1.6;">
+    🆓 <b>三家免费AI任选，全部支持图片识题！</b><br>
+    DeepSeek（500万tokens）· 通义千问（200万/月）· 智谱GLM（免费额度）<br>
+    选一家注册 → 获取API Key → 粘贴保存即可。拍照识图、AI对话全走你选的AI。
+  </div>
   <div class="free-usage-bar" id="free-usage-bar" style="margin-bottom:14px;">
     📊 今日免费次数：<span class="fu-count" id="free-usage-count">5/5</span>
     <span class="fu-key-hint" onclick="document.getElementById('api-key-input').focus()">用完？点此绑Key解锁无限</span>
   </div>
-  <label>DeepSeek API Key <span style="color:var(--hint);font-weight:400;">（绑定你自己的Key，无限使用）</span></label>
+  <label>AI提供商</label>
+  <select id="api-provider-select" onchange="onProviderChange()" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;margin-bottom:10px;background:#fff;">
+    <option value="deepseek">DeepSeek — 免费500万tokens（推荐）</option>
+    <option value="qwen">通义千问（阿里云）— 免费200万tokens/月</option>
+    <option value="glm">智谱GLM — 免费额度</option>
+  </select>
+  <label id="api-key-label">DeepSeek API Key <span style="color:var(--hint);font-weight:400;">（绑定你自己的Key，无限使用）</span></label>
   <input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx">
-  <div class="api-hint">注册地址：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>，新用户赠送500万tokens免费额度</div>
+  <div class="api-hint" id="api-reg-hint">注册地址：<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>，新用户赠送500万tokens免费额度</div>
   <div class="api-status unset" id="api-status-indicator">⚠️ 未配置API Key — 每天5次免费额度</div>
   <label style="margin-top:10px;">飞书群机器人 Webhook <span style="color:var(--hint);font-weight:400;">（用于接收用户反馈）</span></label>
   <input type="text" id="webhook-input" placeholder="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxxxxxxxxx">
@@ -580,7 +591,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
         <div class="input-toolbar">
           <label class="inline-upload-btn" title="上传错题截图，AI自动OCR识别文字">
             📷 上传截图
-            <input type="file" id="qb-file-input" accept="image/*" onchange="handleImageUpload(event)">
+            <input type="file" id="qb-file-input" accept="image/*" capture="environment" onchange="handleImageUpload(event)">
           </label>
           <span class="upload-preview" id="upload-preview">
             <span class="up-thumb-name" id="up-thumb-name"></span>
@@ -589,7 +600,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
           </span>
         </div>
         <div class="ocr-status-inline" id="ocr-status-inline"></div>
-        <textarea id="chat-input" placeholder="把错题粘贴到这里，然后点「🧠 开始复盘」。上传截图后AI自动OCR识别填入。" rows="3" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}"></textarea>
+        <textarea id="chat-input" placeholder="把错题粘贴到这里，然后点「🧠 开始复盘」。上传截图后AI自动OCR识别填入。" rows="3" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();sendChatMessage();}"></textarea>
         <div class="chat-actions">
           <button class="primary" id="chat-primary-btn" onclick="analyzeWithTeacher()">🧠 开始复盘</button>
           <button onclick="sendChatMessage()">💬 发送回答</button>
@@ -887,87 +898,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 
 <script>
-(function(){
-  window.TESSERACT_LOADED=false;
-  window.TESSERACT_ERROR=false;
-  window.TESSERACT_LOAD_ERROR='';
-  // 优先国内/稳定CDN，多个源依次尝试
-  var cdns=[
-    'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js',
-    'https://lib.baomitu.com/tesseract.js/5.0.4/tesseract.min.js',
-    'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/tesseract.js/5.0.4/tesseract.min.js',
-    'https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js'
-  ];
-  var idx=0;
-  function tryLoad(){
-    if(window.Tesseract){window.TESSERACT_LOADED=true;window.TESSERACT_ERROR=false;return;}
-    if(idx>=cdns.length){window.TESSERACT_ERROR=true;window.TESSERACT_LOAD_ERROR='所有CDN源均无法加载（'+cdns.join(', ')+'）';return;}
-    var s=document.createElement('script');
-    s.src=cdns[idx++];
-    s.async=true;
-    s.onload=function(){
-      // 有些CDN返回空脚本或广告拦截，额外校验Tesseract对象
-      setTimeout(function(){
-        if(typeof window.Tesseract!=='undefined' && window.Tesseract.recognize){
-          window.TESSERACT_LOADED=true;window.TESSERACT_ERROR=false;
-        }else{
-          window.TESSERACT_LOAD_ERROR='CDN加载的脚本无效（'+s.src+'）';
-          tryLoad();
-        }
-      },100);
-    };
-    s.onerror=function(){window.TESSERACT_LOAD_ERROR='加载失败：'+s.src;tryLoad();};
-    document.head.appendChild(s);
-  }
-  window.loadTesseractBackup=function(){idx=1;tryLoad();};
-  window.checkTesseract=function(cb,retries){
-    retries=retries||0;
-    if(window.Tesseract && window.Tesseract.recognize){cb(true);return;}
-    if(window.TESSERACT_ERROR){cb(false);return;}
-    if(retries>60){cb(false);return;} // 最多等12秒
-    setTimeout(function(){checkTesseract(cb,retries+1);},200);
-  };
-  // 页面加载后立即启动主CDN加载
-  tryLoad();
-  // OCR语言包预载：Tesseract.js加载成功后多CDN回退下载中文语言包到IndexedDB（首次~8MB，之后毫秒级）
-  var _langPreloaded=false;
-  var _langPreloading=false;
-  window.preloadOcrLang=function(){
-    if(_langPreloading||_langPreloaded||!window.Tesseract)return;
-    _langPreloading=true;
-    var langSources=[
-      'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best',
-      'https://tessdata.projectnaptha.com/4.0.0_best',
-      'https://raw.githubusercontent.com/naptha/tessdata/gh-pages/4.0.0'
-    ];
-    var idx=0;
-    function tryPreload(){
-      Tesseract.createWorker('chi_sim',1,{
-        corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
-        workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
-        langPath:langSources[idx]+'/',
-        cacheMethod:'idb'
-      }).then(function(worker){
-        worker.terminate();
-        _langPreloaded=true;
-        _langPreloading=false;
-        console.log('OCR语言包已预载到IndexedDB缓存（源：'+langSources[idx]+'）');
-      }).catch(function(err){
-        if(idx<langSources.length-1){idx++;console.warn('预载源'+idx+'失败，尝试备用源...');tryPreload();}
-        else{_langPreloading=false;console.warn('OCR语言包预载失败：',err.message);}
-      });
-    }
-    tryPreload();
-  };
-  // Tesseract.js加载成功后立即预载（1秒延迟，缩短等待）
-  setTimeout(function(){if(window.TESSERACT_LOADED||window.Tesseract)preloadOcrLang();},1000);
-  // 监听Tesseract加载（如果是走备用CDN慢加载的情况）
-  var _preloadInterval=setInterval(function(){
-    if(_langPreloaded||_langPreloading){clearInterval(_preloadInterval);return;}
-    if(window.Tesseract&&window.Tesseract.recognize){preloadOcrLang();clearInterval(_preloadInterval);}
-  },3000);
-})();
+// Tesseract.js 已移除，所有OCR识图统一走AI API（DeepSeek/通义千问/智谱GLM）
 </script>
 <script>
 (function(){
@@ -1358,26 +1289,26 @@ window.slSubmit=function(){
 
 // ===== 时政热点 =====
 var SHIZHENG_DATA=[
-  {title:'二十届三中全会：进一步全面深化改革',angle:'公报/决定全文必考，重点关注"六个坚持"原则和改革时间表。'},
-  {title:'新质生产力：科技创新引领产业升级',angle:'常识判断高频考点。关联词：人工智能、低空经济、商业航天。'},
-  {title:'2025年中央一号文件：全面推进乡村振兴',angle:'重点关注粮食安全、千万工程经验推广、县域经济发展。'},
-  {title:'人工智能+行动：AI赋能千行百业',angle:'常识/政治理论交叉考点。关注大模型应用、AI立法。'},
-  {title:'全国统一大市场建设：破除地方保护',angle:'经济常识考点。关注要素市场化配置、破除市场壁垒。'},
-  {title:'碳达峰碳中和：绿色低碳转型',angle:'常识考点。关注新能源、碳交易市场、ESG理念。'},
-  {title:'高质量就业：16-24岁青年就业服务',angle:'申论素材。关注职业技能培训、灵活就业保障。'},
-  {title:'一带一路：共建"人类命运共同体"',angle:'外交常识+申论素材。关注第三届峰会成果。'},
-  {title:'数字中国建设：数字经济+数字政府',angle:'政治理论+常识。关注数据要素、政务数字化。'},
-  {title:'全过程人民民主：基层治理创新',angle:'政治理论考点。关注基层立法联系点、社区治理。'},
-  {title:'粮食安全：守住18亿亩耕地红线',angle:'常识+申论。关注种业振兴、高标准农田建设。'},
-  {title:'银发经济：积极应对人口老龄化',angle:'申论热点。关注养老服务体系建设、适老化改造。'},
-  {title:'中国式现代化：五个特征要记牢',angle:'政治理论核心考点。人口规模巨大/共同富裕/物质精神协调/人与自然和谐/和平发展。'},
-  {title:'加快建设科技强国：基础研究+关键核心技术',angle:'常识考点。关注芯片、量子计算、生物制造。'},
-  {title:'区域协调发展：京津冀/长三角/粤港澳大湾区',angle:'经济常识。关注区域重大战略和主体功能区。'},
-  {title:'营商环境优化：民营经济促进法立法',angle:'经济常识+申论素材。关注公平竞争、产权保护。'},
-  {title:'教育强国建设：拔尖创新人才培养',angle:'申论素材。关注基础教育改革、职业教育。'},
-  {title:'健康中国：深化医药卫生体制改革',angle:'常识考点。关注分级诊疗、医保改革。'},
-  {title:'国家安全体系：总体国家安全观',angle:'政治理论。关注粮食/能源/数据/生物安全。'},
-  {title:'文化自信：中华优秀传统文化创造性转化',angle:'申论素材。关注非遗保护、文旅融合。'}
+  {title:'2026年全国两会：政府工作报告核心要点',angle:'政治理论必考。GDP增速目标、财政赤字率、特别国债规模、重点产业政策。'},
+  {title:'新质生产力2.0：人工智能+千行百业深度融合',angle:'常识高频考点。关联词：AI大模型应用、低空经济、商业航天、人形机器人。'},
+  {title:'2026年中央一号文件：全面推进乡村振兴',angle:'重点关注粮食安全、种业振兴、千万工程提质扩面、防止规模性返贫。'},
+  {title:'二十届三中全会改革落实：300+改革举措',angle:'政治理论核心。关注"六个坚持"原则在经济/政治/文化/社会/生态领域的具体落地。'},
+  {title:'民营经济促进法正式施行',angle:'经济常识+申论素材。关注公平竞争审查、产权保护、融资支持、营商环境优化。'},
+  {title:'全国统一大市场建设2.0：数据要素市场化',angle:'经济常识考点。数据确权/流通/交易/收益分配四大基础制度。'},
+  {title:'碳达峰碳中和：绿色低碳转型提速',angle:'常识考点。新能源装机占比、碳交易市场扩容、ESG信息披露。'},
+  {title:'延迟退休渐进式实施：应对人口老龄化',angle:'申论热点。关注"小步调整、弹性实施"原则、银发经济、养老服务体系建设。'},
+  {title:'高质量充分就业：青年就业优先战略',angle:'申论素材。关注职业技能培训、灵活就业保障、新就业形态劳动者权益。'},
+  {title:'一带一路新十年：高质量共建走深走实',angle:'外交常识+申论素材。关注数字丝绸之路、绿色丝绸之路、健康丝绸之路。'},
+  {title:'数字中国建设：数据基础制度+政务数字化',angle:'政治理论+常识。关注数据二十条落实、政务"一网通办"、数字乡村。'},
+  {title:'全过程人民民主：基层治理现代化',angle:'政治理论考点。关注基层立法联系点全覆盖、"枫桥经验"、社区协商议事。'},
+  {title:'粮食安全：大食物观+多元化食物供给',angle:'常识+申论。关注种业振兴行动方案、高标准农田建设、盐碱地综合利用。'},
+  {title:'中国式现代化：五个特征与九个本质要求',angle:'政治理论核心考点。人口规模巨大/共同富裕/物质精神协调/人与自然和谐/和平发展。'},
+  {title:'科技自立自强：关键核心技术攻关新型举国体制',angle:'常识考点。关注芯片突破、量子计算领先、生物制造产业、6G研发。'},
+  {title:'区域协调发展战略：四大板块+五大区域战略',angle:'经济常识。京津冀协同/长三角一体化/粤港澳大湾区/长江经济带/黄河流域。'},
+  {title:'教育强国建设：新高考改革+职普融通',angle:'申论素材。关注拔尖创新人才培养、"双减"成果巩固、职业教育提质。'},
+  {title:'健康中国：深化医改+公共卫生体系',angle:'常识考点。分级诊疗/紧密型医联体/医保支付改革/中医药传承创新。'},
+  {title:'总体国家安全观：20个重点领域',angle:'政治理论。关注粮食/能源/数据/生物/人工智能/太空/深海/极地安全。'},
+  {title:'文化自信自强：第二个结合（马克思主义+中华优秀传统文化）',angle:'申论素材。关注非遗保护传承、文旅深度融合、国家文化数字化战略。'}
 ];
 function getDayOfYear(){
   var now=new Date();
@@ -1486,13 +1417,21 @@ var chatHistory=[];
 var reviewState=null; // {round:0, module:'', teacher:'', question:'', messages:[], finished:false}
 var chatLoading=false;
 
-// ===== API 配置 =====
+// ===== API 多提供商配置 =====
+var API_PROVIDERS={
+  deepseek:{name:'DeepSeek',url:'https://api.deepseek.com/chat/completions',chatModel:'deepseek-chat',visionModel:'deepseek-v4-flash',freeInfo:'免费500万tokens（一次性）',regUrl:'https://platform.deepseek.com',keyPrefix:'sk-'},
+  qwen:{name:'通义千问（阿里云）',url:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',chatModel:'qwen-plus',visionModel:'qwen-vl-plus',freeInfo:'免费200万tokens/月',regUrl:'https://bailian.console.aliyun.com',keyPrefix:'sk-'},
+  glm:{name:'智谱GLM',url:'https://open.bigmodel.cn/api/paas/v4/chat/completions',chatModel:'glm-4-flash',visionModel:'glm-4v-flash',freeInfo:'免费额度',regUrl:'https://open.bigmodel.cn',keyPrefix:''}
+};
+var API_PROVIDER=localStorage.getItem('gk_api_provider')||'deepseek';
 var API_KEY=localStorage.getItem('gk_llm_api_key')||'';
-var SHARED_KEY=''; // ← 在这对单引号里粘贴你的DeepSeek API Key（如 sk-xxx），用于免费试用
-var API_URL='https://api.deepseek.com/chat/completions';
-var API_MODEL='deepseek-chat';
+var SHARED_KEY=''; // ← 在这对单引号里粘贴你的API Key，用于免费试用
 var FREE_LIMIT=5;
 var WEBHOOK_URL=localStorage.getItem('gk_webhook_url')||'';
+function getApiConfig(){return API_PROVIDERS[API_PROVIDER]||API_PROVIDERS.deepseek;}
+function getApiUrl(){return getApiConfig().url;}
+function getChatModel(){return getApiConfig().chatModel;}
+function getVisionModel(){return getApiConfig().visionModel;}
 
 // ===== 免费额度管理 =====
 function getFreeUsage(){
@@ -1505,7 +1444,7 @@ function getFreeRemaining(){return API_KEY?Infinity:FREE_LIMIT-getFreeUsage().co
 function useFreeToken(){
   if(API_KEY)return;
   var u=getFreeUsage();
-  if(u.count>=FREE_LIMIT)throw new Error('今日免费次数已用完（'+FREE_LIMIT+'/'+FREE_LIMIT+'）。请绑定你自己的DeepSeek API Key（点击顶栏⚙图标设置，新用户免费送500万tokens），即可无限使用。');
+  if(u.count>=FREE_LIMIT)throw new Error('今日免费次数已用完（'+FREE_LIMIT+'/'+FREE_LIMIT+'）。请点击顶栏⚙选择一家免费AI（DeepSeek/通义千问/智谱GLM）绑定你的API Key，即可无限使用。');
   u.count++;
   localStorage.setItem('gk_free_usage',JSON.stringify(u));
   updateFreeUsageUI();
@@ -1708,7 +1647,8 @@ function getTeacherStyle(mod,name){
 }
 
 // ===== LLM API 调用 =====
-function parseDeepSeekError(resp,errText){
+function parseApiError(resp,errText,cfg){
+  cfg=cfg||getApiConfig();
   var msg='';
   try{
     var err=JSON.parse(errText).error;
@@ -1716,29 +1656,61 @@ function parseDeepSeekError(resp,errText){
     if(err&&err.code)msg+=' (code:'+err.code+')';
   }catch(e){}
   if(!msg)msg=errText.substring(0,160);
-  if(resp.status===401)return 'API Key无效，请检查Key是否复制完整';
-  if(resp.status===402)return '账户余额不足：'+msg+'。请去 DeepSeek 控制台充值，或确认赠送额度是否已到账/完成实名认证';
+  if(resp.status===401)return 'API Key无效，请确认你使用的是 '+cfg.name+' 的API Key（注册地址：'+cfg.regUrl+'）';
+  if(resp.status===402)return '账户余额不足：'+msg+'。请去 '+cfg.name+' 控制台充值或确认免费额度';
   if(resp.status===429)return 'API调用频率超限，请稍后再试';
-  if(resp.status>=500)return 'DeepSeek服务器繁忙，请稍后重试';
+  if(resp.status>=500)return cfg.name+' 服务器繁忙，请稍后重试';
   return 'API错误('+resp.status+'): '+msg;
 }
 async function callLLM(messages){
   var keyToUse=API_KEY||SHARED_KEY;
-  if(!keyToUse)throw new Error('请先绑定你的DeepSeek API Key（点击顶栏⚙图标→注册→复制Key→粘贴保存）。完全免费！DeepSeek新用户赠送500万tokens（约可复盘5000+次）。');
+  var cfg=getApiConfig();
+  if(!keyToUse)throw new Error('请先绑定API Key（点击顶栏⚙图标→选择AI提供商→注册→复制Key→粘贴保存）。三家都免费！');
   if(!API_KEY)useFreeToken(); // 无自己Key → 消耗免费额度
-  var resp=await fetch(API_URL,{
+  var resp=await fetch(getApiUrl(),{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+keyToUse},
-    body:JSON.stringify({model:API_MODEL,messages:messages,temperature:0.7,max_tokens:2048})
+    body:JSON.stringify({model:getChatModel(),messages:messages,temperature:0.7,max_tokens:2048})
   });
   if(!resp.ok){
     var errText=await resp.text();
-    throw new Error(parseDeepSeekError(resp,errText));
+    throw new Error(parseApiError(resp,errText,cfg));
   }
   var data=await resp.json();
   if(!data.choices||!data.choices[0]||!data.choices[0].message)throw new Error('API返回格式异常');
   // 已绑Key的用户不耗免费额度
   return data.choices[0].message.content;
+}
+
+// ===== AI 识图（多AI Vision）=====
+// 直接把图片发给AI的vision模型，让AI识别文字，2-3秒完成
+async function ocrWithLLM(imageDataURL){
+  var keyToUse=API_KEY||SHARED_KEY;
+  if(!keyToUse)throw new Error('NO_KEY');
+  var resp=await fetch(getApiUrl(),{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+keyToUse},
+    body:JSON.stringify({
+      model:getVisionModel(),
+      messages:[{
+        role:'user',
+        content:[
+          {type:'text',text:'请识别这张图片中的所有文字内容，原样输出，不要添加任何解释、标注或格式化。如果图片中没有文字，只回复「未识别到文字」。'},
+          {type:'image_url',image_url:{url:imageDataURL}}
+        ]
+      }],
+      temperature:0.1,
+      max_tokens:2048
+    })
+  });
+  if(!resp.ok){
+    var errText=await resp.text();
+    var cfg=getApiConfig();
+    throw new Error('[识图] '+parseApiError(resp,errText,cfg));
+  }
+  var data=await resp.json();
+  if(!data.choices||!data.choices[0]||!data.choices[0].message)throw new Error('API返回格式异常');
+  return data.choices[0].message.content.trim();
 }
 
 function addLoadingMessage(){
@@ -1752,10 +1724,19 @@ function removeLoadingMessage(){
 }
 
 // ===== API 设置面板 =====
+window.onProviderChange=function(){
+  var p=document.getElementById('api-provider-select').value;
+  var cfg=API_PROVIDERS[p]||API_PROVIDERS.deepseek;
+  document.getElementById('api-key-label').innerHTML=cfg.name+' API Key <span style="color:var(--hint);font-weight:400;">（免费额度：'+cfg.freeInfo+'）</span>';
+  document.getElementById('api-key-input').placeholder=cfg.keyPrefix+'xxxxxxxxxxxxxxxxxxxxxxxx';
+  document.getElementById('api-reg-hint').innerHTML='注册地址：<a href="'+cfg.regUrl+'" target="_blank">'+cfg.regUrl.replace('https://','')+'</a>';
+};
 window.toggleApiSettings=function(){
   var panel=document.getElementById('api-settings-panel');
   panel.classList.toggle('show');
   if(panel.classList.contains('show')){
+    document.getElementById('api-provider-select').value=API_PROVIDER;
+    onProviderChange();
     document.getElementById('api-key-input').value=API_KEY;
     document.getElementById('webhook-input').value=WEBHOOK_URL;
     updateApiStatusUI();
@@ -1765,12 +1746,15 @@ window.toggleApiSettings=function(){
 window.saveApiKey=function(){
   var key=document.getElementById('api-key-input').value.trim();
   var wh=document.getElementById('webhook-input').value.trim();
+  var prov=document.getElementById('api-provider-select').value;
   if(key)API_KEY=key;
   if(wh)WEBHOOK_URL=wh;
+  API_PROVIDER=prov;
   if(key){localStorage.setItem('gk_llm_api_key',key);}
   else{localStorage.removeItem('gk_llm_api_key');API_KEY='';}
   if(wh){localStorage.setItem('gk_webhook_url',wh);}
   else{localStorage.removeItem('gk_webhook_url');WEBHOOK_URL='';}
+  localStorage.setItem('gk_api_provider',prov);
   updateApiStatusUI();
   updateFreeUsageUI();
   document.getElementById('api-settings-panel').classList.remove('show');
@@ -1778,22 +1762,30 @@ window.saveApiKey=function(){
 window.testApiKey=async function(){
   var key=document.getElementById('api-key-input').value.trim()||API_KEY;
   if(!key){alert('请先输入API Key');return;}
+  var prov=document.getElementById('api-provider-select').value;
+  var cfg=API_PROVIDERS[prov]||API_PROVIDERS.deepseek;
   var status=document.getElementById('api-status-indicator');
   status.textContent='🔄 测试中...';
   status.className='api-status ok';
   try{
-    var resp=await fetch(API_URL,{
+    var resp=await fetch(cfg.url,{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({model:API_MODEL,messages:[{role:'user',content:'回复"OK"'}],max_tokens:5})
+      body:JSON.stringify({model:cfg.chatModel,messages:[{role:'user',content:'回复"OK"'}],max_tokens:5})
     });
-    if(resp.ok){status.textContent='✅ 连接成功！DeepSeek API正常工作';status.className='api-status ok';}
+    if(resp.ok){status.textContent='✅ 连接成功！'+cfg.name+' API正常工作';status.className='api-status ok';}
     else{
       var errText=await resp.text();
-      status.textContent='❌ '+parseDeepSeekError(resp,errText);
+      var msg=parseApiError(resp,errText,cfg);
+      status.textContent='❌ '+msg;
       status.className='api-status unset';
     }
-  }catch(e){status.textContent='❌ 网络错误: '+e.message;status.className='api-status unset';}
+  }catch(e){
+    var netMsg='❌ 网络错误: '+e.message;
+    if(e.message.indexOf('Failed to fetch')!==-1)netMsg+='\n💡 可能是网络问题，请检查是否能访问 '+cfg.url;
+    status.textContent=netMsg;
+    status.className='api-status unset';
+  }
 };
 window.clearApiKey=function(){
   API_KEY='';
@@ -1804,9 +1796,10 @@ window.clearApiKey=function(){
 function updateApiStatusUI(){
   var btn=document.getElementById('api-settings-btn');
   var status=document.getElementById('api-status-indicator');
-  if(API_KEY){btn.classList.add('configured');status.textContent='✅ API Key已配置 — AI讲师就绪（无限使用）';status.className='api-status ok';}
+  var cfg=getApiConfig();
+  if(API_KEY){btn.classList.add('configured');status.textContent='✅ '+cfg.name+' API Key已配置 — AI讲师就绪（无限使用）';status.className='api-status ok';}
   else if(SHARED_KEY){btn.classList.add('configured');status.textContent='🎁 今日可免费试用 '+getFreeRemaining()+' 次 — 绑定你的Key解锁无限使用';status.className='api-status ok';}
-  else{btn.classList.remove('configured');status.textContent='⚠️ 未配置API Key — 请绑定你的DeepSeek Key（免费注册送500万tokens）';status.className='api-status unset';}
+  else{btn.classList.remove('configured');status.textContent='⚠️ 未配置API Key — 请选择AI提供商并绑定Key（三家都免费！）';status.className='api-status unset';}
   updateFreeUsageUI();
 }
 updateApiStatusUI();
@@ -1875,7 +1868,7 @@ window.analyzeWithTeacher=async function(){
   reviewState={round:1,module:currentTeacherModule,teacher:currentTeacher?currentTeacher.name:'',question:text,messages:[],finished:false};
 
   if(!API_KEY){
-    chatHistory.push({role:'teacher',text:'⚠️ **AI讲师未配置**\n\n你需要先配置DeepSeek API Key才能使用真正的AI对话。\n\n点击顶栏 ⚙ 图标 → 输入API Key → 保存，然后重新点「🧠 开始复盘」。\n\n注册地址：https://platform.deepseek.com（新用户免费送500万tokens）'});
+    chatHistory.push({role:'teacher',text:'⚠️ **AI讲师未配置**\n\n你需要先配置API Key才能使用真正的AI对话。\n\n点击顶栏 ⚙ 图标 → 选择AI提供商（DeepSeek/通义千问/智谱GLM，全免费）→ 输入Key → 保存，然后重新点「🧠 开始复盘」。'});
     renderChatMessages();
     reviewState=null;
     return;
@@ -1974,7 +1967,7 @@ window.clearChat=function(){
   renderChatMessages();
 };
 
-// ===== 图片上传 + OCR =====
+// ===== 图片上传 + AI识图 =====
 var _ocrImgData=null; // 保存最近上传的图片dataURL，供重试用
 window.clearImagePreview=function(){
   document.getElementById('upload-preview').classList.remove('show');
@@ -1991,82 +1984,49 @@ window.handleImageUpload=function(event){
   var statusLine=document.getElementById('ocr-status-inline');
   // 显示紧凑预览
   thumbName.textContent=file.name.length>15?file.name.slice(0,13)+'…':file.name;
-  statusWidget.textContent='加载引擎…';
+  statusWidget.textContent='加载中…';
   statusWidget.className='up-status';
   preview.classList.add('show');
   statusLine.classList.add('show');
-  statusLine.innerHTML='<span class="qb-spinner"></span>正在加载OCR引擎...';
+  statusLine.innerHTML='<span class="qb-spinner"></span>读取图片...';
   // 读文件
   var reader=new FileReader();
   reader.onload=function(e){
     _ocrImgData=e.target.result;
-    checkTesseract(function(loaded){
-      if(!loaded){
-        statusWidget.textContent='引擎加载失败';
+    var keyToUse=API_KEY||SHARED_KEY;
+    var cfg=getApiConfig();
+    if(!keyToUse){
+      // 没有API Key → 引导绑定
+      statusWidget.textContent='需配置';
+      statusWidget.className='up-status error';
+      statusLine.innerHTML='⚠️ 未配置API Key，请点击顶栏⚙选择一家免费AI（DeepSeek/通义千问/智谱GLM）绑定Key后使用AI识图。';
+      return;
+    }
+    // 全走AI识图
+    statusWidget.textContent='AI识图…';
+    statusLine.innerHTML='<span class="qb-spinner"></span>AI识图中（'+cfg.name+'，约2-3秒）...';
+    ocrWithLLM(_ocrImgData).then(function(text){
+      if(text && text.indexOf('未识别到文字')===-1 && text.length>2){
+        statusWidget.textContent='✅ 已填入';
+        statusWidget.className='up-status success';
+        statusLine.innerHTML='✅ AI识图完成！文字已填入，请检查后点「🧠 开始复盘」。';
+        var textarea=document.getElementById('chat-input');
+        textarea.value+=(textarea.value?'\n\n':'')+text;
+        textarea.focus();
+      }else{
+        statusWidget.textContent='无文字';
         statusWidget.className='up-status error';
-        statusLine.innerHTML='⚠️ OCR引擎加载失败。可能原因：网络不通或CDN被拦截。<br>解决方法：①刷新页面重试 ②直接手动粘贴题目文字 ③按F12查看控制台错误';
-        return;
+        statusLine.innerHTML='⚠️ AI未识别到文字，请换更清晰的图片或手动输入。';
       }
-      statusWidget.textContent='识别中…';
-      statusLine.innerHTML='<span class="qb-spinner"></span>正在下载中文识别包（约8MB，首次需要30-60秒，之后秒开）...';
-      // 多CDN源回退 — jsdelivr优先（国内有节点，更快）
-      var langSources=[
-        'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best',
-        'https://tessdata.projectnaptha.com/4.0.0_best',
-        'https://raw.githubusercontent.com/naptha/tessdata/gh-pages/4.0.0'
-      ];
-      var langIdx=0;
-      var _dlStartTime=Date.now();
-      function tryOCR(){
-        var opts={
-          corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
-          workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
-          langPath:langSources[langIdx]+'/',
-          cacheMethod:'idb',
-          logger:function(m){
-            if(m.status==='recognizing text'){
-              statusLine.innerHTML='<span class="qb-spinner"></span>识别中... '+Math.round(m.progress*100)+'%';
-              statusWidget.textContent='识别…'+Math.round(m.progress*100)+'%';
-            }else if(m.status==='loading language traineddata'){
-              var elapsed=Math.round((Date.now()-_dlStartTime)/1000);
-              statusLine.innerHTML='<span class="qb-spinner"></span>下载中文识别包（约8MB，首次较慢请耐心等待）... 已用时 '+elapsed+' 秒';
-            }else if(m.status==='initializing tesseract'){
-              statusLine.innerHTML='<span class="qb-spinner"></span>初始化OCR引擎...';
-            }
-          }
-        };
-        // 使用 createWorker 获得明确错误信息
-        Tesseract.createWorker('chi_sim+eng',1,opts).then(function(worker){
-          return worker.recognize(_ocrImgData).then(function(result){
-            worker.terminate();
-            var text=result.data.text.trim();
-            if(text){
-              statusWidget.textContent='✅ 已填入';
-              statusWidget.className='up-status success';
-              statusLine.innerHTML='✅ 识别完成！文字已填入下方输入框，请检查修正后点「🧠 开始复盘」。';
-              var textarea=document.getElementById('chat-input');
-              textarea.value+=(textarea.value?'\n\n':'')+text;
-              textarea.focus();
-            }else{
-              statusWidget.textContent='无文字';
-              statusWidget.className='up-status error';
-              statusLine.innerHTML='⚠️ 图片中未识别到文字，请换一张更清晰的图片或手动输入。';
-            }
-          });
-        }).catch(function(err){
-          if(langIdx<langSources.length-1){
-            langIdx++;
-            statusLine.innerHTML='<span class="qb-spinner"></span>源 '+(langIdx)+' 失败，尝试备用源（'+(langIdx+1)+'/'+langSources.length+'）...';
-            setTimeout(tryOCR,500);
-          }else{
-            statusWidget.textContent='识别失败';
-            statusWidget.className='up-status error';
-            var errMsg=err.message||err.toString();
-            statusLine.innerHTML='⚠️ OCR失败：'+errMsg+'。<br>请手动输入题目文字，或刷新页面后重试。';
-          }
-        });
+    }).catch(function(err){
+      statusWidget.textContent='识别失败';
+      statusWidget.className='up-status error';
+      var errMsg=err.message||'';
+      if(errMsg.indexOf('NO_KEY')!==-1){
+        statusLine.innerHTML='⚠️ 未配置API Key。请点击顶栏⚙绑定Key（三家都免费！）';
+      }else{
+        statusLine.innerHTML='⚠️ AI识图失败：'+errMsg.substring(0,120)+'<br>请检查API Key是否正确，或手动粘贴题目文字。';
       }
-      tryOCR();
     });
   };
   reader.readAsDataURL(file);
@@ -2182,31 +2142,23 @@ window.handleQBUpload=function(event){
   imageFiles.forEach(function(file){
     var reader=new FileReader();
     reader.onload=function(e){
-      if(typeof Tesseract!=='undefined' && (Tesseract.createWorker||Tesseract.recognize)){
-        var ocrFn=Tesseract.createWorker?function(imgData,cb,errCb){
-          Tesseract.createWorker('chi_sim+eng',1,{
-            corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
-            workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js',
-            langPath:'https://cdn.jsdelivr.net/npm/@tesseract.js-data/chi_sim/4.0.0_best/',
-            cacheMethod:'idb' // 复用预载缓存，毫秒级加载
-          }).then(function(worker){
-            return worker.recognize(imgData).then(function(result){worker.terminate();cb(result);});
-          }).catch(function(err){errCb(err);});
-        }:function(imgData,cb,errCb){
-          Tesseract.recognize(imgData,'chi_sim+eng',{
-            corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0/',
-            workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/worker.min.js'
-          }).then(cb).catch(errCb);
-        };
-        ocrFn(e.target.result,function(result){
-          var text=result.data.text.trim();
-          if(text){
+      var imgData=e.target.result;
+      var keyToUse=API_KEY||SHARED_KEY;
+      // 全走AI识图
+      if(keyToUse){
+        ocrWithLLM(imgData).then(function(text){
+          if(text && text.indexOf('未识别到文字')===-1 && text.length>2){
             USER_QB.push({title:file.name.replace(/\.[^.]+$/,''),content:text,source:file.name,date:new Date().toLocaleDateString('zh-CN')});
           }
-          processed++;
-          checkAllDone();
-        }).catch(function(){processed++;checkAllDone();});
-      }else{processed++;checkAllDone();}
+          processed++;checkAllDone();
+        }).catch(function(){
+          // AI失败
+          processed++;checkAllDone();
+        });
+      }else{
+        // 没Key，跳过
+        processed++;checkAllDone();
+      }
     };
     reader.onerror=function(){processed++;checkAllDone();};
     reader.readAsDataURL(file);
@@ -2561,8 +2513,7 @@ renderQBFileList();
 updateCheckinUI();
 renderReminders();
 renderDailyGoal();
-// 预加载OCR引擎，避免首次上传时等待
-setTimeout(function(){checkTesseract(function(loaded){console.log('Tesseract preload:',loaded?'success':'failed');});},1000);
+// OCR已改为AI API识图，无需预加载Tesseract.js
 
 })();
 </script>
