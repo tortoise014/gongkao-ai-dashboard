@@ -1766,7 +1766,7 @@ window.submitFeedback=function(){
   if(WEBHOOK_URL){
     var payload={msg_type:'interactive',card:{header:{title:{tag:'plain_text',content:'公考仪表盘 - 用户反馈'},template:'green'},elements:[{tag:'div',text:{tag:'lark_md',content:'**反馈内容：**\n'+content+(contact?'\n\n**联系方式：**'+contact:'')+(navigator.userAgent.includes('Mobile')?'\n\n📱 移动端':'💻 桌面端')+'  \n⏰ '+new Date().toLocaleString()}}]}};
     fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(r){
-      if(r.ok){status.textContent='✅ 反馈已发送，感谢！';status.className='fm-status show success';document.getElementById('fb-content').value='';status.textContent='反馈已发送!';}
+      if(r.ok){status.textContent='✅ 反馈已发送，感谢！';status.className='fm-status show success';document.getElementById('fb-content').value='';}
       else{status.textContent='❌ 发送失败('+r.status+')';status.className='fm-status show error';}
     }).catch(function(e){status.textContent='❌ 网络错误: '+e.message;status.className='fm-status show error';});
   }else{
@@ -1800,10 +1800,13 @@ function renderChatMessages(){
     if(msg.socratic)cls+=' socratic';
     if(msg.loading)cls+=' loading';
     var text=msg.text;
+    var htmlText;
     if(msg.loading){
-      text='AI讲师正在思考中 <span class="dots"><span></span><span></span><span></span></span>';
+      htmlText='AI讲师正在思考中 <span class="dots"><span></span><span></span><span></span></span>';
+    }else{
+      htmlText=escHtml(text).replace(/\n/g,'<br>');
     }
-    html+='<div class="'+cls+'"'+(msg.loading?' id="chat-loading"':'')+'><div class="bubble">'+text.replace(/\n/g,'<br>')+'</div></div>';
+    html+='<div class="'+cls+'"'+(msg.loading?' id="chat-loading"':'')+'><div class="bubble">'+htmlText+'</div></div>';
   });
   var body=document.getElementById('chat-messages');
   body.innerHTML=html;
@@ -1832,7 +1835,7 @@ function renderTeacherCards(){
   var html='';
   teachers.forEach(function(t){
     var badgeHtml=t.badge==='skill'?'<span class="tc-badge skill">有Skill</span>':t.badge==='new-t'?'<span class="tc-badge new-t">推荐</span>':'';
-    html+='<div class="teacher-card" onclick="selectTeacher(\''+currentTeacherModule+'\',\''+t.name+'\')">'+
+    html+='<div class="teacher-card" onclick="selectTeacher(\''+currentTeacherModule+'\',\''+t.name+'\',this)">'+
       '<div class="tc-name">'+t.name+'</div>'+
       '<div class="tc-platform">'+t.platform+'</div>'+
       '<div class="tc-style">'+t.style+'</div>'+
@@ -1841,12 +1844,12 @@ function renderTeacherCards(){
   document.getElementById('teacher-cards').innerHTML=html;
 }
 
-window.selectTeacher=function(mod,name){
+window.selectTeacher=function(mod,name,el){
   var teachers=TEACHER_LIBRARY[mod]||[];
   currentTeacher=teachers.find(function(t){return t.name===name;});
   if(!currentTeacher)return;
   document.querySelectorAll('.teacher-card').forEach(function(c){c.classList.remove('selected');});
-  event.currentTarget.classList.add('selected');
+  if(el)el.classList.add('selected');
   openTeacherChat();
 };
 
@@ -2936,7 +2939,7 @@ function getDaysUntilExam(){
 }
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 // ===== 课程上线置顶通知条 + 限时体验控制 =====
-var TRIAL_END=new Date('2026-08-16T23:59:59'); // 上传前可手动修改：格式 YYYY-MM-DDTHH:mm:ss
+var TRIAL_END=new Date('2026-09-14T23:59:59'); // 上传前可手动修改：格式 YYYY-MM-DDTHH:mm:ss
 var NOTICE_HIDDEN_KEY='gk_notice_hidden';
 function isTrialActive(){
   return new Date() < TRIAL_END;
