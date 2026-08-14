@@ -383,7 +383,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 /* ===== 新增板块（升级版Skill体验） ===== */
 .mc-wrap{margin-top:4px}
 .mc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.mc-countdown{background:#fff2f0;border:1px solid #ffccc7;color:#cf1322;border-radius:20px;padding:5px 14px;font-size:13px;white-space:nowrap;display:none}
+.mc-countdown{background:#eaf6ef;border:1px solid #b7dfc9;color:#146c50;border-radius:20px;padding:5px 14px;font-size:13px;white-space:nowrap;display:none}
 .mc-countdown.show{display:inline-block}
 .mc-countdown b{font-size:15px}
 .mc-key-hint{font-size:11px;color:var(--hint)}
@@ -470,8 +470,8 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 <body>
 <!-- 课程上线置顶通知条 -->
 <div class="top-notice" id="top-notice">
-  <span class="tn-txt">🚀 课程正式上线！50元永久有效 · <b>升级版Skill限时免费体验</b><span id="tn-countdown"></span></span>
-  <button class="tn-btn" onclick="showTrialPanel()">🎁 免费体验</button>
+  <span class="tn-txt">🚀 课程正式上线！50元永久有效 · <b>AI名师对话 · 每天免费5次</b>，长期开放</span>
+  <button class="tn-btn" onclick="document.getElementById('gkq-open-btn').click()">🎁 免费体验</button>
   <button class="tn-btn ghost" onclick="window.open('https://wx.zsxq.com/dweb2/index/group/48882484585828','_blank')">去看看</button>
   <button class="tn-close" onclick="closeTopNotice()" title="关闭">✕</button>
 </div>
@@ -761,7 +761,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
   <div class="fupan-subpanel active" data-fp-panel="method">
     <div class="mc-wrap">
       <div class="mc-top">
-        <span class="mc-countdown" id="mcCountdown">🎁 限时体验倒计时：<b id="mcCountdownNum">--</b></span>
+        <span class="mc-countdown" id="mcCountdown">✨ 长期开放体验 · 绑定 API Key 可不限次使用</span>
         <span class="mc-key-hint" id="mcKeyHint">绑定 API Key 即可不限次使用（DeepSeek 送 500 万 tokens）</span>
       </div>
       <p style="font-size:12px;color:var(--hint);margin-bottom:14px;">选一位名师，用他的方法论纠正你的学习方法和解题思路。可粘贴题目/材料/你的答案，也可上传截图自动识别文字（复用你配置的识图Key，DeepSeek用户需另配通义/GLM识图Key）。</p>
@@ -809,7 +809,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 
       <div class="mc-purchase" id="mcPurchaseCard" style="display:none">
         <div class="p-seal">体<br>验</div>
-        <h3>限时体验已结束</h3>
+        <h3>体验不够？解锁完整版</h3>
         <p>刚才的体验只是「升级版 Skill」的冰山一角。完整版包含：<br>
           12 位行测名师 + 6 位申论名师全部方法库 · 可改名的专属讲师模板<br>
           配套数据包与 10 个基础 Skill · 持续更新</p>
@@ -2938,23 +2938,16 @@ function getDaysUntilExam(){
   return Math.max(1,daysBetween(info.examDate,today));
 }
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-// ===== 课程上线置顶通知条 + 限时体验控制 =====
-var TRIAL_END=new Date('2026-09-14T23:59:59'); // 上传前可手动修改：格式 YYYY-MM-DDTHH:mm:ss
+// ===== 课程上线置顶通知条（已改为长期开放，不再限时） =====
 var NOTICE_HIDDEN_KEY='gk_notice_hidden';
-function isTrialActive(){
-  return new Date() < TRIAL_END;
-}
+function isTrialActive(){ return true; } // 长期开放，永不到期
 function closeTopNotice(){
   var el=document.getElementById('top-notice');
   if(el) el.style.display='none';
   localStorage.setItem(NOTICE_HIDDEN_KEY,'1');
 }
 function showTrialPanel(){
-  if(!isTrialActive()){
-    alert('体验已结束，加入知识星球解锁完整版');
-    window.open('https://wx.zsxq.com/dweb2/index/group/48882484585828','_blank');
-    return;
-  }
+  // 长期开放：直接进入「学习方法纠正」面板
   document.querySelectorAll('.fupan-subtab').forEach(function(b){
     b.classList.toggle('active', b.dataset.fp==='method');
   });
@@ -2971,17 +2964,6 @@ function initTopNotice(){
   if(localStorage.getItem(NOTICE_HIDDEN_KEY)){
     el.style.display='none';
     return;
-  }
-  if(!isTrialActive()){
-    el.style.display='none';
-    return;
-  }
-  // 通知条内显示剩余天数
-  var cd=document.getElementById('tn-countdown');
-  if(cd){
-    var diff=TRIAL_END-new Date();
-    var d=Math.max(0,Math.ceil(diff/86400000));
-    cd.textContent='（剩'+d+'天）';
   }
 }
 function genId(){return 'wb_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
@@ -3117,23 +3099,9 @@ var MC_DIRS={
 var MC_STATE={dir:null,teacher:null,messages:[]};
 function mcHasUnlimited(){return !!(API_KEY||SHARED_KEY);}
 function startTrialCountdown(){
+  // 已改为长期开放：仅显示提示条，不再倒计时
   var el=document.getElementById('mcCountdown');
-  var num=document.getElementById('mcCountdownNum');
-  if(!el||!num)return;
-  if(!isTrialActive()){ mcDisableTrial(); return; }
-  el.classList.add('show');
-  function tick(){
-    var diff=TRIAL_END-new Date();
-    if(diff<=0){ num.textContent='00:00:00'; mcDisableTrial(); return; }
-    var d=Math.floor(diff/86400000);
-    var h=Math.floor((diff%86400000)/3600000);
-    var m=Math.floor((diff%3600000)/60000);
-    var s=Math.floor((diff%60000)/1000);
-    num.textContent=(d>0?d+'天':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-  }
-  tick();
-  if(window.__trialTimer)clearInterval(window.__trialTimer);
-  window.__trialTimer=setInterval(tick,1000);
+  if(el) el.classList.add('show');
 }
 function mcDisableTrial(){
   var cd=document.getElementById('mcCountdown');
@@ -3148,7 +3116,7 @@ function mcDisableTrial(){
   if(purchase){
     purchase.style.display='block';
     var h3=purchase.querySelector('h3');
-    if(h3)h3.textContent='限时体验已结束';
+    if(h3)h3.textContent='体验不够？解锁完整版';
   }
 }
 window.mcOnTabShow=function(){
@@ -3225,7 +3193,6 @@ function mcAddMsg(role,text){
 }
 
 function mcSendQuestion(){
-  if(!isTrialActive()){alert('限时体验已结束，加入知识星球解锁完整版');return;}
   var input=document.getElementById('mcQuestionInput');
   var q=input.value.trim();
   if(!q)return;
