@@ -324,9 +324,162 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 .follow-card:hover .fc-link{opacity:.9}
 .follow-card.coming-soon:hover .fc-link{opacity:1}
 @media(max-width:768px){.follow-grid{grid-template-columns:1fr}.api-settings-panel{top:52px;right:10px;left:10px;width:auto;max-height:calc(100vh - 70px);padding:14px 16px}}
+/* 题本进度 */
+.wb-add-form{display:none;margin-bottom:16px;padding:16px;background:var(--bg);border:1px dashed var(--jade-mid);border-radius:var(--radius-sm)}
+.wb-add-form.show{display:block}
+.wb-add-form .row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.wb-add-form input{flex:1;min-width:120px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:13px}
+.wb-add-form button{font-family:inherit;font-size:13px;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:500}
+.wb-add-form .wb-save{background:var(--jade);color:#fff}
+.wb-add-form .wb-cancel{background:var(--bg);color:var(--sub);border:1px solid var(--border)}
+.wb-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.wb-book-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .15s;position:relative}
+.wb-book-card:hover{border-color:var(--jade-mid);box-shadow:0 2px 8px rgba(15,110,86,.06)}
+.wb-book-card .wb-book-name{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:4px;padding-right:28px}
+.wb-book-card .wb-book-meta{font-size:11px;color:var(--hint);margin-bottom:10px}
+.wb-book-card .wb-book-del{position:absolute;top:12px;right:12px;background:none;border:none;font-size:16px;color:var(--hint);cursor:pointer;padding:2px 6px;border-radius:4px}
+.wb-book-card .wb-book-del:hover{color:var(--coral);background:var(--coral-light)}
+.wb-progress-bar{height:10px;background:var(--border);border-radius:5px;overflow:hidden;margin-bottom:10px}
+.wb-progress-fill{height:100%;border-radius:5px;background:var(--jade);transition:width .4s ease}
+.wb-progress-fill.high{background:var(--coral)}
+.wb-progress-stats{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:10px}
+.wb-progress-stats .wb-pct{font-weight:700;color:var(--jade)}
+.wb-progress-stats .wb-pct.high{color:var(--coral)}
+.wb-daily-input{display:flex;align-items:center;gap:6px;margin-top:4px}
+.wb-daily-input label{font-size:11px;color:var(--hint);white-space:nowrap}
+.wb-daily-input input{width:64px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:inherit;text-align:center}
+.wb-daily-input button{font-family:inherit;font-size:11px;padding:5px 10px;border:none;border-radius:4px;background:var(--jade);color:#fff;cursor:pointer}
+.wb-daily-input .wb-done-badge{font-size:11px;color:var(--jade);font-weight:600}
+.wb-add-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;padding:8px 16px;border:2px dashed var(--jade-mid);border-radius:8px;background:transparent;color:var(--jade);cursor:pointer;transition:all .15s;margin-bottom:16px}
+.wb-add-btn:hover{background:var(--jade-light);border-color:var(--jade)}
+.wb-total-bar{margin-bottom:16px;padding:14px;background:var(--jade-light);border-radius:var(--radius);border:1px solid var(--jade-mid);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.wb-total-bar .wb-total-label{font-size:13px;font-weight:600;color:var(--jade)}
+.wb-total-bar .wb-total-num{font-size:13px;color:var(--sub)}
+.wb-total-bar .wb-total-num b{color:var(--jade);font-size:15px}
+@media(max-width:768px){.wb-book-grid{grid-template-columns:1fr}.wb-daily-input{flex-wrap:wrap}}
+.course-promo{display:flex;align-items:center;gap:20px;padding:18px 22px;margin:0 0 28px;background:linear-gradient(135deg,var(--jade-light),#e8f8f0);border:1px solid var(--jade-mid);border-radius:var(--radius);position:relative}
+.course-promo .promo-text{flex:1;min-width:0}
+.course-promo .promo-text h4{font-size:15px;color:var(--jade);margin:0 0 4px;font-weight:700}
+.course-promo .promo-text p{font-size:12px;color:var(--sub);margin:0;line-height:1.6}
+.course-promo .promo-qr{flex-shrink:0;text-align:center}
+.course-promo .promo-qr img{width:80px;height:80px;border-radius:6px;border:2px solid #fff;display:block}
+.course-promo .promo-qr span{font-size:10px;color:var(--hint);margin-top:4px;display:block}
+.course-promo .promo-close{position:absolute;top:8px;right:10px;background:none;border:none;font-size:16px;color:var(--hint);cursor:pointer;padding:2px 6px;line-height:1}
+.course-promo .promo-close:hover{color:var(--fg)}
+/* 顶部置顶通知条 */
+.top-notice{position:sticky;top:0;z-index:9999;background:linear-gradient(90deg,#0b3d2e,#146c50);color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 14px;font-size:13px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.top-notice .tn-txt{line-height:1.5}
+.top-notice .tn-txt b{color:#ffd666}
+.top-notice .tn-btn{background:#fff;color:#0b3d2e;border:none;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.top-notice .tn-btn:hover{background:#ffd666}
+.top-notice .tn-btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.7);font-weight:500}
+.top-notice .tn-btn.ghost:hover{background:rgba(255,255,255,.15)}
+.top-notice .tn-close{background:none;border:none;color:rgba(255,255,255,.75);font-size:16px;cursor:pointer;padding:0 4px;line-height:1}
+.top-notice .tn-close:hover{color:#fff}
+@media(max-width:640px){.top-notice{font-size:12px;padding:8px 10px;gap:8px}.top-notice .tn-btn{padding:4px 12px;font-size:12px}}
+.course-promo .promo-close:hover{color:var(--fg)}
+@media(max-width:768px){.course-promo{gap:12px;padding:14px 16px}.course-promo .promo-text h4{font-size:14px}.course-promo .promo-qr img{width:64px;height:64px}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* ===== 新增板块（升级版Skill体验） ===== */
+.mc-wrap{margin-top:4px}
+.mc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.mc-countdown{background:#fff2f0;border:1px solid #ffccc7;color:#cf1322;border-radius:20px;padding:5px 14px;font-size:13px;white-space:nowrap;display:none}
+.mc-countdown.show{display:inline-block}
+.mc-countdown b{font-size:15px}
+.mc-key-hint{font-size:11px;color:var(--hint)}
+.mc-step{margin-bottom:18px}
+.mc-step-label{font-size:13px;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.mc-step-label::before{content:"";width:3px;height:14px;background:var(--jade);border-radius:2px;display:inline-block}
+.mc-step-label b{color:var(--jade)}
+.mc-dir-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mc-dir-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 18px;cursor:pointer;text-align:left;transition:all .18s;box-shadow:var(--shadow);font-family:inherit;color:var(--ink)}
+.mc-dir-card:hover{border-color:var(--jade-mid);transform:translateY(-2px);box-shadow:0 4px 18px rgba(15,110,86,.12)}
+.mc-dir-card.active{border-color:var(--jade);background:var(--jade-light)}
+.mc-dir-card .ic{color:var(--jade);margin-bottom:10px;display:block}
+.mc-dir-card b{font-size:16px;display:block}
+.mc-dir-card span{font-size:12px;color:var(--sub);display:block;margin-top:6px;line-height:1.6}
+.mc-teacher-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mc-t-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 12px;cursor:pointer;transition:all .15s;font-family:inherit;text-align:left;color:var(--ink)}
+.mc-t-card:hover{border-color:var(--jade-mid);transform:translateY(-1px)}
+.mc-t-card.active{border-color:var(--jade);background:var(--jade-light);box-shadow:0 0 0 1px var(--jade)}
+.mc-t-card .t-subject{font-size:10px;color:var(--jade);background:var(--jade-light);border-radius:10px;padding:2px 8px;display:inline-block;margin-bottom:6px}
+.mc-t-card b{font-size:15px;display:block}
+.mc-t-card .t-method{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.5}
+.mc-t-card .t-tag{font-size:10px;color:var(--hint);margin-top:4px}
+.mc-t-card .t-check{display:none}
+.mc-t-card.active .t-check{display:inline;color:var(--jade);float:right;font-size:16px}
+.mc-chat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);min-height:180px;max-height:400px;overflow-y:auto;padding:16px;box-shadow:var(--shadow)}
+.mc-chat-placeholder{color:var(--hint);font-size:13px;line-height:1.8;text-align:center;padding:26px 10px}
+.mc-chat-placeholder .example{display:block;margin:10px auto 0;font-family:inherit;font-size:12px;color:var(--jade);background:var(--jade-light);border:1px dashed var(--jade-mid);border-radius:8px;padding:8px 14px;cursor:pointer;max-width:82%}
+.mc-msg{margin-bottom:14px;display:flex;flex-direction:column}
+.mc-msg .who{font-size:11px;color:var(--hint);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.mc-msg .who .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.mc-msg.user{align-items:flex-end}
+.mc-msg.user .who{flex-direction:row-reverse}
+.mc-msg.user .who .avatar{background:var(--jade);color:#fff}
+.mc-msg.ai .who .avatar{background:var(--gold);color:#fff}
+.mc-msg .bubble{max-width:88%;padding:11px 14px;border-radius:12px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.mc-msg.user .bubble{background:var(--jade);color:#fff;border-bottom-right-radius:4px}
+.mc-msg.ai .bubble{background:var(--jade-light);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--ink)}
+.mc-typing .bubble::after{content:"…";animation:mcBlink 1s infinite}
+@keyframes mcBlink{0%,100%{opacity:.2}50%{opacity:1}}
+.mc-input-row{display:flex;gap:10px;margin-top:12px;align-items:stretch;flex-wrap:wrap}
+.mc-input-row textarea{flex:1;min-width:220px;font-family:inherit;font-size:14px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;resize:none;background:var(--card);color:var(--ink);line-height:1.6}
+.mc-input-row textarea:focus{outline:none;border-color:var(--jade-mid)}
+.mc-input-row button{font-family:inherit;font-size:14px;font-weight:600;padding:12px 26px;border:none;border-radius:10px;background:var(--jade);color:#fff;cursor:pointer;transition:all .15s;white-space:nowrap}
+.mc-input-row button:hover{opacity:.9}
+.mc-input-row button:disabled{background:var(--hint);cursor:not-allowed}
+.mc-upload-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;padding:10px 16px;border:1px dashed var(--jade-mid);border-radius:10px;background:var(--jade-light);color:var(--jade);cursor:pointer;white-space:nowrap}
+.mc-upload-btn:hover{border-color:var(--jade)}
+.mc-ocr-status{font-size:12px;color:var(--sub);margin-top:8px;min-height:18px}
+.mc-ocr-status.ok{color:var(--jade)}
+.mc-ocr-status.err{color:var(--coral)}
+.mc-purchase{background:linear-gradient(135deg,var(--jade-light),var(--gold-light));border:1px solid var(--jade-mid);border-radius:var(--radius);padding:26px 22px;margin-top:20px;text-align:center}
+.mc-purchase .p-seal{width:44px;height:44px;border:2px solid var(--gold);border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:13px;font-weight:700}
+.mc-purchase h3{font-size:17px;margin-bottom:8px;color:var(--ink)}
+.mc-purchase p{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+.mc-purchase .p-btn{display:inline-block;font-family:inherit;font-size:14px;font-weight:700;padding:12px 34px;background:var(--jade);color:#fff;border-radius:8px;text-decoration:none;transition:all .15s}
+.mc-purchase .p-btn:hover{opacity:.9;transform:translateY(-1px)}
+.mc-purchase .p-note{font-size:11px;color:var(--hint);margin-top:10px}
+@media(max-width:768px){.mc-dir-grid{grid-template-columns:1fr}.mc-teacher-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.mc-teacher-grid{grid-template-columns:1fr}}
+
+/* ===== AI名师对话（独立模块 gkq-，不依赖主IIFE） ===== */
+.gkq-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:9px 24px;background:var(--jade-light);border-bottom:1px solid var(--border);font-size:13px;color:var(--ink)}
+.gkq-banner-text b{color:var(--jade)}
+.gkq-banner-btn{background:var(--jade);color:#fff;border:none;border-radius:6px;padding:7px 20px;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:opacity .15s}
+.gkq-banner-btn:hover{opacity:.9}
+.gkq-modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+.gkq-modal.show{display:flex}
+.gkq-box{background:var(--card);border-radius:14px;width:min(880px,95vw);height:min(700px,92vh);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 14px 44px rgba(0,0,0,.28)}
+.gkq-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;background:var(--jade);color:#fff;font-size:14px;font-weight:600;flex-shrink:0}
+.gkq-head .gkq-quota{font-size:12px;font-weight:400;opacity:.95;margin-left:8px}
+.gkq-head .gkq-quota b{font-weight:600}
+.gkq-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
+.gkq-frame{flex:1;border:none;width:100%;min-height:0}
+.gkq-done{flex:1;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:30px;background:var(--card)}
+.gkq-done.show{display:flex}
+.gkq-done h3{margin:0;font-size:17px;color:var(--ink)}
+.gkq-done p{margin:0;font-size:13px;color:var(--sub);line-height:1.8}
+.gkq-done a{background:var(--jade);color:#fff;text-decoration:none;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:600;margin-top:4px}
+.gkq-done a:hover{opacity:.9}
+.gkq-done button{background:none;border:none;color:var(--hint);font-size:12px;cursor:pointer;text-decoration:underline;font-family:inherit}
+@media(max-width:520px){.gkq-banner{padding:8px 14px}.gkq-banner-text{width:100%}.gkq-banner-btn{width:100%}}
 </style>
 </head>
 <body>
+<!-- 课程上线置顶通知条 -->
+<div class="top-notice" id="top-notice">
+  <span class="tn-txt">🚀 课程正式上线！50元永久有效 · <b>升级版Skill限时免费体验</b><span id="tn-countdown"></span></span>
+  <button class="tn-btn" onclick="showTrialPanel()">🎁 免费体验</button>
+  <button class="tn-btn ghost" onclick="window.open('https://wx.zsxq.com/dweb2/index/group/48882484585828','_blank')">去看看</button>
+  <button class="tn-close" onclick="closeTopNotice()" title="关闭">✕</button>
+</div>
+<!-- AI名师对话入口横幅 -->
+<div class="gkq-banner" id="gkq-banner">
+  <div class="gkq-banner-text">🧠 <b>AI名师对话</b> · 18位公考名师在线答疑 · 每天免费 <b id="gkq-left-txt">5</b> 次</div>
+  <button class="gkq-banner-btn" id="gkq-open-btn">开始对话</button>
+</div>
 <div class="top-bar">
   <div class="brand">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -342,6 +495,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
     <button data-target="fupan">复盘</button>
     <button data-target="xuangang">选岗</button>
     <button data-target="daka">打卡</button>
+    <button data-target="tiben">题本</button>
     <button data-target="tixing">提醒</button>
     <button data-target="guide">指南</button>
   </div>
@@ -355,6 +509,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
   <button data-target="fupan">复盘</button>
   <button data-target="xuangang">选岗</button>
   <button data-target="daka">打卡</button>
+  <button data-target="tiben">题本</button>
   <button data-target="tixing">提醒</button>
   <button data-target="guide">指南</button>
 </div>
@@ -425,6 +580,19 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
     </div>
   </div>
   <div class="province-detail" id="province-detail" style="text-align:left;"></div>
+</div>
+
+<!-- 课程推广 -->
+<div class="course-promo" id="course-promo">
+  <button class="promo-close" onclick="document.getElementById('course-promo').style.display='none'" title="关闭">×</button>
+  <div class="promo-text">
+    <h4>🚀 想自己从零搭出这套系统？</h4>
+    <p>不用学代码，复制AI指令就能做。扫码看完整教程，50元永久有效。</p>
+  </div>
+  <div class="promo-qr">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://wx.zsxq.com/dweb2/index/group/48882484585828" alt="课程二维码" loading="lazy">
+    <span>扫码查看课程</span>
+  </div>
 </div>
 
 <!-- ===== 2. 学习天数 ===== -->
@@ -583,13 +751,76 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 <div class="card">
   <div class="fupan-subtabs">
-    <button class="fupan-subtab active" data-fp="teacher">👨‍🏫 讲师对话</button>
+    <button class="fupan-subtab active" data-fp="method">🧭 新增板块</button>
+    <button class="fupan-subtab" data-fp="teacher">👨‍🏫 讲师对话</button>
     <button class="fupan-subtab" data-fp="workbench">📝 逐题录入</button>
     <button class="fupan-subtab" data-fp="qb-mgr">📁 题库管理</button>
   </div>
 
-  <!-- Sub-tab 1: 讲师对话 -->
-  <div class="fupan-subpanel active" data-fp-panel="teacher">
+  <!-- Sub-tab 1: 新增板块（升级版Skill体验） -->
+  <div class="fupan-subpanel active" data-fp-panel="method">
+    <div class="mc-wrap">
+      <div class="mc-top">
+        <span class="mc-countdown" id="mcCountdown">🎁 限时体验倒计时：<b id="mcCountdownNum">--</b></span>
+        <span class="mc-key-hint" id="mcKeyHint">绑定 API Key 即可不限次使用（DeepSeek 送 500 万 tokens）</span>
+      </div>
+      <p style="font-size:12px;color:var(--hint);margin-bottom:14px;">选一位名师，用他的方法论纠正你的学习方法和解题思路。可粘贴题目/材料/你的答案，也可上传截图自动识别文字（复用你配置的识图Key，DeepSeek用户需另配通义/GLM识图Key）。</p>
+
+      <div class="mc-step">
+        <div class="mc-step-label">第一步 · 选择方向</div>
+        <div class="mc-dir-grid">
+          <button class="mc-dir-card" data-dir="xingce" onclick="mcChooseDir('xingce')">
+            <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <b>行测学习方法</b>
+            <span>资料分析 · 言语理解 · 判断推理 · 数量关系 · 常识政治</span>
+          </button>
+          <button class="mc-dir-card" data-dir="shenlun" onclick="mcChooseDir('shenlun')">
+            <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <b>申论材料分析</b>
+            <span>归纳概括 · 综合分析 · 提出对策 · 公文 · 大作文</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mc-step" id="mcStepTeacher" style="display:none">
+        <div class="mc-step-label">第二步 · 选择讲师（<span id="mcDirName"></span>）</div>
+        <div class="mc-teacher-grid" id="mcTeacherGrid"></div>
+      </div>
+
+      <div class="mc-step" id="mcStepChat" style="display:none">
+        <div class="mc-step-label">第三步 · 向 <b id="mcCurrentTeacher">这位名师</b> 提问</div>
+        <div class="mc-chat-box" id="mcChatBox">
+          <div class="mc-chat-placeholder" id="mcChatPlaceholder">
+            <div style="margin-bottom:6px">把你的备考问题发给这位名师，不限题型：</div>
+            <button class="example" onclick="mcQuickAsk(this)">帮我诊断一下我的资料分析为什么总是做不完</button>
+            <button class="example" onclick="mcQuickAsk(this)">这道题怎么用假设分配法算？</button>
+            <button class="example" onclick="mcQuickAsk(this)">大作文总是跑题怎么办，帮我看看立意</button>
+          </div>
+        </div>
+        <div class="mc-input-row">
+          <label class="mc-upload-btn">📷 上传截图识别
+            <input type="file" id="mc-file-input" accept="image/*" capture="environment" onchange="mcHandleImageUpload(event)" style="display:none">
+          </label>
+          <textarea id="mcQuestionInput" placeholder="输入你的问题…（可粘贴题目、材料、自己的答案，或上传截图自动识别文字）" rows="2"></textarea>
+          <button id="mcSendBtn" onclick="mcSendQuestion()">发送</button>
+        </div>
+        <div class="mc-ocr-status" id="mcOcrStatus"></div>
+      </div>
+
+      <div class="mc-purchase" id="mcPurchaseCard" style="display:none">
+        <div class="p-seal">体<br>验</div>
+        <h3>限时体验已结束</h3>
+        <p>刚才的体验只是「升级版 Skill」的冰山一角。完整版包含：<br>
+          12 位行测名师 + 6 位申论名师全部方法库 · 可改名的专属讲师模板<br>
+          配套数据包与 10 个基础 Skill · 持续更新</p>
+        <a class="p-btn" href="https://wx.zsxq.com/group/48882484585828" target="_blank">加入知识星球 · 解锁完整版</a>
+        <div class="p-note">星球内可下载全部 Skill 模板，复制改名指令即可拥有你的专属讲师。或点击顶栏⚙绑定你的 API Key，即可不限次体验。</div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Sub-tab 2: 讲师对话 -->
+  <div class="fupan-subpanel" data-fp-panel="teacher">
     <p style="font-size:12px;color:var(--hint);margin-bottom:10px;">选择模块和讲师，上传错题截图（自动OCR转文字）或直接粘贴题目，AI用名师方法论帮你复盘。</p>
     <div class="teacher-module-bar" id="teacher-module-bar"></div>
     <div class="teacher-card-grid" id="teacher-cards"></div>
@@ -627,7 +858,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
     </div>
   </div>
 
-  <!-- Sub-tab 2: 逐题录入 -->
+  <!-- Sub-tab 3: 逐题录入 -->
   <div class="fupan-subpanel" data-fp-panel="workbench">
     <div class="review-tabs" id="review-tabs">
       <button class="review-tab urgent active" data-module="ziliao">资料分析 ⚡</button>
@@ -718,7 +949,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
     </div>
   </div>
 
-  <!-- Sub-tab 3: 题库管理 -->
+  <!-- Sub-tab 4: 题库管理 -->
   <div class="fupan-subpanel" data-fp-panel="qb-mgr">
     <p style="font-size:12px;color:var(--hint);margin-bottom:14px;">上传你自己的题库文件（支持文件夹批量上传），系统自动解析存储。之后搜索题目直接从你的题库检索。</p>
     <div class="qb-mgr-zone" onclick="document.getElementById('qb-folder-input').click()">
@@ -734,7 +965,6 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
     <div class="qb-search-results" id="qb-mgr-results"></div>
     <div class="qb-file-list" id="qb-file-list"></div>
   </div>
-</div>
 </div>
 
 <!-- ===== 7. 选岗 ===== -->
@@ -823,7 +1053,36 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 </div>
 
-<!-- ===== 9. 提醒 ===== -->
+<!-- ===== 9. 题本进度 ===== -->
+<div class="section-anchor" id="section-tiben">
+<div class="section-title">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+  <h2>题本进度</h2>
+  <span class="tag tag-blue">刷题追踪</span>
+</div>
+<div class="card">
+  <button class="wb-add-btn" onclick="toggleWorkbookForm()">+ 添加题本</button>
+  <div class="wb-add-form" id="wb-add-form">
+    <div class="row">
+      <input type="text" id="wb-new-name" placeholder="题本名称（如：粉笔5000题-资料分析）">
+      <input type="number" id="wb-new-total" placeholder="总题数" min="1" style="max-width:120px">
+    </div>
+    <div class="row">
+      <button class="wb-save" onclick="addWorkbook()">保存</button>
+      <button class="wb-cancel" onclick="toggleWorkbookForm()">取消</button>
+    </div>
+  </div>
+  <div class="wb-total-bar" id="wb-total-bar" style="display:none">
+    <span class="wb-total-label">全部题本总进度</span>
+    <span class="wb-total-num" id="wb-total-stats"></span>
+  </div>
+  <div class="wb-book-grid" id="wb-book-grid">
+    <div style="text-align:center;padding:30px;color:var(--hint);font-size:13px;">还没有添加题本，点击上方按钮添加<br>例如：粉笔5000题、华图行测真题、智能组卷</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== 10. 提醒 ===== -->
 <div class="section-anchor" id="section-tixing">
 <div class="section-title">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -843,7 +1102,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 </div>
 
-<!-- ===== 10. 指南 ===== -->
+<!-- ===== 11. 指南 ===== -->
 <div class="section-anchor" id="section-guide">
 <div class="section-title">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
@@ -879,7 +1138,7 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 </div>
 </div>
 
-<div class="section-anchor" id="section-pay" style="margin-top:36px">>
+<div class="section-anchor" id="section-pay" style="margin-top:36px">
   <div class="section-title">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v10H2V10"/><path d="M2 10l10-6 10 6"/><path d="M12 4v12"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="14" r="2"/></svg>
     <h2>关注我，获取更多备考干货</h2>
@@ -891,15 +1150,15 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
       <div class="fc-desc">AI公考实战演示<br>备考干货 & 软件测评<br>每周更新</div>
       <span class="fc-link">👉 点我关注</span>
     </a>
-    <div class="follow-card coming-soon">
+    <div class="follow-card">
       <div class="fc-icon">📦</div>
-      <div class="fc-name">搭建课程</div>
-      <div class="fc-desc">从零搭建AI备考系统<br>HTML/CSS/JS实操<br>DeepSeek API接入<br>全程录屏教学</div>
-      <span class="fc-link">即将上线</span>
+      <div class="fc-name">完整教程+Skill包</div>
+      <div class="fc-desc">从零搭建AI备考系统<br>10个名师Skill一键安装<br>AI答疑助手自助排障<br>后续更新免费</div>
+      <span class="fc-link">知识星球 50元</span>
     </div>
   </div>
   <div class="card" style="margin-top:12px;text-align:center;">
-    <span style="font-size:13px;color:var(--sub);">💡 课程和Skill包正在准备中，先在抖音关注，上线第一时间通知你</span>
+    <span style="font-size:13px;color:var(--sub);">💡 50元全打包，一次付费永久有效。内含完整教程+Skill包+AI答疑助手。先关注抖音了解功能，觉得有用再入圈。</span>
   </div>
 </div>
 
@@ -911,7 +1170,6 @@ h3{font-size:13px;font-weight:500;color:var(--sub)}
 <div class="footer">
   公考AI全流程备考系统 · 基于WorkBuddy + 9个专项Skill<br>
   数据来源：粉笔错题本 + 袁东申论全家桶 + AI实时分析
-</div>
 </div>
 
 <script>
@@ -926,34 +1184,41 @@ var DEFAULT_GUOKAO_DATE=new Date(2026,10,29);
 var DEFAULT_GUOKAO_GONGGAO=new Date(2026,9,15);
 var currentProvinceId=localStorage.getItem('gk_current_province')||'guangdong';
 function daysBetween(a,b){return Math.max(0,Math.ceil((a-b)/(1000*60*60*24)));}
+function ensureFutureDate(d){
+  if(!d)return d;
+  var today=new Date();today.setHours(0,0,0,0);
+  var dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  while(dd < today) dd.setFullYear(dd.getFullYear()+1);
+  return dd;
+}
 function parseExamDate(str){
   if(!str)return null;
   var m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3])));
   m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})[-~](\d{1,2})日/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3])));
   m=str.match(/(\d{4})年(\d{1,2})月上旬/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,1));
   m=str.match(/(\d{4})年(\d{1,2})月/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,1));
   return null;
 }
 function parseAnnounceDate(str){
   if(!str)return null;
   var m=str.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3])));
   m=str.match(/(\d{4})年(\d{1,2})月中旬/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,15);
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,15));
   m=str.match(/(\d{4})年(\d{1,2})月下旬/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,25);
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,25));
   m=str.match(/(\d{4})年(\d{1,2})月/);
-  if(m)return new Date(parseInt(m[1]),parseInt(m[2])-1,1);
+  if(m)return ensureFutureDate(new Date(parseInt(m[1]),parseInt(m[2])-1,1));
   return null;
 }
 function getProvinceExamInfo(pid){
   var p=PROVINCE_DB[pid]||PROVINCE_DB['guangdong'];
-  var examDate=parseExamDate(p.examDate)||DEFAULT_GUOKAO_DATE;
-  var announceDate=parseAnnounceDate(p.announceDate)||DEFAULT_GUOKAO_GONGGAO;
+  var examDate=parseExamDate(p.examDate)||ensureFutureDate(DEFAULT_GUOKAO_DATE);
+  var announceDate=parseAnnounceDate(p.announceDate)||ensureFutureDate(DEFAULT_GUOKAO_GONGGAO);
   var shortName=p.name.replace('省考','').replace('(','').replace(')','');
   if(pid==='guokao')shortName='国考';
   return {p:p,examDate:examDate,announceDate:announceDate,shortName:shortName};
@@ -961,7 +1226,8 @@ function getProvinceExamInfo(pid){
 function updateCountdown(){
   var info=getProvinceExamInfo(currentProvinceId);
   var today=new Date();
-  var gkDays=daysBetween(DEFAULT_GUOKAO_DATE,today);
+  var gkDate=ensureFutureDate(DEFAULT_GUOKAO_DATE);
+  var gkDays=daysBetween(gkDate,today);
   var skDays=daysBetween(info.examDate,today);
   var ggDays=daysBetween(info.announceDate,today);
   document.getElementById('guokao-days').textContent=gkDays;
@@ -1021,14 +1287,14 @@ window.resetStudyDate=function(){
 };
 
 // ===== 省份数据 =====
-var PROVINCE_DB={guokao:{name:'国考(国家公务员)',flag:'🏛️',examDate:'2026年11月28-29日',announceDate:'2026年10月14日',time:120,notes:'分副省级(135题)/市地级(130题)/行政执法(130题)三类。2025年起新增政治理论模块约20题。全国最权威考公考试，难度最高。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:'2025新增'},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'40',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'40',note:'图形10+定义10+类比10+逻辑10'},ziliao:{name:'资料分析',qty:'20',note:''}},special:[],difficulty:'★★★★★'},guangdong:{name:'广东省考',flag:'🐉',examDate:'2026年12月上旬',announceDate:'2026年10月中下旬',time:90,isIndependent:true,notes:'⚠️ 2025年起大幅提前至年末！题量90题。申论分四类。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:'单选+多选+判断'},changshi:{name:'常识应用',qty:'15',note:'含广东省情'},yanyu:{name:'言语理解',qty:'15',note:''},shuliang:{name:'数量关系',qty:'15',note:'含数字推理'},panduan:{name:'判断推理',qty:'25',note:'含科学推理'},ziliao:{name:'资料分析',qty:'10',note:'提分关键'}},special:['科学推理(物理/化学/生物)','数字推理','申论四类分卷','广东省情素材'],compareGuokao:'广东仅90题(国考130-135题)，时间仅90分钟。独有科学推理模块。难度低于国考但时间压力更大。',difficulty:'★★★★☆'},jiangsu:{name:'江苏省考',flag:'🏯',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A类135题/B类135题/C类130题。申论分A/B/C三类。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~20',note:'含数字推理'},panduan:{name:'判断推理',qty:'~40',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['数字推理','篇章阅读','A/B/C分类'],compareGuokao:'题量接近国考。独有数字推理和篇章阅读。难度与国考相当。',difficulty:'★★★★☆'},zhejiang:{name:'浙江省考',flag:'🌊',examDate:'2026年12月6-7日',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A卷125题/B卷120题。综合应用能力替代申论。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:''},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15-20',note:'难度较高'},panduan:{name:'判断推理',qty:'35-40',note:'图形推理占比高'},ziliao:{name:'资料分析',qty:'10-15',note:''}},special:['综合应用能力(替代申论)','图形推理占比超15%','数字推理难度高'],compareGuokao:'数量关系难度突出，图形推理占比高。另考综合应用能力而非传统申论。',difficulty:'★★★★★'},shandong:{name:'山东省考',flag:'⛰️',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'题量120题左右。竞争极其激烈，2025年报考45万+。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:'偏向山东省情'},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['常考乡村振兴','山东省情素材'],compareGuokao:'题量略少于国考。竞争比全国最高之一。',difficulty:'★★★★☆'},beijing:{name:'北京市考',flag:'🏘️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约135题。常识判断涉及时政深度解读。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:''},changshi:{name:'常识判断',qty:'~15',note:'深度时政'},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['篇章阅读','常识判断深度时政'],compareGuokao:'题量与国考相当。独有篇章阅读题型。',difficulty:'★★★★★'},shanghai:{name:'上海市考',flag:'🏙️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约130题。政治理论不定项选择是最大特色。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:'不定项选择!'},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~25',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:'含科学素养'},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['政治理论不定项选择(选错不得分)','科学素养(物理/化学)'],compareGuokao:'最特殊：不定项选择。答错即零分，难度大增。',difficulty:'★★★★☆'},sichuan:{name:'四川省考',flag:'🐼',examDate:'2026年12月',announceDate:'2026年10-11月',time:120,isIndependent:true,notes:'100题。已独立命题，12月笔试。',modules:{zhengzhi:{name:'政治理论',qty:'~10',note:''},changshi:{name:'常识判断',qty:'10',note:''},yanyu:{name:'言语理解',qty:'35',note:'占比最大'},shuliang:{name:'数量关系',qty:'10',note:''},panduan:{name:'判断推理',qty:'30',note:''},ziliao:{name:'资料分析',qty:'15',note:''}},special:['言语理解占比35%最高'],compareGuokao:'仅100题，题量最少。言语理解占比高达35%。',difficulty:'★★★★★'},tianjin:{name:'天津市考',flag:'🎡',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~15',note:''}},special:[],compareGuokao:'题量少于国考，难度适中。',difficulty:'★★★☆☆'},henan:{name:'河南省考',flag:'🐘',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。联考省份，人口大省竞争激烈。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。难度中等偏上。',difficulty:'★★★★☆'},hubei:{name:'湖北省考',flag:'🏗️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'125题。',modules:{zhengzhi:{name:'政治理论',qty:'15',note:''},changshi:{name:'常识判断',qty:'10',note:'含湖北省情'},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'35',note:''},ziliao:{name:'资料分析',qty:'20',note:''}},special:['知悉湖北"51020"现代产业集群'],compareGuokao:'联考代表省份。题量125题略少于国考。',difficulty:'★★☆☆☆'},hunan:{name:'湖南省考',flag:'🌶️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['部分岗位加试财经专业知识'],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},fujian:{name:'福建省考',flag:'🌺',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},anhui:{name:'安徽省考',flag:'🏔️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jiangxi:{name:'江西省考',flag:'🏮',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guangxi:{name:'广西省考',flag:'🏞️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},yunnan:{name:'云南省考',flag:'🌈',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guizhou:{name:'贵州省考',flag:'🍶',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'竞争最激烈联考省份之一(报录比92.7:1)。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型，但报录比极高。',difficulty:'★★★☆☆'},hebei:{name:'河北省考',flag:'🏟️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shanxi:{name:'山西省考',flag:'🏛️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shaanxi:{name:'陕西省考',flag:'🕌',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},liaoning:{name:'辽宁省考',flag:'🐯',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jilin:{name:'吉林省考',flag:'❄️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。报录比仅28.5:1，较友好。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:'2026取消篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['2026年取消篇章阅读','报录比低(28.5:1)'],compareGuokao:'联考标准题型。竞争相对友好。',difficulty:'★★☆☆☆'},heilongjiang:{name:'黑龙江省考',flag:'🐲',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比最低(27.8:1)，上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['报录比全国最低(27.8:1)'],compareGuokao:'联考标准题型。上岸最友好的省份之一。',difficulty:'★★☆☆☆'},neimenggu:{name:'内蒙古省考',flag:'🐴',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},xinjiang:{name:'新疆省考',flag:'🕌',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'基层岗占比高。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['基层岗位占比超60%'],compareGuokao:'联考标准题型。基层岗位充足。',difficulty:'★★★☆☆'},xizang:{name:'西藏省考',flag:'🏔️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★☆☆☆'},qinghai:{name:'青海省考',flag:'🌅',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。上岸友好。',difficulty:'★★☆☆☆'},gansu:{name:'甘肃省考',flag:'🐫',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},ningxia:{name:'宁夏省考',flag:'🏜️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比66.7:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},hainan:{name:'海南省考',flag:'🏝️',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'报录比78:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},chongqing:{name:'重庆市考',flag:'🌆',examDate:'2026年3月14日(联考)',announceDate:'2026年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'}};
+var PROVINCE_DB={guokao:{name:'国考(国家公务员)',flag:'🏛️',examDate:'2026年11月28-29日',announceDate:'2026年10月14日',time:120,notes:'分副省级(135题)/市地级(130题)/行政执法(130题)三类。2025年起新增政治理论模块约20题。全国最权威考公考试，难度最高。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:'2025新增'},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'40',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'40',note:'图形10+定义10+类比10+逻辑10'},ziliao:{name:'资料分析',qty:'20',note:''}},special:[],difficulty:'★★★★★'},guangdong:{name:'广东省考',flag:'🐉',examDate:'2026年12月上旬',announceDate:'2026年10月中下旬',time:90,isIndependent:true,notes:'⚠️ 2025年起大幅提前至年末！题量90题。申论分四类。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:'单选+多选+判断'},changshi:{name:'常识应用',qty:'15',note:'含广东省情'},yanyu:{name:'言语理解',qty:'15',note:''},shuliang:{name:'数量关系',qty:'15',note:'含数字推理'},panduan:{name:'判断推理',qty:'25',note:'含科学推理'},ziliao:{name:'资料分析',qty:'10',note:'提分关键'}},special:['科学推理(物理/化学/生物)','数字推理','申论四类分卷','广东省情素材'],compareGuokao:'广东仅90题(国考130-135题)，时间仅90分钟。独有科学推理模块。难度低于国考但时间压力更大。',difficulty:'★★★★☆'},jiangsu:{name:'江苏省考',flag:'🏯',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A类135题/B类135题/C类130题。申论分A/B/C三类。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~20',note:'含数字推理'},panduan:{name:'判断推理',qty:'~40',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['数字推理','篇章阅读','A/B/C分类'],compareGuokao:'题量接近国考。独有数字推理和篇章阅读。难度与国考相当。',difficulty:'★★★★☆'},zhejiang:{name:'浙江省考',flag:'🌊',examDate:'2026年12月6-7日',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'A卷125题/B卷120题。综合应用能力替代申论。',modules:{zhengzhi:{name:'政治理论',qty:'10',note:''},changshi:{name:'常识判断',qty:'20',note:''},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15-20',note:'难度较高'},panduan:{name:'判断推理',qty:'35-40',note:'图形推理占比高'},ziliao:{name:'资料分析',qty:'10-15',note:''}},special:['综合应用能力(替代申论)','图形推理占比超15%','数字推理难度高'],compareGuokao:'数量关系难度突出，图形推理占比高。另考综合应用能力而非传统申论。',difficulty:'★★★★★'},shandong:{name:'山东省考',flag:'⛰️',examDate:'2026年12月上旬',announceDate:'2026年10月下旬',time:120,isIndependent:true,notes:'题量120题左右。竞争极其激烈，2025年报考45万+。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:'偏向山东省情'},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['常考乡村振兴','山东省情素材'],compareGuokao:'题量略少于国考。竞争比全国最高之一。',difficulty:'★★★★☆'},beijing:{name:'北京市考',flag:'🏘️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约135题。常识判断涉及时政深度解读。',modules:{zhengzhi:{name:'政治理论',qty:'~20',note:''},changshi:{name:'常识判断',qty:'~15',note:'深度时政'},yanyu:{name:'言语理解',qty:'~35',note:'含篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['篇章阅读','常识判断深度时政'],compareGuokao:'题量与国考相当。独有篇章阅读题型。',difficulty:'★★★★★'},shanghai:{name:'上海市考',flag:'🏙️',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约130题。政治理论不定项选择是最大特色。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:'不定项选择!'},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~25',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~35',note:'含科学素养'},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['政治理论不定项选择(选错不得分)','科学素养(物理/化学)'],compareGuokao:'最特殊：不定项选择。答错即零分，难度大增。',difficulty:'★★★★☆'},sichuan:{name:'四川省考',flag:'🐼',examDate:'2026年12月',announceDate:'2026年10-11月',time:120,isIndependent:true,notes:'100题。已独立命题，12月笔试。',modules:{zhengzhi:{name:'政治理论',qty:'~10',note:''},changshi:{name:'常识判断',qty:'10',note:''},yanyu:{name:'言语理解',qty:'35',note:'占比最大'},shuliang:{name:'数量关系',qty:'10',note:''},panduan:{name:'判断推理',qty:'30',note:''},ziliao:{name:'资料分析',qty:'15',note:''}},special:['言语理解占比35%最高'],compareGuokao:'仅100题，题量最少。言语理解占比高达35%。',difficulty:'★★★★★'},tianjin:{name:'天津市考',flag:'🎡',examDate:'2026年12月',announceDate:'2026年11月',time:120,isIndependent:true,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~15',note:''}},special:[],compareGuokao:'题量少于国考，难度适中。',difficulty:'★★★☆☆'},henan:{name:'河南省考',flag:'🐘',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。联考省份，人口大省竞争激烈。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。难度中等偏上。',difficulty:'★★★★☆'},hubei:{name:'湖北省考',flag:'🏗️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'125题。',modules:{zhengzhi:{name:'政治理论',qty:'15',note:''},changshi:{name:'常识判断',qty:'10',note:'含湖北省情'},yanyu:{name:'言语理解',qty:'30',note:''},shuliang:{name:'数量关系',qty:'15',note:''},panduan:{name:'判断推理',qty:'35',note:''},ziliao:{name:'资料分析',qty:'20',note:''}},special:['知悉湖北"51020"现代产业集群'],compareGuokao:'联考代表省份。题量125题略少于国考。',difficulty:'★★☆☆☆'},hunan:{name:'湖南省考',flag:'🌶️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['部分岗位加试财经专业知识'],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},fujian:{name:'福建省考',flag:'🌺',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},anhui:{name:'安徽省考',flag:'🏔️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jiangxi:{name:'江西省考',flag:'🏮',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guangxi:{name:'广西省考',flag:'🏞️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},yunnan:{name:'云南省考',flag:'🌈',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},guizhou:{name:'贵州省考',flag:'🍶',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'竞争最激烈联考省份之一(报录比92.7:1)。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型，但报录比极高。',difficulty:'★★★☆☆'},hebei:{name:'河北省考',flag:'🏟️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shanxi:{name:'山西省考',flag:'🏛️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},shaanxi:{name:'陕西省考',flag:'🕌',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},liaoning:{name:'辽宁省考',flag:'🐯',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},jilin:{name:'吉林省考',flag:'❄️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。报录比仅28.5:1，较友好。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:'2026取消篇章阅读'},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['2026年取消篇章阅读','报录比低(28.5:1)'],compareGuokao:'联考标准题型。竞争相对友好。',difficulty:'★★☆☆☆'},heilongjiang:{name:'黑龙江省考',flag:'🐲',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'报录比最低(27.8:1)，上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['报录比全国最低(27.8:1)'],compareGuokao:'联考标准题型。上岸最友好的省份之一。',difficulty:'★★☆☆☆'},neimenggu:{name:'内蒙古省考',flag:'🐴',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},xinjiang:{name:'新疆省考',flag:'🕌',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'基层岗占比高。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:['基层岗位占比超60%'],compareGuokao:'联考标准题型。基层岗位充足。',difficulty:'★★★☆☆'},xizang:{name:'西藏省考',flag:'🏔️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★☆☆☆'},qinghai:{name:'青海省考',flag:'🌅',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'上岸友好省份。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。上岸友好。',difficulty:'★★☆☆☆'},gansu:{name:'甘肃省考',flag:'🐫',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},ningxia:{name:'宁夏省考',flag:'🏜️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'报录比66.7:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},hainan:{name:'海南省考',flag:'🏝️',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'报录比78:1。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'},chongqing:{name:'重庆市考',flag:'🌆',examDate:'2027年3月13-14日(联考)',announceDate:'2027年1月',time:120,notes:'约120题。',modules:{zhengzhi:{name:'政治理论',qty:'~15',note:''},changshi:{name:'常识判断',qty:'~15',note:''},yanyu:{name:'言语理解',qty:'~30',note:''},shuliang:{name:'数量关系',qty:'~15',note:''},panduan:{name:'判断推理',qty:'~30',note:''},ziliao:{name:'资料分析',qty:'~20',note:''}},special:[],compareGuokao:'联考标准题型。',difficulty:'★★★☆☆'}};
 var INDEPENDENT_PROVINCES=['guangdong','jiangsu','zhejiang','shandong','beijing','shanghai','sichuan','tianjin'];
 var JOINT_PROVINCES=['henan','hubei','hunan','fujian','anhui','jiangxi','guangxi','yunnan','guizhou','hebei','shanxi','shaanxi','liaoning','jilin','heilongjiang','neimenggu','xinjiang','xizang','qinghai','gansu','ningxia','hainan','chongqing'];
 function renderProvinceChips(){
   var chips='';
   chips+='<span class="province-chip guokao-ch" data-pid="guokao" onclick="selectProvince(\'guokao\')">'+PROVINCE_DB['guokao'].flag+' '+PROVINCE_DB['guokao'].name+'</span>';
   INDEPENDENT_PROVINCES.forEach(function(pid){var p=PROVINCE_DB[pid];chips+='<span class="province-chip" data-pid="'+pid+'" onclick="selectProvince(\''+pid+'\')">'+p.flag+' '+p.name+'</span>';});
-  chips+='<span style="font-size:12px;color:var(--sub);font-weight:600;margin-top:8px;width:100%;">联考省份（2026年3月14日）：</span>';
+  chips+='<span style="font-size:12px;color:var(--sub);font-weight:600;margin-top:8px;width:100%;">联考省份（2027年3月13-14日）：</span>';
   JOINT_PROVINCES.forEach(function(pid){var p=PROVINCE_DB[pid];chips+='<span class="province-chip" data-pid="'+pid+'" onclick="selectProvince(\''+pid+'\')">'+p.flag+' '+p.name+'</span>';});
   document.getElementById('province-chips').innerHTML=chips;
 }
@@ -1250,7 +1516,7 @@ window.stChatSubmit=function(){
   if(advice.indexOf('<p>')<0){
     advice+='<p>感谢你的分享！建议你用"选择题自测"模式，填写各模块正确率，AI能给出更精准的诊断和建议。也可以去"复盘"模块选讲师一对一分析错题。</p>';
   }
-  advice+='<p style="margin-top:12px;color:var(--hint);font-size:11px;">💬 想要更深度的个性化分析？把你的错题截图上传到"复盘"模块，选讲师进行一对一复盘。</p>';
+  advice+='<p style="margin-top:12px;color:var(--hint);font-size:11px;">💬 想要更深度的个性化分析？把你的错题截图上传到"复盘"模块，选AI名师进行深度复盘。</p>';
   advice+='</div></div>';
   document.getElementById('st-chat-result').innerHTML=advice;
 };
@@ -2508,7 +2774,7 @@ function updateCheckinUI(){
 // ===== 提醒系统 =====
 function renderReminders(){
   var info=getProvinceExamInfo(currentProvinceId);
-  var gkDays=daysBetween(DEFAULT_GUOKAO_DATE,new Date());
+  var gkDays=daysBetween(ensureFutureDate(DEFAULT_GUOKAO_DATE),new Date());
   var skDays=daysBetween(info.examDate,new Date());
   var ggDays=daysBetween(info.announceDate,new Date());
   var skName=currentProvinceId==='guokao'?'国考':info.shortName+'省考';
@@ -2555,6 +2821,7 @@ function renderReminders(){
 function renderDailyGoal(){
   var info=getProvinceExamInfo(currentProvinceId);
   var targetDays=daysBetween(info.examDate,new Date());
+  var gkDays=daysBetween(ensureFutureDate(DEFAULT_GUOKAO_DATE),new Date());
   var goal='';
   if(targetDays>180){
     goal='<div style="display:flex;gap:12px;flex-wrap:wrap;">'+
@@ -2586,6 +2853,7 @@ document.querySelectorAll('.fupan-subtab').forEach(function(tab){
     document.querySelectorAll('.fupan-subpanel').forEach(function(p){p.classList.remove('active');});
     this.classList.add('active');
     document.querySelector('.fupan-subpanel[data-fp-panel="'+fp+'"]').classList.add('active');
+    if(fp==='method')mcOnTabShow();
   });
 });
 
@@ -2600,6 +2868,169 @@ document.querySelectorAll('.review-tab').forEach(function(tab){
   });
 });
 
+// ===== 题本进度 =====
+var WB_STORAGE_KEY='gk_workbooks';
+var WB_LOG_KEY='gk_wb_daily';
+function getWorkbooks(){
+  try{return JSON.parse(localStorage.getItem(WB_STORAGE_KEY))||[];}catch(e){return[];}
+}
+function saveWorkbooks(books){localStorage.setItem(WB_STORAGE_KEY,JSON.stringify(books));}
+function getDailyLog(){
+  try{return JSON.parse(localStorage.getItem(WB_LOG_KEY))||{};}catch(e){return{};}
+}
+function saveDailyLog(log){localStorage.setItem(WB_LOG_KEY,JSON.stringify(log));}
+function getTodayStr(){
+  var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function renderWorkbooks(){
+  var books=getWorkbooks();
+  var today=getTodayStr();
+  var log=getDailyLog();
+  var grid=document.getElementById('wb-book-grid');
+  var totalBar=document.getElementById('wb-total-bar');
+  var totalStats=document.getElementById('wb-total-stats');
+  if(books.length===0){
+    grid.innerHTML='<div style="text-align:center;padding:30px;color:var(--hint);font-size:13px;">还没有添加题本，点击上方按钮添加<br>例如：粉笔5000题、华图行测真题、智能组卷</div>';
+    totalBar.style.display='none';
+    return;
+  }
+  var totalQ=0,totalDone=0;
+  var html='';
+  books.forEach(function(b){
+    totalQ+=b.total;
+    totalDone+=b.completed;
+    var pct=b.total>0?Math.round(b.completed/b.total*100):0;
+    var pctClass=pct>=80?' high':'';
+    var remaining=b.total-b.completed;
+    var todayLog=log[b.id+'_'+today]||0;
+    html+='<div class="wb-book-card">'+
+      '<button class="wb-book-del" onclick="deleteWorkbook(\''+b.id+'\')" title="删除题本">×</button>'+
+      '<div class="wb-book-name">'+escHtml(b.name)+'</div>'+
+      '<div class="wb-book-meta">创建于 '+b.createdAt+'</div>'+
+      '<div class="wb-progress-bar"><div class="wb-progress-fill'+pctClass+'" style="width:'+pct+'%"></div></div>'+
+      '<div class="wb-progress-stats">'+
+        '<span>已完成 <b>'+b.completed+'</b> / '+b.total+' 题</span>'+
+        '<span class="wb-pct'+pctClass+'">'+pct+'%</span>'+
+      '</div>'+
+      '<div class="wb-progress-stats" style="margin-bottom:6px">'+
+        '<span>剩余 '+remaining+' 题</span>'+
+        '<span style="font-size:11px;color:var(--hint)">日均 '+(remaining>0?Math.round(remaining/Math.max(1,getDaysUntilExam())):0)+' 题</span>'+
+      '</div>'+
+      '<div class="wb-daily-input">'+
+        '<label>今日新增：</label>'+
+        '<input type="number" id="wb-input-'+b.id+'" min="0" max="'+remaining+'" placeholder="题数">'+
+        '<button onclick="addDailyProgress(\''+b.id+'\')">记录</button>'+
+        (todayLog>0?'<span class="wb-done-badge">今日已做 '+todayLog+' 题</span>':'')+
+      '</div>'+
+    '</div>';
+  });
+  grid.innerHTML=html;
+  totalBar.style.display='flex';
+  var totalPct=totalQ>0?Math.round(totalDone/totalQ*100):0;
+  totalStats.innerHTML='总完成 <b>'+totalDone+'</b> / '+totalQ+' 题（<b>'+totalPct+'%</b>）';
+}
+function getDaysUntilExam(){
+  var info=getProvinceExamInfo(currentProvinceId);
+  var today=new Date();today.setHours(0,0,0,0);
+  return Math.max(1,daysBetween(info.examDate,today));
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// ===== 课程上线置顶通知条 + 限时体验控制 =====
+var TRIAL_END=new Date('2026-08-16T23:59:59'); // 上传前可手动修改：格式 YYYY-MM-DDTHH:mm:ss
+var NOTICE_HIDDEN_KEY='gk_notice_hidden';
+function isTrialActive(){
+  return new Date() < TRIAL_END;
+}
+function closeTopNotice(){
+  var el=document.getElementById('top-notice');
+  if(el) el.style.display='none';
+  localStorage.setItem(NOTICE_HIDDEN_KEY,'1');
+}
+function showTrialPanel(){
+  if(!isTrialActive()){
+    alert('体验已结束，加入知识星球解锁完整版');
+    window.open('https://wx.zsxq.com/dweb2/index/group/48882484585828','_blank');
+    return;
+  }
+  document.querySelectorAll('.fupan-subtab').forEach(function(b){
+    b.classList.toggle('active', b.dataset.fp==='method');
+  });
+  document.querySelectorAll('.fupan-subpanel').forEach(function(p){
+    p.classList.toggle('active', p.dataset.fpPanel==='method');
+  });
+  var anchor=document.getElementById('section-fupan');
+  if(anchor) anchor.scrollIntoView({behavior:'smooth'});
+  startTrialCountdown();
+}
+function initTopNotice(){
+  var el=document.getElementById('top-notice');
+  if(!el)return;
+  if(localStorage.getItem(NOTICE_HIDDEN_KEY)){
+    el.style.display='none';
+    return;
+  }
+  if(!isTrialActive()){
+    el.style.display='none';
+    return;
+  }
+  // 通知条内显示剩余天数
+  var cd=document.getElementById('tn-countdown');
+  if(cd){
+    var diff=TRIAL_END-new Date();
+    var d=Math.max(0,Math.ceil(diff/86400000));
+    cd.textContent='（剩'+d+'天）';
+  }
+}
+function genId(){return 'wb_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
+function toggleWorkbookForm(){
+  var form=document.getElementById('wb-add-form');
+  form.classList.toggle('show');
+  if(form.classList.contains('show')){
+    document.getElementById('wb-new-name').value='';
+    document.getElementById('wb-new-total').value='';
+    document.getElementById('wb-new-name').focus();
+  }
+}
+function addWorkbook(){
+  var name=document.getElementById('wb-new-name').value.trim();
+  var total=parseInt(document.getElementById('wb-new-total').value);
+  if(!name){alert('请输入题本名称');return;}
+  if(!total||total<1){alert('请输入有效的总题数');return;}
+  var books=getWorkbooks();
+  books.push({id:genId(),name:name,total:total,completed:0,createdAt:getTodayStr()});
+  saveWorkbooks(books);
+  toggleWorkbookForm();
+  renderWorkbooks();
+}
+function deleteWorkbook(id){
+  if(!confirm('确定删除这个题本吗？进度数据将丢失。'))return;
+  var books=getWorkbooks().filter(function(b){return b.id!==id;});
+  saveWorkbooks(books);
+  renderWorkbooks();
+}
+function addDailyProgress(bookId){
+  var input=document.getElementById('wb-input-'+bookId);
+  var count=parseInt(input.value);
+  if(!count||count<1){alert('请输入有效的做题数');return;}
+  var books=getWorkbooks();
+  var book=books.find(function(b){return b.id===bookId;});
+  if(!book)return;
+  if(book.completed+count>book.total){
+    if(!confirm('今日新增 '+count+' 题将超过总题数，是否自动截断为剩余题数？'))return;
+    count=book.total-book.completed;
+  }
+  book.completed+=count;
+  saveWorkbooks(books);
+  // Daily log
+  var today=getTodayStr();
+  var key=bookId+'_'+today;
+  var log=getDailyLog();
+  log[key]=(log[key]||0)+count;
+  saveDailyLog(log);
+  input.value='';
+  renderWorkbooks();
+}
+
 // ===== 初始化 =====
 renderProvinceChips();
 selectProvince(currentProvinceId);
@@ -2613,10 +3044,306 @@ renderQBFileList();
 updateCheckinUI();
 renderReminders();
 renderDailyGoal();
+renderWorkbooks();
+initTopNotice();
 // OCR已改为AI API识图，无需预加载Tesseract.js
+
+/* ================= 学习方法纠正（升级版Skill体验） ================= */
+var MC_TEACHERS_XINGCE=[
+  {id:'gaozhao', name:'高照', subject:'资料分析', tag:'零基础 · 计算困难户',
+   method:'3+2作业法 · 夸夸刷 · 速算大练兵',
+   prompt:'你是行测名师高照，专精资料分析。教学风格：保姆式拆解、温柔耐心，常把"不要着急，慢慢来"挂在嘴边。核心方法体系：(1)3+2作业法——审题三步：①圈时间（注意"截至11月"与"1-11月"的差异）②判题型（关键词→公式映射）③定主体（注意"规模以上""其中"这类限定）；计算两步：先用自己的方法算，再看优化方法对比。(2)夸夸刷：分题型大量刷题，建立"看到题就知道哪类"的肌肉记忆。(3)速算大练兵：保持每日计算手感。回答要求：把每一步拆到最细，公式为什么这么用、数据在哪里找、陷阱在哪里，全部讲清楚，零基础用户也要能听懂。绝不给"多刷题就行"这种空话。'},
+  {id:'huasheng13', name:'花生十三', subject:'资料分析', tag:'有基础 · 冲90%正确率',
+   method:'假设分配法 · 拆分法 · 差分法 · 415份数法',
+   prompt:'你是行测名师花生十三，资料分析与逻辑判断双料大神。教学风格：直接犀利，"上考场没时间让你慢慢算"。核心方法：(1)假设分配法：把增长率拆成"假设值+增量"，避免大数乘除，计算量锐减。(2)拆分法：复杂数字拆成整百整十，简化乘除。(3)差分法：分数比较大小专用。(4)415份数法：基期/现期/增长量三者份数关系速算。(5)逻辑判断：加强削弱、分析推出技巧性极强。回答要求：直奔高效解法，给最快路径；用户算得慢时直接指出哪里拖了速度；允许直言用户方法低效，但必须给出替代方案。'},
+  {id:'qilin', name:'齐麟', subject:'资料分析', tag:'稳扎稳打型',
+   method:'截位直除 · 百化分 · 刷题组',
+   prompt:'你是行测名师齐麟，专精资料分析与数量关系。风格：不玩花活、稳扎稳打。核心方法：(1)截位直除：选项首位差异大时截取前两位估算。(2)百化分：百分数转分数（如1/8=12.5%），乘除变乘除。(3)刷题组：固定每日题量+定期复盘。回答要求：先讲原理再讲操作，强调稳定性和正确率优先，不依赖秒杀技巧；建议具体刷题量和复盘方式。'},
+  {id:'alimujiang', name:'阿里木江', subject:'言语理解', tag:'零基础友好',
+   method:'逻辑拆解 · 语境分析 · 反语感',
+   prompt:'你是行测言语名师阿里木江，公认零基础友好型讲师。风格：通俗易懂、讲题自带趣味，强烈反对凭语感蒙题。核心方法：(1)逻辑填空语境分析：先不看选项，分析空格所在句的逻辑关系（转折/并列/递进/解释说明），再锁定答案。(2)中心理解结构分析：抓主题词+行文脉络（总分/分总/转折）。回答要求：手把手拆解，每个选项为什么对、为什么错讲清楚，教用户建立"逻辑第一、语感第二"的做题习惯。'},
+  {id:'guoxi', name:'郭熙', subject:'言语理解', tag:'有基础想提速',
+   method:'高频考点大招 · 选项排除法',
+   prompt:'你是行测言语名师郭熙（粉笔）。风格：技巧流，把高频考点总结成简单好用的"大招"。核心方法：(1)高频考点大招：转折之后是重点、对策优先、主题词复现等。(2)选项排除法：识别干扰项特征（偷换概念/无中生有/绝对化/以偏概全）。回答要求：给可复用的判断口诀和排除顺序，教用户快速锁定答案并稳住正确率。'},
+  {id:'xiaobao', name:'小宝', subject:'言语理解', tag:'瓶颈期突破',
+   method:'句子结构 · 行文逻辑 · 反套路',
+   prompt:'你是行测言语名师小宝言语。风格：反套路，不照着答案念。核心方法：重句子结构、行文逻辑，带用户分析"这个句子为什么对、干扰项是怎么设计的"。回答要求：从句子成分和逻辑层次切入，帮瓶颈期用户突破"凭感觉选、对错看运气"的困境，讲清命题人设置干扰项的规律。'},
+  {id:'niejia', name:'聂佳', subject:'判断推理', tag:'零基础入门',
+   method:'特征图法 · 翻译推理 · 类比推理',
+   prompt:'你是行测判断推理名师聂佳（粉笔），图形推理天花板。风格：讲解细致、逻辑清晰。核心方法：(1)特征图法：看到特征图形→锁定对应规律（如"田"字形→笔画/对称/封闭空间）。(2)翻译推理：除非否则、只有才、如果那么等逻辑关联词翻译。(3)类比推理：词项关系细分（种属/组成/功能/因果）。回答要求：先教识别特征，再教套用规律，最后演示一道真题走完整流程。'},
+  {id:'longfei', name:'龙飞', subject:'判断推理', tag:'图推卡壳',
+   method:'出题人思维 · 一笔画 · 空间重构',
+   prompt:'你是行测判断推理名师龙飞。风格：强调底层逻辑，"你要想出题人为什么这么画"。核心方法：(1)出题人思维：从出题人角度反推规律设计思路。(2)一笔画：奇点法判断。(3)空间重构：相对面/相邻面排除。回答要求：教用户站在出题人视角分析图形，而不是死记规律表；对图推总卡壳的情况给出快速试错顺序。'},
+  {id:'huitu', name:'灰兔', subject:'数量关系', tag:'没时间系统学',
+   method:'秒杀公式 · 舍得原则',
+   prompt:'你是行测数量关系名师灰兔。风格：技巧流，教用户学会"舍得"。核心方法：(1)秒杀公式：整除特性、倍数特性、奇偶特性等快速排除法。(2)舍弃原则：难题1分钟没思路立即标记跳过，用最少时间拿最多基础分。回答要求：先判断这道题值不值得做（基础题/难题），再给最速解法；明确告诉用户哪些题该果断放弃，别恋战。'},
+  {id:'liweiming', name:'李委明', subject:'数量关系', tag:'零基础学数量',
+   method:'公式推导 · 逻辑严谨',
+   prompt:'你是行测数量关系名师李委明。风格：逻辑严谨，公式推导通俗易懂。核心方法：工程、行程、利润、排列组合等基础题型的公式推导，讲清"公式为什么成立"。回答要求：从公式推导讲起，让零基础用户理解原理而不是死记；每讲一个题型给1道配套练习建议。'},
+  {id:'limengjiao', name:'李梦娇', subject:'常识判断', tag:'小白 · 考前突击',
+   method:'口诀记忆歌 · 高频考点',
+   prompt:'你是行测常识名师李梦娇（华图），常识口诀歌创始人。风格：口诀化表达、朗朗上口。核心方法：把历史、地理、法律、科技等高频考点编成口诀歌，帮助碎片时间磨耳朵记忆。回答要求：尽量用口诀/顺口溜/记忆锚点输出，方便用户考前突击；给出口诀对应的考点范围。'},
+  {id:'libu', name:'李卜', subject:'常识判断', tag:'冲刺抓重点',
+   method:'常识开天斧 · 时政押题',
+   prompt:'你是行测常识与时政名师李卜。风格：直击重点、不绕弯。核心方法：《常识开天斧》体系、时政押题。回答要求：时政类问题给最新要点+可能的出题角度；常识类问题给高频考点框架和记忆优先级，冲刺阶段抓大放小。'}
+];
+var MC_TEACHERS_SHENLUN=[
+  {id:'limengyuan', name:'李梦圆', subject:'小题踩点', tag:'零基础入门',
+   method:'踩点法 · 框架法',
+   prompt:'你是申论名师李梦圆（粉笔），入门天花板。风格：框架清晰、循循善诱、零基础友好。核心方法：(1)踩点法：围绕作答对象提炼关键词，答案精简且覆盖要点。(2)框架法：分条列项、要点前置；口语化原词需"盖帽+具体展开"。(3)材料阅读：扫读→定位→勾画关键词密集区。回答要求：分析材料按"段落拆解→得分点清单→命题意图判断"输出，每个要点标注出处段落；讲解细致到零基础用户也能照做。'},
+  {id:'yuandong', name:'袁东', subject:'公文 · 大作文', tag:'打基础后进阶',
+   method:'三把钥匙 · 逻辑叙事',
+   prompt:'你是申论名师袁东。风格：实事求是、不煽情，口头禅"申论是按词给分的技术活"。核心方法（三把钥匙）：(1)答案从材料中来——申论本质是"还原"而非"创作"。(2)审题定生死——题干三要素：材料范围、核心主题、字数要求。(3)按词给分——阅卷人30秒一份，看关键词踩了多少。思维路径：逻辑骨架+语感，宏观叙事构建文章骨架，逻辑链条串联避免机械堆砌关键词。回答要求：分析材料时抓逻辑链节点（因为/所以/导致/为此前后的句子）；公文和大作文给宏观叙事骨架，不煽情。'},
+  {id:'zhanzhang', name:'站长', subject:'综合分析', tag:'有基础想提升层次',
+   method:'逻辑梳理 · 材料剖析',
+   prompt:'你是申论名师站长申论。风格：逻辑严密、层层深入。核心方法：逻辑思维+材料剖析，综合分析题逻辑梳理到位，擅长抓观点性句子、评论性表述（材料作者的态度），答案贴合得分要点、层次分明。回答要求：综合分析题按"释义→展开（原因/表现/影响）→对策"的总分总结构组织，每层讲清逻辑依据。'},
+  {id:'zhangxiaolong', name:'张小龙', subject:'小题 · 写新意', tag:'想冲高分',
+   method:'抄写法则 · 角度新颖',
+   prompt:'你是申论名师张小龙。风格：思维灵活、角度新颖，帮用户突破模板化。核心方法（抄写法则）：(1)先抄后提炼：一半的题不用提炼，照抄材料原词原句即可。(2)短语短句优先：越短信息量越大，顿号/引号形式，引号词常是得分点。(3)信息量大的长句拆分：拆成几条加顿号，让信息量"看起来大"。(4)答案排序：抄>提炼>推断，推断主观性强、得分小、后置。回答要求：教用户从材料里找出可直接照抄的原词，答案标注"抄/提炼/推断"来源；大作文给新颖角度但不脱离材料。'},
+  {id:'feiyang', name:'飞扬', subject:'大作文 · 踩点', tag:'长线备考',
+   method:'阅卷思维 · 贴近机关实际',
+   prompt:'你是申论名师飞扬。风格：阅卷人视角、贴近机关工作实际。核心方法：阅卷思维——非常熟悉阅卷规则，答题思路贴近机关实际；大作文不跑题、小题踩点准；反套路、材料为王。回答要求：从"阅卷人会怎么给分"的角度分析，明确指出哪些点必踩、哪些表达要换成规范性用语；大作文诊断立意是否从题干来、是否跑题。'},
+  {id:'shanshuling', name:'单淑玲', subject:'大作文框架', tag:'应试导向',
+   method:'五段式骨架 · 实战技巧',
+   prompt:'你是申论名师单淑玲。风格：干脆利落、一针见血、不啰嗦。核心方法：大作文框架搭建——三段式/五段式刚性骨架，确保阅卷人30秒定位核心观点；方法实用接地气，考场实战技巧拉满。回答要求：给可直接套用的骨架结构+考场实战技巧，回答简洁不拖泥带水；对用户的小题答案快速给出踩点诊断。'}
+];
+var MC_DIRS={
+  xingce:{name:'行测学习方法',teachers:MC_TEACHERS_XINGCE},
+  shenlun:{name:'申论材料分析',teachers:MC_TEACHERS_SHENLUN}
+};
+var MC_STATE={dir:null,teacher:null,messages:[]};
+function mcHasUnlimited(){return !!(API_KEY||SHARED_KEY);}
+function startTrialCountdown(){
+  var el=document.getElementById('mcCountdown');
+  var num=document.getElementById('mcCountdownNum');
+  if(!el||!num)return;
+  if(!isTrialActive()){ mcDisableTrial(); return; }
+  el.classList.add('show');
+  function tick(){
+    var diff=TRIAL_END-new Date();
+    if(diff<=0){ num.textContent='00:00:00'; mcDisableTrial(); return; }
+    var d=Math.floor(diff/86400000);
+    var h=Math.floor((diff%86400000)/3600000);
+    var m=Math.floor((diff%3600000)/60000);
+    var s=Math.floor((diff%60000)/1000);
+    num.textContent=(d>0?d+'天':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  }
+  tick();
+  if(window.__trialTimer)clearInterval(window.__trialTimer);
+  window.__trialTimer=setInterval(tick,1000);
+}
+function mcDisableTrial(){
+  var cd=document.getElementById('mcCountdown');
+  if(cd){ cd.classList.remove('show'); cd.style.display='none'; }
+  ['mcQuestionInput','mcSendBtn','mc-file-input'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){ el.disabled=true; }
+  });
+  var send=document.getElementById('mcSendBtn');
+  if(send){ send.textContent='体验已结束'; send.style.opacity='.5'; }
+  var purchase=document.getElementById('mcPurchaseCard');
+  if(purchase){
+    purchase.style.display='block';
+    var h3=purchase.querySelector('h3');
+    if(h3)h3.textContent='限时体验已结束';
+  }
+}
+window.mcOnTabShow=function(){
+  startTrialCountdown();
+  var card=document.getElementById('mcPurchaseCard');
+  if(card)card.style.display='none';
+};
+
+function mcChooseDir(dir){
+  MC_STATE.dir=dir;MC_STATE.teacher=null;MC_STATE.messages=[];
+  document.querySelectorAll('.mc-dir-card').forEach(function(c){
+    c.classList.toggle('active',c.getAttribute('data-dir')===dir);
+  });
+  document.getElementById('mcDirName').textContent=MC_DIRS[dir].name;
+  var grid=document.getElementById('mcTeacherGrid');
+  grid.innerHTML='';
+  MC_DIRS[dir].teachers.forEach(function(t){
+    var card=document.createElement('button');
+    card.className='mc-t-card';
+    card.setAttribute('data-tid',t.id);
+    card.innerHTML='<span class="t-subject">'+escHtml(t.subject)+'</span>'+
+      '<b>'+escHtml(t.name)+'</b><span class="t-check">✓</span>'+
+      '<div class="t-method">'+escHtml(t.method)+'</div>'+
+      '<div class="t-tag">'+escHtml(t.tag)+'</div>';
+    card.onclick=function(){mcChooseTeacher(t.id);};
+    grid.appendChild(card);
+  });
+  document.getElementById('mcStepTeacher').style.display='block';
+  document.getElementById('mcStepChat').style.display='none';
+  document.getElementById('mcPurchaseCard').style.display='none';
+}
+
+function mcChooseTeacher(id){
+  MC_STATE.teacher=id;MC_STATE.messages=[];
+  var list=MC_DIRS[MC_STATE.dir].teachers;
+  var t=list.filter(function(x){return x.id===id;})[0];
+  document.getElementById('mcCurrentTeacher').textContent=t.name+'（'+t.subject+'）';
+  document.querySelectorAll('.mc-t-card').forEach(function(c){
+    c.classList.toggle('active',c.getAttribute('data-tid')===id);
+  });
+  var box=document.getElementById('mcChatBox');
+  box.innerHTML='<div class="mc-chat-placeholder" id="mcChatPlaceholder">'+
+    '<div style="margin-bottom:6px">已切换到【'+escHtml(t.name)+'】模式 · '+escHtml(t.method)+'</div>'+
+    '<div style="margin-bottom:6px">把你的备考问题发给这位名师：</div>'+
+    '<button class="example" onclick="mcQuickAsk(this)">帮我诊断一下我的资料分析为什么总是做不完</button>'+
+    '<button class="example" onclick="mcQuickAsk(this)">这道题怎么用假设分配法算？</button>'+
+    '<button class="example" onclick="mcQuickAsk(this)">大作文总是跑题怎么办，帮我看看立意</button>'+
+  '</div>';
+  document.getElementById('mcStepChat').style.display='block';
+  document.getElementById('mcPurchaseCard').style.display='none';
+  document.getElementById('mcQuestionInput').focus();
+}
+
+function mcQuickAsk(btn){
+  document.getElementById('mcQuestionInput').value=btn.textContent;
+  mcSendQuestion();
+}
+
+function mcAddMsg(role,text){
+  var box=document.getElementById('mcChatBox');
+  var ph=document.getElementById('mcChatPlaceholder');
+  if(ph)ph.remove();
+  var msg=document.createElement('div');
+  msg.className='mc-msg '+role;
+  var t=MC_DIRS[MC_STATE.dir].teachers.filter(function(x){return x.id===MC_STATE.teacher;})[0];
+  var whoName=role==='user'?'我':(t?t.name:'名师');
+  var av=role==='user'?'我':(t?t.name.charAt(0):'师');
+  msg.innerHTML='<div class="who"><span class="avatar">'+escHtml(av)+'</span>'+escHtml(whoName)+'</div><div class="bubble"></div>';
+  box.appendChild(msg);
+  var bubble=msg.querySelector('.bubble');
+  bubble.textContent=text;
+  box.scrollTop=box.scrollHeight;
+  return bubble;
+}
+
+function mcSendQuestion(){
+  if(!isTrialActive()){alert('限时体验已结束，加入知识星球解锁完整版');return;}
+  var input=document.getElementById('mcQuestionInput');
+  var q=input.value.trim();
+  if(!q)return;
+  var keyToUse=API_KEY||SHARED_KEY;
+  if(!keyToUse){
+    alert('请先点击顶栏 ⚙ 绑定一个免费 AI 的 API Key（DeepSeek 送 500 万 tokens，通义/智谱也有免费额度），即可使用。');
+    return;
+  }
+  var t=MC_DIRS[MC_STATE.dir].teachers.filter(function(x){return x.id===MC_STATE.teacher;})[0];
+  if(!t)return;
+  MC_STATE.messages.push({role:'user',content:q});
+  mcAddMsg('user',q);
+  input.value='';
+
+  var box=document.getElementById('mcChatBox');
+  var typing=document.createElement('div');
+  typing.className='mc-msg ai mc-typing';
+  typing.innerHTML='<div class="who"><span class="avatar">'+escHtml(t.name.charAt(0))+'</span>'+escHtml(t.name)+' 正在思考…</div><div class="bubble"></div>';
+  box.appendChild(typing);
+  box.scrollTop=box.scrollHeight;
+  var sendBtn=document.getElementById('mcSendBtn');
+  sendBtn.disabled=true;
+
+  var sys='你是公考讲师【'+t.name+'】，专精'+t.subject+'。\n\n'+t.prompt+
+    '\n\n回答要求：\n1. 始终保持'+t.name+'的教学风格和语言特点。\n2. 回答结构清晰，用Markdown小标题和列表组织。\n3. 必须落到具体可操作的方法和步骤，禁止空话套话。\n4. 如用户粘贴了题目/材料，请基于内容分析，不臆造。';
+  var msgs=[{role:'system',content:sys}].concat(MC_STATE.messages);
+
+  fetch(getApiUrl(),{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+keyToUse},
+    body:JSON.stringify({model:getChatModel(),messages:msgs,temperature:0.7,max_tokens:2200})
+  }).then(function(res){
+    if(res.status===401){throw new Error('KEY_INVALID');}
+    if(!res.ok){throw new Error('HTTP '+res.status);}
+    return res.json();
+  }).then(function(data){
+    var answer=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'（无回复）';
+    typing.classList.remove('mc-typing');
+    typing.querySelector('.bubble').textContent=answer;
+    MC_STATE.messages.push({role:'assistant',content:answer});
+  }).catch(function(err){
+    typing.classList.remove('mc-typing');
+    if(err.message==='KEY_INVALID'){
+      typing.querySelector('.bubble').textContent='API Key 无效或已过期，请点击顶栏⚙重新设置 Key。';
+    }else{
+      typing.querySelector('.bubble').textContent='请求失败：'+err.message+'。请检查网络后重试。';
+    }
+  }).finally(function(){
+    sendBtn.disabled=false;
+    box.scrollTop=box.scrollHeight;
+  });
+}
+
+function mcShowPurchase(){
+  document.getElementById('mcPurchaseCard').style.display='block';
+  var btn=document.getElementById('mcSendBtn');
+  if(btn){btn.disabled=true; btn.textContent='体验已结束';}
+  document.getElementById('mcPurchaseCard').scrollIntoView({behavior:'smooth'});
+}
+
+function mcHandleImageUpload(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  var status=document.getElementById('mcOcrStatus');
+  status.className='mc-ocr-status';
+  status.textContent='读取图片…';
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var keyToUse=API_KEY||SHARED_KEY;
+    if(!keyToUse){
+      status.className='mc-ocr-status err';
+      status.innerHTML='⚠️ 未配置 API Key，请点击顶栏⚙绑定 Key 后使用 AI 识图。';
+      return;
+    }
+    status.className='mc-ocr-status';
+    status.textContent='AI识图中（'+getApiConfig().name+'，约2-3秒）…';
+    ocrWithLLM(e.target.result).then(function(text){
+      if(text&&text.indexOf('未识别到文字')===-1&&text.length>2){
+        status.className='mc-ocr-status ok';
+        status.textContent='✅ AI识图完成！文字已填入输入框，请检查后发送。';
+        var ta=document.getElementById('mcQuestionInput');
+        ta.value+=(ta.value?'\n\n':'')+text;
+        ta.focus();
+      }else{
+        status.className='mc-ocr-status err';
+        status.textContent='⚠️ AI未识别到文字，请换更清晰的图片或手动输入。';
+      }
+    }).catch(function(err){
+      status.className='mc-ocr-status err';
+      var errMsg=err.message||'';
+      if(errMsg.indexOf('NO_VISION_KEY')!==-1){
+        status.innerHTML='⚠️ 你选的 AI（'+getApiConfig().name+'）不支持识图，需要单独配置识图 Key：顶栏⚙ → 把<b>通义千问</b>的 Key 填到「识图API Key」字段（免费200万tokens/月）。';
+      }else if(errMsg.indexOf('NO_KEY')!==-1){
+        status.innerHTML='⚠️ 未配置 API Key。请点击顶栏⚙绑定 Key（三家都免费）。';
+      }else{
+        status.innerHTML='⚠️ AI识图失败：'+errMsg.substring(0,120)+'<br>请检查 Key 是否正确，或手动粘贴题目文字。';
+      }
+    });
+  };
+  reader.readAsDataURL(file);
+}
+startTrialCountdown();
+// ===== 暴露给HTML onclick/onchange 调用的函数（IIFE内定义，必须挂window） =====
+window.mcChooseDir=mcChooseDir;
+window.mcChooseTeacher=mcChooseTeacher;
+window.mcQuickAsk=mcQuickAsk;
+window.mcSendQuestion=mcSendQuestion;
+window.mcHandleImageUpload=mcHandleImageUpload;
+window.mcShowPurchase=mcShowPurchase;
+window.showTrialPanel=showTrialPanel;
+window.closeTopNotice=closeTopNotice;
+window.toggleWorkbookForm=toggleWorkbookForm;
+window.addWorkbook=addWorkbook;
+window.deleteWorkbook=deleteWorkbook;
+window.addDailyProgress=addDailyProgress;
+window.isTrialActive=isTrialActive;
+window.startTrialCountdown=startTrialCountdown;
 
 })();
 </script>
+
 
 <!-- 反馈悬浮按钮 -->
 <button class="feedback-fab" onclick="toggleFeedback()" title="反馈建议">💬</button>
@@ -2636,5 +3363,80 @@ renderDailyGoal();
   </div>
 </div>
 
+<!-- AI名师对话弹窗 -->
+<div class="gkq-modal" id="gkq-modal">
+  <div class="gkq-box">
+    <div class="gkq-head">
+      <span>🧠 AI名师对话<span class="gkq-quota">今日剩余 <b id="gkq-quota-left">5</b> 次</span></span>
+      <button class="gkq-close" id="gkq-close-btn" title="关闭">✕</button>
+    </div>
+    <iframe class="gkq-frame" id="gkq-frame" src="名师对话体验页.html" loading="lazy"></iframe>
+    <div class="gkq-done" id="gkq-done">
+      <h3>今日免费次数已用完</h3>
+      <p>18位名师 · 全部方法库 · 无限提问<br>都在 50 元课程里（前20名返现20元）</p>
+      <a href="https://wx.zsxq.com/dweb2/index/group/48882484585828" target="_blank">去课程看看 →</a>
+      <button id="gkq-close2-btn">明天再来</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== AI名师对话模块（独立脚本，不依赖主IIFE） ===== */
+(function(){
+  var DAILY=5;
+  var QUOTA_KEY='gkq_quota_';
+  function today(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+  function getUsed(){
+    try{
+      var raw=localStorage.getItem(QUOTA_KEY+today());
+      if(raw!==null) return parseInt(raw,10)||0;
+      var ks=Object.keys(localStorage);
+      for(var i=0;i<ks.length;i++){ if(ks[i].indexOf(QUOTA_KEY)===0 && ks[i]!==QUOTA_KEY+today()) localStorage.removeItem(ks[i]); }
+    }catch(e){}
+    return 0;
+  }
+  function setUsed(n){ try{ localStorage.setItem(QUOTA_KEY+today(),String(n)); }catch(e){} }
+  function left(){ var u=getUsed(); return Math.max(0,DAILY-u); }
+  function refreshUI(){
+    var l=left();
+    var t1=document.getElementById('gkq-left-txt'); if(t1) t1.textContent=l;
+    var t2=document.getElementById('gkq-quota-left'); if(t2) t2.textContent=l;
+  }
+  function showUpgrade(){
+    var modal=document.getElementById('gkq-modal');
+    var frame=document.getElementById('gkq-frame');
+    var done=document.getElementById('gkq-done');
+    if(frame) frame.style.display='none';
+    if(done) done.classList.add('show');
+    if(modal) modal.classList.add('show');
+  }
+  function openChat(){
+    if(left()<=0){ showUpgrade(); return; }
+    var modal=document.getElementById('gkq-modal');
+    var frame=document.getElementById('gkq-frame');
+    var done=document.getElementById('gkq-done');
+    if(done) done.classList.remove('show');
+    if(frame){ frame.style.display='block'; frame.src='名师对话体验页.html'; }
+    if(modal) modal.classList.add('show');
+    refreshUI();
+  }
+  function closeChat(){
+    var modal=document.getElementById('gkq-modal');
+    if(modal) modal.classList.remove('show');
+  }
+  window.addEventListener('message',function(ev){
+    if(ev.data && ev.data.type==='gk-ai-chat-used'){
+      var u=getUsed()+1; setUsed(u); refreshUI();
+      if(u>=DAILY){ setTimeout(showUpgrade,2500); }
+    }
+  });
+  function bind(id,fn){ var el=document.getElementById(id); if(el) el.addEventListener('click',fn); }
+  bind('gkq-open-btn',openChat);
+  bind('gkq-close-btn',closeChat);
+  bind('gkq-close2-btn',closeChat);
+  refreshUI();
+  window.gkqTest={DAILY:DAILY,getUsed:getUsed,left:left,open:openChat,close:closeChat,showUpgrade:showUpgrade};
+})();
+</script>
 </body>
 </html>

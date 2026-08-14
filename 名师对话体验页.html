@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公考AI · 名师对话体验</title>
+<style>
+:root{
+  --bg:#faf9f7;--card:#ffffff;--fg:#2d2a26;--sub:#7a756d;--hint:#b5b0a8;
+  --border:#e8e4dd;--jade:#3d6b57;--jade-mid:#7fa893;--jade-light:#eef4f0;
+  --gold:#b08968;--gold-light:#f7f2ea;--red:#b0453a;
+  --radius:12px;--shadow:0 2px 14px rgba(61,107,87,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 60px}
+
+/* ===== 顶部标题 ===== */
+.header{text-align:center;padding:40px 0 28px}
+.header .seal{width:60px;height:60px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  color:var(--gold);font-size:16px;font-weight:700;line-height:1.15;letter-spacing:1px;
+  background:radial-gradient(circle, rgba(176,137,104,.08) 0%, transparent 70%)}
+.header h1{font-size:24px;font-weight:800;letter-spacing:.5px;line-height:1.4}
+.header h1 .j{color:var(--jade)}
+.header .sub{font-size:14px;color:var(--sub);margin-top:10px;line-height:1.8}
+
+/* ===== 区块标题 ===== */
+.section-title{display:flex;align-items:center;gap:10px;margin:30px 0 14px;font-size:18px;font-weight:800}
+.section-title::before{content:"";width:4px;height:18px;background:var(--jade);border-radius:2px}
+.section-title .tag{margin-left:auto;font-size:11px;font-weight:600;color:var(--jade);background:var(--jade-light);
+  border:1px solid var(--jade-mid);border-radius:12px;padding:3px 10px;white-space:nowrap}
+.section-desc{font-size:13px;color:var(--sub);line-height:1.8;margin:-8px 0 16px}
+
+/* ===== 体验区 ===== */
+.demo-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 20px;box-shadow:var(--shadow)}
+.demo-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.demo-head b{font-size:16px}
+.demo-head .quota{margin-left:auto;background:var(--jade-light);border:1px solid var(--jade-mid);color:var(--jade);
+  border-radius:20px;padding:5px 14px;font-size:12px;white-space:nowrap}
+.step{margin-top:20px}
+.step-label{font-size:13px;color:var(--sub);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.step-label::before{content:"";width:3px;height:14px;background:var(--jade);border-radius:2px;display:inline-block}
+.step-label b{color:var(--jade)}
+.dir-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dir-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 18px;
+  cursor:pointer;text-align:left;transition:all .18s;box-shadow:var(--shadow);font-family:inherit}
+.dir-card:hover{border-color:var(--jade-mid);transform:translateY(-2px);box-shadow:0 4px 18px rgba(61,107,87,.12)}
+.dir-card.active{border-color:var(--jade);background:var(--jade-light)}
+.dir-card .ic{color:var(--jade);margin-bottom:10px;display:block}
+.dir-card b{font-size:16px;display:block}
+.dir-card span{font-size:12px;color:var(--sub);display:block;margin-top:6px;line-height:1.6}
+.teacher-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.t-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 12px;cursor:pointer;
+  transition:all .15s;font-family:inherit;text-align:left}
+.t-card:hover{border-color:var(--jade-mid);transform:translateY(-1px)}
+.t-card.active{border-color:var(--jade);background:var(--jade-light);box-shadow:0 0 0 1px var(--jade)}
+.t-card .t-subject{font-size:10px;color:var(--jade);background:var(--jade-light);border-radius:10px;padding:2px 8px;display:inline-block;margin-bottom:6px}
+.t-card b{font-size:15px;display:block}
+.t-card .t-method{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.5}
+.t-card .t-tag{font-size:10px;color:var(--hint);margin-top:4px}
+.t-card .t-check{display:none}
+.t-card.active .t-check{display:inline;color:var(--jade);float:right;font-size:16px}
+.chat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);min-height:200px;
+  max-height:420px;overflow-y:auto;padding:18px;box-shadow:var(--shadow)}
+.chat-placeholder{color:var(--hint);font-size:13px;line-height:1.8;text-align:center;padding:30px 10px}
+.chat-placeholder .example{display:block;margin:10px auto 0;font-family:inherit;font-size:12px;color:var(--jade);
+  background:var(--jade-light);border:1px dashed var(--jade-mid);border-radius:8px;padding:8px 14px;cursor:pointer;max-width:80%}
+.msg{margin-bottom:14px;display:flex;flex-direction:column}
+.msg .who{font-size:11px;color:var(--hint);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.msg .who .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.msg.user{align-items:flex-end}
+.msg.user .who{flex-direction:row-reverse}
+.msg.user .who .avatar{background:var(--jade);color:#fff}
+.msg.ai .who .avatar{background:var(--gold);color:#fff}
+.msg .bubble{max-width:88%;padding:11px 14px;border-radius:12px;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-word}
+.msg.user .bubble{background:var(--jade);color:#fff;border-bottom-right-radius:4px}
+.msg.ai .bubble{background:var(--jade-light);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--fg)}
+.msg .bubble table{border-collapse:collapse;margin:8px 0;font-size:13px}
+.msg .bubble th,.msg .bubble td{border:1px solid var(--border);padding:5px 8px;text-align:left}
+.msg .bubble th{background:var(--jade);color:#fff;font-weight:600}
+.typing .bubble::after{content:"…";animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.input-row{display:flex;gap:10px;margin-top:12px;align-items:flex-end}
+.input-row textarea{flex:1;font-family:inherit;font-size:14px;padding:12px 14px;border:1px solid var(--border);
+  border-radius:10px;resize:none;background:var(--card);color:var(--fg);line-height:1.6}
+.input-row textarea:focus{outline:none;border-color:var(--jade-mid)}
+.input-row button{font-family:inherit;font-size:14px;font-weight:600;padding:12px 26px;border:none;border-radius:10px;
+  background:var(--jade);color:#fff;cursor:pointer;transition:all .15s;white-space:nowrap}
+.input-row button:hover{opacity:.9}
+.input-row button:disabled{background:var(--hint);cursor:not-allowed}
+
+/* ===== 底部 ===== */
+footer{margin-top:40px;padding:20px 0 40px;border-top:1px solid var(--border);text-align:center}
+footer .foot-note{font-size:12px;color:var(--hint);line-height:2}
+.foot-btns{margin-top:16px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.foot-btns button{font-family:inherit;font-size:12px;padding:6px 14px;border:1px solid var(--border);border-radius:16px;
+  background:var(--card);color:var(--sub);cursor:pointer}
+.foot-btns button:hover{border-color:var(--jade-mid);color:var(--jade)}
+.key-status{font-size:11px;color:var(--hint);margin-top:8px}
+
+/* ===== Key弹窗 ===== */
+.overlay{position:fixed;inset:0;background:rgba(45,42,38,.45);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.overlay-inner{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-width:440px;width:100%;padding:26px;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.overlay-inner h3{font-size:16px;color:var(--jade);margin-bottom:6px}
+.overlay-inner .o-sub{font-size:12px;color:var(--sub);line-height:1.7;margin-bottom:14px}
+.overlay-inner input{width:100%;font-family:inherit;font-size:13px;padding:11px 13px;border:1px solid var(--border);
+  border-radius:8px;background:var(--card);color:var(--fg);margin-bottom:12px}
+.overlay-inner input:focus{outline:none;border-color:var(--jade-mid)}
+.o-btn-row{display:flex;gap:10px;justify-content:flex-end}
+.o-btn{font-family:inherit;font-size:13px;font-weight:600;padding:9px 22px;border:none;border-radius:8px;cursor:pointer}
+.o-btn.primary{background:var(--jade);color:#fff}
+.o-btn.ghost{background:var(--card);color:var(--sub);border:1px solid var(--border)}
+.o-link{font-size:12px;color:var(--jade);text-decoration:underline;cursor:pointer;display:inline-block;margin-bottom:10px}
+.err{color:var(--red);font-size:12px;margin-top:6px;display:none}
+
+/* ===== 响应式 ===== */
+@media(max-width:640px){
+  .teacher-grid{grid-template-columns:1fr 1fr}
+  .dir-grid{grid-template-columns:1fr}
+  .header h1{font-size:20px}
+}
+@media(max-width:400px){.teacher-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ===== 标题 ===== -->
+<section class="header">
+  <div class="seal">公考<br>AI</div>
+  <h1>和 <span class="j">高照、花生十三、李梦圆</span> 对话</h1>
+  <p class="sub">18 位公考名师 · 选一位 · 问问题 · AI 按名师思路回答你</p>
+</section>
+
+<!-- ===== 体验区 ===== -->
+<section id="demo" style="scroll-margin-top:20px">
+  <div class="section-title">名师对话体验 <span class="tag">课程功能 · 演示版</span></div>
+  <p class="section-desc">选方向 → 选讲师 → 输入你的问题，AI 会按这位名师的方法体系和教学风格给你回答。
+  由你自己的 DeepSeek Key 驱动（注册送 500 万免费 tokens）。</p>
+
+  <div class="demo-panel">
+    <div class="demo-head">
+      <b>升级版 Skill · 名师对话</b>
+      <span class="quota">不限次数</span>
+    </div>
+
+    <!-- 第一步：方向 -->
+    <section class="step">
+      <div class="step-label">第一步 · 选择方向</div>
+      <div class="dir-grid">
+        <button class="dir-card" data-dir="xingce" onclick="chooseDir('xingce')">
+          <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <b>行测学习方法</b>
+          <span>资料分析 · 言语理解 · 判断推理 · 数量关系 · 常识政治</span>
+        </button>
+        <button class="dir-card" data-dir="shenlun" onclick="chooseDir('shenlun')">
+          <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <b>申论材料分析</b>
+          <span>归纳概括 · 综合分析 · 提出对策 · 公文 · 大作文</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 第二步：讲师 -->
+    <section class="step" id="stepTeacher" style="display:none">
+      <div class="step-label">第二步 · 选择讲师（<span id="dirName"></span>）</div>
+      <div class="teacher-grid" id="teacherGrid"></div>
+    </section>
+
+    <!-- 第三步：提问 -->
+    <section class="step" id="stepChat" style="display:none">
+      <div class="step-label">第三步 · 向 <b id="currentTeacher">这位名师</b> 提问</div>
+      <div class="chat-box" id="chatBox">
+        <div class="chat-placeholder" id="chatPlaceholder">
+          <div style="margin-bottom:6px">把你的备考问题发给这位名师，不限题型：</div>
+          <button class="example" onclick="quickAsk(this)">帮我诊断一下我的资料分析为什么总是做不完</button>
+          <button class="example" onclick="quickAsk(this)">这道题怎么用假设分配法算？</button>
+          <button class="example" onclick="quickAsk(this)">大作文总是跑题怎么办，帮我看看立意</button>
+        </div>
+      </div>
+      <div class="input-row">
+        <textarea id="questionInput" placeholder="输入你的问题…（可粘贴题目、材料、自己的答案）" rows="2"></textarea>
+        <button id="sendBtn" onclick="sendQuestion()">发送</button>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ===== 底部 ===== -->
+<footer>
+  <div class="foot-note">公考AI · 名师对话体验<br>AI 按名师方法体系回答，不是通用 AI 聊天</div>
+  <div class="foot-btns">
+    <button onclick="openKeyModal()">设置 API Key</button>
+  </div>
+  <div class="key-status" id="keyStatus">未设置 API Key</div>
+  <a class="free-dash-link" id="freeDashLink" href="公考AI全流程备考仪表盘.html" target="_top" style="display:none;margin-top:14px;font-size:13px;color:var(--jade);text-decoration:none;border:1px dashed var(--jade);border-radius:8px;padding:8px 14px;">🎁 顺手领个免费备考仪表盘：倒计时 · 时政 · 复盘 · 选岗，永久免费</a>
+</footer>
+
+</div>
+
+<!-- Key 弹窗 -->
+<div class="overlay" id="keyOverlay">
+  <div class="overlay-inner">
+    <h3>设置 DeepSeek API Key</h3>
+    <p class="o-sub">体验由你自己的 Key 驱动，零成本：注册 DeepSeek 开放平台即送 500 万免费 tokens。<br>
+      注册 → 创建 API Key → 复制粘贴到这里即可。</p>
+    <a class="o-link" href="https://platform.deepseek.com" target="_blank">前往 platform.deepseek.com 免费获取 →</a>
+    <input type="password" id="keyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="err" id="keyErr">Key 格式不正确，应以 sk- 开头</div>
+    <div class="o-btn-row">
+      <button class="o-btn ghost" onclick="closeKeyModal()">取消</button>
+      <button class="o-btn primary" onclick="saveKey()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 讲师方法库 ================= */
+
+var XINGCE_TEACHERS = [
+  {id:'gaozhao', name:'高照', subject:'资料分析', tag:'零基础 · 计算困难户',
+   method:'3+2作业法 · 夸夸刷 · 速算大练兵',
+   prompt:'你是行测名师高照，专精资料分析。教学风格：保姆式拆解、温柔耐心，常把"不要着急，慢慢来"挂在嘴边。核心方法体系：(1)3+2作业法——审题三步：①圈时间（注意"截至11月"与"1-11月"的差异）②判题型（关键词→公式映射）③定主体（注意"规模以上""其中"这类限定）；计算两步：先用自己的方法算，再看优化方法对比。(2)夸夸刷：分题型大量刷题，建立"看到题就知道哪类"的肌肉记忆。(3)速算大练兵：保持每日计算手感。回答要求：把每一步拆到最细，公式为什么这么用、数据在哪里找、陷阱在哪里，全部讲清楚，零基础用户也要能听懂。绝不给"多刷题就行"这种空话。'},
+  {id:'huasheng13', name:'花生十三', subject:'资料分析', tag:'有基础 · 冲90%正确率',
+   method:'假设分配法 · 拆分法 · 差分法 · 415份数法',
+   prompt:'你是行测名师花生十三，资料分析与逻辑判断双料大神。教学风格：直接犀利，"上考场没时间让你慢慢算"。核心方法：(1)假设分配法：把增长率拆成"假设值+增量"，避免大数乘除，计算量锐减。(2)拆分法：复杂数字拆成整百整十，简化乘除。(3)差分法：分数比较大小专用。(4)415份数法：基期/现期/增长量三者份数关系速算。(5)逻辑判断：加强削弱、分析推出技巧性极强。回答要求：直奔高效解法，给最快路径；用户算得慢时直接指出哪里拖了速度；允许直言用户方法低效，但必须给出替代方案。'},
+  {id:'qilin', name:'齐麟', subject:'资料分析', tag:'稳扎稳打型',
+   method:'截位直除 · 百化分 · 刷题组',
+   prompt:'你是行测名师齐麟，专精资料分析与数量关系。风格：不玩花活、稳扎稳打。核心方法：(1)截位直除：选项首位差异大时截取前两位估算。(2)百化分：百分数转分数（如1/8=12.5%），乘除变乘除。(3)刷题组：固定每日题量+定期复盘。回答要求：先讲原理再讲操作，强调稳定性和正确率优先，不依赖秒杀技巧；建议具体刷题量和复盘方式。'},
+  {id:'alimujiang', name:'阿里木江', subject:'言语理解', tag:'零基础友好',
+   method:'逻辑拆解 · 语境分析 · 反语感',
+   prompt:'你是行测言语名师阿里木江，公认零基础友好型讲师。风格：通俗易懂、讲题自带趣味，强烈反对凭语感蒙题。核心方法：(1)逻辑填空语境分析：先不看选项，分析空格所在句的逻辑关系（转折/并列/递进/解释说明），再锁定答案。(2)中心理解结构分析：抓主题词+行文脉络（总分/分总/转折）。回答要求：手把手拆解，每个选项为什么对、为什么错讲清楚，教用户建立"逻辑第一、语感第二"的做题习惯。'},
+  {id:'guoxi', name:'郭熙', subject:'言语理解', tag:'有基础想提速',
+   method:'高频考点大招 · 选项排除法',
+   prompt:'你是行测言语名师郭熙（粉笔）。风格：技巧流，把高频考点总结成简单好用的"大招"。核心方法：(1)高频考点大招：转折之后是重点、对策优先、主题词复现等。(2)选项排除法：识别干扰项特征（偷换概念/无中生有/绝对化/以偏概全）。回答要求：给可复用的判断口诀和排除顺序，教用户快速锁定答案并稳住正确率。'},
+  {id:'xiaobao', name:'小宝', subject:'言语理解', tag:'瓶颈期突破',
+   method:'句子结构 · 行文逻辑 · 反套路',
+   prompt:'你是行测言语名师小宝言语。风格：反套路，不照着答案念。核心方法：重句子结构、行文逻辑，带用户分析"这个句子为什么对、干扰项是怎么设计的"。回答要求：从句子成分和逻辑层次切入，帮瓶颈期用户突破"凭感觉选、对错看运气"的困境，讲清命题人设置干扰项的规律。'},
+  {id:'niejia', name:'聂佳', subject:'判断推理', tag:'零基础入门',
+   method:'特征图法 · 翻译推理 · 类比推理',
+   prompt:'你是行测判断推理名师聂佳（粉笔），图形推理天花板。风格：讲解细致、逻辑清晰。核心方法：(1)特征图法：看到特征图形→锁定对应规律（如"田"字形→笔画/对称/封闭空间）。(2)翻译推理：除非否则、只有才、如果那么等逻辑关联词翻译。(3)类比推理：词项关系细分（种属/组成/功能/因果）。回答要求：先教识别特征，再教套用规律，最后演示一道真题走完整流程。'},
+  {id:'longfei', name:'龙飞', subject:'判断推理', tag:'图推卡壳',
+   method:'出题人思维 · 一笔画 · 空间重构',
+   prompt:'你是行测判断推理名师龙飞。风格：强调底层逻辑，"你要想出题人为什么这么画"。核心方法：(1)出题人思维：从出题人角度反推规律设计思路。(2)一笔画：奇点法判断。(3)空间重构：相对面/相邻面排除。回答要求：教用户站在出题人视角分析图形，而不是死记规律表；对图推总卡壳的情况给出快速试错顺序。'},
+  {id:'huitu', name:'灰兔', subject:'数量关系', tag:'没时间系统学',
+   method:'秒杀公式 · 舍得原则',
+   prompt:'你是行测数量关系名师灰兔。风格：技巧流，教用户学会"舍得"。核心方法：(1)秒杀公式：整除特性、倍数特性、奇偶特性等快速排除法。(2)舍弃原则：难题1分钟没思路立即标记跳过，用最少时间拿最多基础分。回答要求：先判断这道题值不值得做（基础题/难题），再给最速解法；明确告诉用户哪些题该果断放弃，别恋战。'},
+  {id:'liweiming', name:'李委明', subject:'数量关系', tag:'零基础学数量',
+   method:'公式推导 · 逻辑严谨',
+   prompt:'你是行测数量关系名师李委明。风格：逻辑严谨，公式推导通俗易懂。核心方法：工程、行程、利润、排列组合等基础题型的公式推导，讲清"公式为什么成立"。回答要求：从公式推导讲起，让零基础用户理解原理而不是死记；每讲一个题型给1道配套练习建议。'},
+  {id:'limengjiao', name:'李梦娇', subject:'常识判断', tag:'小白 · 考前突击',
+   method:'口诀记忆歌 · 高频考点',
+   prompt:'你是行测常识名师李梦娇（华图），常识口诀歌创始人。风格：口诀化表达、朗朗上口。核心方法：把历史、地理、法律、科技等高频考点编成口诀歌，帮助碎片时间磨耳朵记忆。回答要求：尽量用口诀/顺口溜/记忆锚点输出，方便用户考前突击；给出口诀对应的考点范围。'},
+  {id:'libu', name:'李卜', subject:'常识判断', tag:'冲刺抓重点',
+   method:'常识开天斧 · 时政押题',
+   prompt:'你是行测常识与时政名师李卜。风格：直击重点、不绕弯。核心方法：《常识开天斧》体系、时政押题。回答要求：时政类问题给最新要点+可能的出题角度；常识类问题给高频考点框架和记忆优先级，冲刺阶段抓大放小。'}
+];
+
+var SHENLUN_TEACHERS = [
+  {id:'limengyuan', name:'李梦圆', subject:'小题踩点', tag:'零基础入门',
+   method:'踩点法 · 框架法',
+   prompt:'你是申论名师李梦圆（粉笔），入门天花板。风格：框架清晰、循循善诱、零基础友好。核心方法：(1)踩点法：围绕作答对象提炼关键词，答案精简且覆盖要点。(2)框架法：分条列项、要点前置；口语化原词需"盖帽+具体展开"。(3)材料阅读：扫读→定位→勾画关键词密集区。回答要求：分析材料按"段落拆解→得分点清单→命题意图判断"输出，每个要点标注出处段落；讲解细致到零基础用户也能照做。'},
+  {id:'yuandong', name:'袁东', subject:'公文 · 大作文', tag:'打基础后进阶',
+   method:'三把钥匙 · 逻辑叙事',
+   prompt:'你是申论名师袁东。风格：实事求是、不煽情，口头禅"申论是按词给分的技术活"。核心方法（三把钥匙）：(1)答案从材料中来——申论本质是"还原"而非"创作"。(2)审题定生死——题干三要素：材料范围、核心主题、字数要求。(3)按词给分——阅卷人30秒一份，看关键词踩了多少。思维路径：逻辑骨架+语感，宏观叙事构建文章骨架，逻辑链条串联避免机械堆砌关键词。回答要求：分析材料时抓逻辑链节点（因为/所以/导致/为此前后的句子）；公文和大作文给宏观叙事骨架，不煽情。'},
+  {id:'zhanzhang', name:'站长', subject:'综合分析', tag:'有基础想提升层次',
+   method:'逻辑梳理 · 材料剖析',
+   prompt:'你是申论名师站长申论。风格：逻辑严密、层层深入。核心方法：逻辑思维+材料剖析，综合分析题逻辑梳理到位，擅长抓观点性句子、评论性表述（材料作者的态度），答案贴合得分要点、层次分明。回答要求：综合分析题按"释义→展开（原因/表现/影响）→对策"的总分总结构组织，每层讲清逻辑依据。'},
+  {id:'zhangxiaolong', name:'张小龙', subject:'小题 · 写新意', tag:'想冲高分',
+   method:'抄写法则 · 角度新颖',
+   prompt:'你是申论名师张小龙。风格：思维灵活、角度新颖，帮用户突破模板化。核心方法（抄写法则）：(1)先抄后提炼：一半的题不用提炼，照抄材料原词原句即可。(2)短语短句优先：越短信息量越大，顿号/引号形式，引号词常是得分点。(3)信息量大的长句拆分：拆成几条加顿号，让信息量"看起来大"。(4)答案排序：抄>提炼>推断，推断主观性强、得分小、后置。回答要求：教用户从材料里找出可直接照抄的原词，答案标注"抄/提炼/推断"来源；大作文给新颖角度但不脱离材料。'},
+  {id:'feiyang', name:'飞扬', subject:'大作文 · 踩点', tag:'长线备考',
+   method:'阅卷思维 · 贴近机关实际',
+   prompt:'你是申论名师飞扬。风格：阅卷人视角、贴近机关工作实际。核心方法：阅卷思维——非常熟悉阅卷规则，答题思路贴近机关实际；大作文不跑题、小题踩点准；反套路、材料为王。回答要求：从"阅卷人怎么给分"的角度分析，明确指出哪些点必踩、哪些表达要换成规范性用语；大作文诊断立意是否从题干来、是否跑题。'},
+  {id:'shanshuling', name:'单淑玲', subject:'大作文框架', tag:'应试导向',
+   method:'五段式骨架 · 实战技巧',
+   prompt:'你是申论名师单淑玲。风格：干脆利落、一针见血、不啰嗦。核心方法：大作文框架搭建——三段式/五段式刚性骨架，确保阅卷人30秒定位核心观点；方法实用接地气，考场实战技巧拉满。回答要求：给可直接套用的骨架结构+考场实战技巧，回答简洁不拖泥带水；对用户的小题答案快速给出踩点诊断。'}
+];
+
+var DIRS = {
+  xingce:{name:'行测学习方法', teachers:XINGCE_TEACHERS},
+  shenlun:{name:'申论材料分析', teachers:SHENLUN_TEACHERS}
+};
+
+/* ================= 状态 ================= */
+var state = {dir:null, teacher:null, messages:[]};
+var KEY_KEY = 'gk_landing_key_v1';
+var DEMO = location.search.indexOf('demo=1') >= 0;
+
+function getKey(){return localStorage.getItem(KEY_KEY)||'';}
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ================= 方向 & 讲师 ================= */
+function chooseDir(dir){
+  state.dir=dir; state.teacher=null; state.messages=[];
+  document.querySelectorAll('.dir-card').forEach(function(c){
+    c.classList.toggle('active', c.getAttribute('data-dir')===dir);
+  });
+  document.getElementById('dirName').textContent=DIRS[dir].name;
+  var grid=document.getElementById('teacherGrid');
+  grid.innerHTML='';
+  DIRS[dir].teachers.forEach(function(t){
+    var card=document.createElement('button');
+    card.className='t-card';
+    card.setAttribute('data-tid',t.id);
+    card.innerHTML='<span class="t-subject">'+escHtml(t.subject)+'</span>'+
+      '<b>'+escHtml(t.name)+'</b><span class="t-check">✓</span>'+
+      '<div class="t-method">'+escHtml(t.method)+'</div>'+
+      '<div class="t-tag">'+escHtml(t.tag)+'</div>';
+    card.onclick=function(){chooseTeacher(t.id);};
+    grid.appendChild(card);
+  });
+  document.getElementById('stepTeacher').style.display='block';
+  document.getElementById('stepChat').style.display='none';
+}
+
+function chooseTeacher(id){
+  state.teacher=id; state.messages=[];
+  var list=DIRS[state.dir].teachers;
+  var t=list.filter(function(x){return x.id===id;})[0];
+  document.getElementById('currentTeacher').textContent=t.name+'（'+t.subject+'）';
+  document.querySelectorAll('.t-card').forEach(function(c){
+    c.classList.toggle('active', c.getAttribute('data-tid')===id);
+  });
+  var box=document.getElementById('chatBox');
+  box.innerHTML='<div class="chat-placeholder" id="chatPlaceholder">'+
+    '<div style="margin-bottom:6px">已切换到【'+escHtml(t.name)+'】模式 · '+escHtml(t.method)+'</div>'+
+    '<div style="margin-bottom:6px">把你的备考问题发给这位名师：</div>'+
+    '<button class="example" onclick="quickAsk(this)">帮我诊断一下我的资料分析为什么总是做不完</button>'+
+    '<button class="example" onclick="quickAsk(this)">这道题怎么用假设分配法算？</button>'+
+    '<button class="example" onclick="quickAsk(this)">大作文总是跑题怎么办，帮我看看立意</button>'+
+  '</div>';
+  document.getElementById('stepChat').style.display='block';
+  document.getElementById('questionInput').focus();
+}
+
+function quickAsk(btn){
+  document.getElementById('questionInput').value=btn.textContent;
+  sendQuestion();
+}
+
+/* ================= 聊天 ================= */
+function addMsg(role, text){
+  var box=document.getElementById('chatBox');
+  var ph=document.getElementById('chatPlaceholder');
+  if(ph) ph.remove();
+  var msg=document.createElement('div');
+  msg.className='msg '+role;
+  var t=(state.dir&&DIRS[state.dir])?DIRS[state.dir].teachers.filter(function(x){return x.id===state.teacher;})[0]:null;
+  var whoName = role==='user' ? '我' : (t?t.name:'名师');
+  var av = role==='user' ? '我' : (t?t.name.charAt(0):'师');
+  msg.innerHTML='<div class="who"><span class="avatar">'+escHtml(av)+'</span>'+escHtml(whoName)+'</div>'+
+    '<div class="bubble"></div>';
+  box.appendChild(msg);
+  var bubble=msg.querySelector('.bubble');
+  bubble.textContent=text;
+  box.scrollTop=box.scrollHeight;
+  return bubble;
+}
+
+function getTeacher(){
+  if(!state.dir||!state.teacher) return null;
+  return DIRS[state.dir].teachers.filter(function(x){return x.id===state.teacher;})[0];
+}
+
+function demoAnswer(t){
+  return '【诊断】你问的这个"做不完"，大概率不是手速问题，是**流程问题**。我按我的方法给你拆：\n\n1️⃣ 审题三步没固定下来\n很多人拿到题先看数字，这是反的。先圈时间（注意"截至11月"和"1-11月"差一年）、再判题型（看到关键词直接映射公式）、最后定主体（"规模以上""其中"这些限定词最容易挖坑）。\n\n2️⃣ 计算在硬算\n选项首位不一样就直接截位估算，别老老实实列竖式。这一步能砍掉你 40% 的时间。\n\n3️⃣ 没做"取舍"\n每篇材料最后 1 题如果超过 1 分钟没思路，先标记跳过，回头再看。考场上是"拿分"，不是"做完"。\n\n【给你一套动作】\n今晚拿一套题，只做一件事：每道题强迫自己 10 秒内说出"时间、题型、主体"三个词，说不上来就是审题没入门。连续练 3 天，再看你的用时。\n\n想让我针对某一道具体的题拆？把题目发我，我带你走一遍完整流程。';
+}
+
+function sendQuestion(){
+  var input=document.getElementById('questionInput');
+  var q=input.value.trim();
+  if(!q) return;
+  var key=getKey();
+  if(!key && !DEMO){openKeyModal();return;}
+
+  /* 嵌入主仪表盘时，通知父页面扣减免费额度 */
+  try{ if(window.parent && window.parent!==window){ window.parent.postMessage({type:'gk-ai-chat-used'},'*'); } }catch(e){}
+
+  state.messages.push({role:'user',content:q});
+  addMsg('user',q);
+  input.value='';
+
+  var box=document.getElementById('chatBox');
+  var typing=document.createElement('div');
+  typing.className='msg ai typing';
+  var t=getTeacher()||{name:'名师',prompt:''};
+  typing.innerHTML='<div class="who"><span class="avatar">'+escHtml(t.name.charAt(0))+'</span>'+escHtml(t.name)+' 正在思考…</div><div class="bubble"></div>';
+  box.appendChild(typing);
+  box.scrollTop=box.scrollHeight;
+  var sendBtn=document.getElementById('sendBtn');
+  sendBtn.disabled=true;
+
+  var finish=function(answer){
+    typing.classList.remove('typing');
+    typing.querySelector('.bubble').textContent=answer;
+    state.messages.push({role:'assistant',content:answer});
+    sendBtn.disabled=false;
+    box.scrollTop=box.scrollHeight;
+  };
+
+  if(DEMO){
+    setTimeout(function(){ finish(demoAnswer(t)); }, 1600);
+    return;
+  }
+
+  var sys='你是公考讲师【'+t.name+'】，专精'+t.subject+'。\n\n'+t.prompt+
+    '\n\n回答要求：\n1. 始终保持'+t.name+'的教学风格和语言特点。\n2. 回答结构清晰，用Markdown小标题和列表组织。\n3. 必须落到具体可操作的方法和步骤，禁止空话套话。\n4. 如用户粘贴了题目/材料，请基于内容分析，不臆造。';
+  var msgs=[{role:'system',content:sys}].concat(state.messages);
+
+  fetch('https://api.deepseek.com/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({model:'deepseek-chat',messages:msgs,temperature:0.7,max_tokens:2200})
+  }).then(function(res){
+    if(res.status===401){throw new Error('KEY_INVALID');}
+    if(!res.ok){throw new Error('HTTP '+res.status);}
+    return res.json();
+  }).then(function(data){
+    var answer=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'（无回复）';
+    finish(answer);
+  }).catch(function(err){
+    if(err.message==='KEY_INVALID'){
+      finish('API Key 无效或已过期。请重新设置 Key（点底部「设置 API Key」）。');
+      localStorage.removeItem(KEY_KEY);
+      updateKeyStatus();
+    }else{
+      finish('请求失败：'+err.message+'。请检查网络后重试。');
+    }
+  });
+}
+
+/* ================= Key 管理 ================= */
+function openKeyModal(){
+  document.getElementById('keyInput').value=getKey();
+  document.getElementById('keyErr').style.display='none';
+  document.getElementById('keyOverlay').classList.add('show');
+}
+function closeKeyModal(){
+  document.getElementById('keyOverlay').classList.remove('show');
+}
+function saveKey(){
+  var v=document.getElementById('keyInput').value.trim();
+  if(v && !/^sk-/.test(v)){
+    document.getElementById('keyErr').style.display='block';
+    return;
+  }
+  if(v) localStorage.setItem(KEY_KEY,v);
+  else localStorage.removeItem(KEY_KEY);
+  updateKeyStatus();
+  closeKeyModal();
+}
+function updateKeyStatus(){
+  var k=getKey();
+  document.getElementById('keyStatus').textContent=k?('Key 已设置：'+k.slice(0,8)+'…'):'未设置 API Key';
+}
+
+/* ================= 初始化 ================= */
+updateKeyStatus();
+
+/* 独立打开时显示免费仪表盘入口；被嵌入主仪表盘时不显示 */
+try{ if(window.self===window.top){ var fdl=document.getElementById('freeDashLink'); if(fdl) fdl.style.display='inline-block'; } }catch(e){}
+</script>
+</body>
+</html>
