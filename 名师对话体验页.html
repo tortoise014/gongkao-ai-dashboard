@@ -89,6 +89,15 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
   background:var(--jade);color:#fff;cursor:pointer;transition:all .15s;white-space:nowrap}
 .input-row button:hover{opacity:.9}
 .input-row button:disabled{background:var(--hint);cursor:not-allowed}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;padding:12px 14px;
+  border:1px dashed var(--jade-mid);border-radius:10px;background:var(--jade-light);color:var(--jade);
+  cursor:pointer;white-space:nowrap;flex-shrink:0}
+.upload-btn:hover{border-color:var(--jade)}
+.upload-btn:active{opacity:.85}
+.upload-btn.disabled{opacity:.5;cursor:not-allowed}
+.ocr-status{font-size:12px;color:var(--sub);margin-top:8px;min-height:18px;line-height:1.7}
+.ocr-status.ok{color:var(--jade)}
+.ocr-status.err{color:var(--red)}
 
 /* ===== 底部 ===== */
 footer{margin-top:40px;padding:20px 0 40px;border-top:1px solid var(--border);text-align:center}
@@ -120,6 +129,7 @@ footer .foot-note{font-size:12px;color:var(--hint);line-height:2}
   .teacher-grid{grid-template-columns:1fr 1fr}
   .dir-grid{grid-template-columns:1fr}
   .header h1{font-size:20px}
+  .upload-btn{font-size:12px;padding:12px 10px}
 }
 @media(max-width:400px){.teacher-grid{grid-template-columns:1fr}}
 </style>
@@ -182,9 +192,12 @@ footer .foot-note{font-size:12px;color:var(--hint);line-height:2}
         </div>
       </div>
       <div class="input-row">
-        <textarea id="questionInput" placeholder="输入你的问题…（可粘贴题目、材料、自己的答案）" rows="2"></textarea>
+        <label class="upload-btn" for="imgInput">📷 上传截图识别</label>
+        <textarea id="questionInput" placeholder="输入你的问题…（可粘贴题目、材料、自己的答案，或上传截图自动识别文字）" rows="2"></textarea>
         <button id="sendBtn" onclick="sendQuestion()">发送</button>
       </div>
+      <div class="ocr-status" id="ocrStatus"></div>
+      <input type="file" id="imgInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
     </section>
   </div>
 </section>
@@ -431,6 +444,86 @@ function sendQuestion(){
       finish('请求失败：'+err.message+'。请检查网络后重试。');
     }
   });
+}
+
+/* ================= AI 识图（复用主仪表盘识图 Key 机制） ================= */
+var VISION_PROVIDERS={
+  qwen:{name:'通义千问',url:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',visionModel:'qwen-vl-plus'},
+  glm:{name:'智谱GLM',url:'https://open.bigmodel.cn/api/paas/v4/chat/completions',visionModel:'glm-4v-flash'}
+};
+function getVisionConfig(){
+  // 主对话AI若支持识图（qwen/glm），直接用它的Key；否则用识图专用提供商
+  var main=localStorage.getItem('gk_api_provider')||'deepseek';
+  if(main==='qwen'||main==='glm')return VISION_PROVIDERS[main];
+  var vp=localStorage.getItem('gk_vision_provider')||'qwen';
+  return VISION_PROVIDERS[vp]||VISION_PROVIDERS.qwen;
+}
+function getVisionKey(){
+  // 优先识图专用Key，其次主对话Key（主对话Key需为qwen/glm才有效）
+  return localStorage.getItem('gk_vision_key')||localStorage.getItem('gk_llm_api_key')||'';
+}
+function ocrWithLLM(imageDataURL){
+  var key=getVisionKey();
+  if(!key)return Promise.reject(new Error('NO_VISION_KEY'));
+  var vCfg=getVisionConfig();
+  return fetch(vCfg.url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({
+      model:vCfg.visionModel,
+      messages:[{
+        role:'user',
+        content:[
+          {type:'text',text:'请识别这张图片中的所有文字内容，原样输出，不要添加任何解释、标注或格式化。如果图片中没有文字，只回复「未识别到文字」。'},
+          {type:'image_url',image_url:{url:imageDataURL}}
+        ]
+      }],
+      temperature:0.1,
+      max_tokens:2048
+    })
+  }).then(function(res){
+    if(res.status===401)throw new Error('VISION_KEY_INVALID');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    return res.json();
+  }).then(function(data){
+    if(!data.choices||!data.choices[0]||!data.choices[0].message)throw new Error('API返回格式异常');
+    return data.choices[0].message.content.trim();
+  });
+}
+function handleImageUpload(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  var status=document.getElementById('ocrStatus');
+  status.className='ocr-status';
+  status.textContent='读取图片…';
+  var reader=new FileReader();
+  reader.onload=function(e){
+    status.textContent='AI识图中（约2-3秒）…';
+    ocrWithLLM(e.target.result).then(function(text){
+      if(text&&text.indexOf('未识别到文字')===-1&&text.length>2){
+        status.className='ocr-status ok';
+        status.textContent='✅ AI识图完成！文字已填入输入框，请检查后发送。';
+        var ta=document.getElementById('questionInput');
+        ta.value+=(ta.value?'\n\n':'')+text;
+        ta.focus();
+      }else{
+        status.className='ocr-status err';
+        status.textContent='⚠️ AI未识别到文字，请换更清晰的图片或手动输入。';
+      }
+    }).catch(function(err){
+      status.className='ocr-status err';
+      if(err.message==='NO_VISION_KEY'){
+        status.innerHTML='⚠️ 未配置识图 Key。若在免费仪表盘内使用，请点主页面顶栏 ⚙ 配置「识图API Key」（通义千问，免费200万tokens/月）；独立打开本页请配置 DeepSeek 外的识图 Key。';
+      }else if(err.message==='VISION_KEY_INVALID'){
+        status.textContent='⚠️ 识图 Key 无效或已过期，请重新配置。';
+      }else{
+        status.textContent='⚠️ AI识图失败：'+err.message+'。请检查 Key 是否正确，或手动粘贴题目文字。';
+      }
+    });
+  };
+  reader.onerror=function(){status.className='ocr-status err';status.textContent='⚠️ 图片读取失败，请重试。';};
+  reader.readAsDataURL(file);
+  event.target.value=''; // 允许重复选择同一张图
 }
 
 /* ================= Key 管理 ================= */
